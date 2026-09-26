@@ -1,6 +1,5 @@
 import Header from "./Header";
 import HeroMedia from "./HeroMedia";
-import Particles from "./Particles";
 
 export default function Hero() {
   return (
@@ -13,10 +12,9 @@ export default function Hero() {
       {/* Mobile/tablet: photo on top, copy anchored on a darker base */}
       <div className="absolute inset-0 -z-20 bg-gradient-to-t from-background from-10% via-background/85 via-45% to-background/15 lg:hidden" />
       <div className="absolute inset-x-0 top-0 -z-20 h-40 bg-gradient-to-b from-background/70 to-transparent" />
-      <div className="absolute inset-x-0 bottom-0 -z-20 hidden h-40 bg-gradient-to-t from-background to-transparent lg:block" />
+      <div className="absolute inset-x-0 bottom-0 -z-20 h-56 bg-gradient-to-t from-background via-background/70 to-transparent" />
       <div className="absolute inset-0 -z-20 bg-[radial-gradient(ellipse_50%_45%_at_80%_25%,rgba(49,106,162,0.3),transparent)]" />
 
-      <Particles />
       <Header />
 
       <div className="mx-auto flex w-full max-w-7xl flex-1 items-end px-5 pt-32 pb-10 sm:px-6 sm:pt-40 sm:pb-16 lg:px-10">
@@ -58,7 +56,7 @@ export default function Hero() {
               Get Started
             </a>
             <a
-              href="#services"
+              href="#clarity"
               className="group flex items-center justify-center gap-3 text-sm text-foreground sm:justify-start"
             >
               Explore services
@@ -81,7 +79,7 @@ export default function Hero() {
               </li>
             ))}
           </ul>
-          <a href="#services" className="hidden items-center gap-3 hover:text-foreground sm:flex">
+          <a href="#clarity" className="hidden items-center gap-3 hover:text-foreground sm:flex">
             Scroll
             <span className="relative block h-8 w-px overflow-hidden bg-white/20">
               <span className="scroll-tick absolute inset-x-0 top-0 h-3 bg-brand" />

@@ -34,7 +34,6 @@
 
 html {
   color-scheme: dark;
-  scroll-behavior: smooth;
 }
 
 body {
@@ -130,9 +129,6 @@ body {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  html {
-    scroll-behavior: auto;
-  }
   .hero-zoom,
   .scroll-tick,
   .float-slow,
@@ -144,4 +140,43 @@ body {
     transform: none;
     stroke-dashoffset: 0;
   }
+}
+
+/* ---- Clarity intro: scroll-driven (vars --p overall, --t text, --c order) ---- */
+.clarity .word {
+  opacity: clamp(0.16, calc(0.16 + (var(--t) * 1.25 - var(--w)) * 7), 1);
+  transition: none;
+}
+
+.clarity .fragment {
+  --amp: 0.45;
+  border-color: color-mix(in srgb, var(--brand) calc(var(--c) * 55%), var(--line));
+  opacity: calc(0.45 + var(--c) * 0.55);
+  transform: translate3d(
+      calc((1 - var(--c)) * var(--x) * var(--amp) * 1px),
+      calc((1 - var(--c)) * var(--y) * var(--amp) * 1px),
+      0
+    )
+    rotate(calc((1 - var(--c)) * var(--r) * 1deg));
+  will-change: transform;
+}
+
+.clarity .fragment .dot {
+  background: color-mix(in srgb, var(--brand) calc(var(--c) * 100%), var(--muted));
+  box-shadow: 0 0 calc(var(--c) * 10px) var(--brand);
+}
+
+@media (min-width: 1024px) {
+  .clarity .fragment {
+    --amp: 1;
+  }
+}
+
+.clarity .trail {
+  position: absolute;
+  top: 8%;
+  width: 1px;
+  height: 46%;
+  background: linear-gradient(to bottom, transparent, rgba(91, 147, 199, 0.35), transparent);
+  transform: translateY(calc(var(--p) * var(--s) * 1px));
 }
