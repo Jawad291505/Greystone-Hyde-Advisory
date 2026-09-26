@@ -2,6 +2,7 @@
 
 import dynamic from "next/dynamic";
 import { Component, useEffect, useRef, useState } from "react";
+import CubeCssStage from "./CubeCssStage";
 
 // three.js is only fetched once the section is close to the viewport.
 // One retry covers a transient chunk-load failure.
@@ -36,7 +37,7 @@ class SceneBoundary extends Component {
 const clamp = (v) => Math.min(1, Math.max(0, v));
 const DISCIPLINES = ["Tax", "VAT", "Payroll", "Cash flow", "Expenses", "Invoices", "Reporting"];
 
-export default function CubeSection() {
+export default function CubeSection({ forceCss = false }) {
   const section = useRef(null);
   const progress = useRef(0);
   const visRef = useRef(false);
@@ -51,7 +52,7 @@ export default function CubeSection() {
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
     // Warm the 3D chunk during idle time so it is ready before the section arrives.
-    const warm = window.setTimeout(() => import("./CubeScene").catch(() => {}), 2500);
+    const warm = forceCss ? 0 : window.setTimeout(() => import("./CubeScene").catch(() => {}), 2500);
 
     let raf;
     let smooth = -1;
@@ -61,7 +62,7 @@ export default function CubeSection() {
       const vh = window.innerHeight;
       const near = rect.top < vh * 2 && rect.bottom > -vh;
       const visible = rect.top < vh * 1.1 && rect.bottom > -vh * 0.1;
-      if (near !== nearRef.current) {
+      if (!forceCss && near !== nearRef.current) {
         nearRef.current = near;
         if (near) setSmall(window.innerWidth < 768);
         setLoad(near);
@@ -85,7 +86,7 @@ export default function CubeSection() {
       cancelAnimationFrame(raf);
       clearTimeout(warm);
     };
-  }, []);
+  }, [forceCss]);
 
   return (
     <section
@@ -101,8 +102,8 @@ export default function CubeSection() {
         />
 
         <div className="absolute inset-0">
-          {failed ? (
-            <StaticCube />
+          {forceCss || failed ? (
+            <CubeCssStage progress={progress} />
           ) : (
             load && (
               <SceneBoundary>

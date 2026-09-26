@@ -245,3 +245,82 @@ body {
     stroke-dashoffset: 0;
   }
 }
+
+/* ---- CSS 3D cube (no WebGL) ---- */
+.c3d-scene {
+  --u: 98px;
+  --s: calc(var(--u) * 0.94);
+  perspective: 1500px;
+  perspective-origin: 50% 45%;
+  display: grid;
+  place-items: center;
+}
+
+.c3d-group,
+.c3d-piece {
+  transform-style: preserve-3d;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 0;
+  height: 0;
+  will-change: transform;
+}
+
+.c3d-face {
+  position: absolute;
+  width: var(--s);
+  height: var(--s);
+  margin: calc(var(--s) / -2) 0 0 calc(var(--s) / -2);
+  border-radius: calc(var(--u) * 0.07);
+  backface-visibility: hidden;
+  display: grid;
+  place-items: center;
+  text-align: center;
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-weight: 600;
+  font-size: calc(var(--u) * 0.13);
+  letter-spacing: 0.02em;
+  color: rgba(236, 235, 230, 0.85);
+  overflow: hidden;
+}
+
+.c3d-front  { transform: translateZ(calc(var(--s) / 2)); }
+.c3d-back   { transform: rotateY(180deg) translateZ(calc(var(--s) / 2)); }
+.c3d-right  { transform: rotateY(90deg) translateZ(calc(var(--s) / 2)); }
+.c3d-left   { transform: rotateY(-90deg) translateZ(calc(var(--s) / 2)); }
+.c3d-top    { transform: rotateX(90deg) translateZ(calc(var(--s) / 2)); }
+.c3d-bottom { transform: rotateX(-90deg) translateZ(calc(var(--s) / 2)); }
+
+.c3d-tile {
+  background: linear-gradient(135deg, #141c2b, #0a0f18);
+  border: 1px solid rgba(91, 147, 199, 0.4);
+  box-shadow: inset 0 0 0 calc(var(--u) * 0.05) rgba(5, 8, 14, 0.55), inset 0 1px 0 rgba(150, 190, 232, 0.18);
+}
+
+.c3d-accent {
+  background: linear-gradient(135deg, #316aa2, #243b6f);
+  border: 1px solid rgba(200, 225, 255, 0.5);
+  color: #ecebe6;
+  box-shadow: inset 0 0 0 calc(var(--u) * 0.05) rgba(14, 30, 60, 0.35), 0 0 calc(var(--u) * 0.3) rgba(49, 106, 162, 0.35);
+}
+
+.c3d-inner {
+  background: #0a0e16;
+  border: 1px solid rgba(91, 147, 199, 0.12);
+}
+
+/* Fixed fake lighting per face direction */
+.c3d-face::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: var(--shade, transparent);
+}
+.c3d-top    { --shade: linear-gradient(160deg, rgba(190, 215, 245, 0.2), transparent 70%); }
+.c3d-front  { --shade: linear-gradient(160deg, rgba(150, 190, 232, 0.06), rgba(0, 0, 0, 0.12)); }
+.c3d-right  { --shade: linear-gradient(200deg, rgba(0, 0, 0, 0.28), rgba(0, 0, 0, 0.42)); }
+.c3d-left   { --shade: rgba(0, 0, 0, 0.18); }
+.c3d-back   { --shade: rgba(0, 0, 0, 0.35); }
+.c3d-bottom { --shade: rgba(0, 0, 0, 0.5); }
