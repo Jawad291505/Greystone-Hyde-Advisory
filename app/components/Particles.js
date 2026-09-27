@@ -20,7 +20,14 @@ export default function Particles() {
     let cur = target;
     let prev = cur;
 
-    const colors = ["91,147,199", "49,106,162", "150,190,232"];
+    // Screen-blend glows read as light specks and need a dark backdrop; on the
+    // light-preview route the same trick would just wash out to white, so this
+    // switches to darker particles composited with multiply instead.
+    const light = !!document.querySelector(".theme-light");
+    canvas.style.mixBlendMode = light ? "multiply" : "screen";
+    const colors = light
+      ? ["49,106,162", "36,59,111", "20,34,64"]
+      : ["91,147,199", "49,106,162", "150,190,232"];
 
     const build = () => {
       const count = w < 768 ? 34 : 70;
@@ -31,7 +38,7 @@ export default function Particles() {
           y: Math.random() * h,
           z,
           r: z * 1.7 + 0.4,
-          a: z * 0.55 + 0.15,
+          a: light ? z * 0.3 + 0.08 : z * 0.55 + 0.15,
           vy: -(0.05 + Math.random() * 0.12) * z,
           vx: (Math.random() - 0.5) * 0.08,
           ph: Math.random() * Math.PI * 2,
@@ -116,7 +123,7 @@ export default function Particles() {
     <canvas
       ref={ref}
       aria-hidden
-      className="pointer-events-none fixed inset-0 z-[5] h-full w-full mix-blend-screen"
+      className="pointer-events-none fixed inset-0 z-[5] h-full w-full"
     />
   );
 }

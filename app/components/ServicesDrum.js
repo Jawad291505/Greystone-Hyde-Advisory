@@ -66,14 +66,14 @@ const smooth = (t) => t * t * (3 - 2 * t);
 
 function Visual({ v }) {
   return (
-    <div className="mt-4 border border-white/[0.07] bg-background/50 p-3.5 sm:mt-5 sm:p-4">
+    <div className="mt-4 border border-foreground/[0.07] bg-background/50 p-3.5 sm:mt-5 sm:p-4">
       <div className="mb-3 flex items-center justify-between text-[10px] tracking-[0.2em] text-muted uppercase">
         <span>{v.title}</span>
         {v.tag && <span className="text-brand">● {v.tag}</span>}
       </div>
 
       {v.type === "rows" && (
-        <ul className="divide-y divide-white/[0.06]">
+        <ul className="divide-y divide-foreground/[0.06]">
           {v.rows.map((r) => (
             <li key={r[0]} className="flex items-center justify-between gap-4 py-2 text-xs">
               <span className="text-foreground/80">{r[0]}</span>
@@ -93,7 +93,7 @@ function Visual({ v }) {
                 <span className="text-foreground/80">{r[0]}</span>
                 <span className="font-mono text-muted">{r[2]}</span>
               </div>
-              <div className="h-1.5 bg-white/[0.06]">
+              <div className="h-1.5 bg-foreground/[0.06]">
                 <div className="bar h-full bg-gradient-to-r from-logo-blue to-brand" style={{ "--w": `${r[1]}%` }} />
               </div>
             </li>
@@ -118,7 +118,7 @@ function Visual({ v }) {
       {v.type === "tiles" && (
         <div className="grid grid-cols-2 gap-2">
           {v.tiles.map((t) => (
-            <div key={t[0]} className="border border-white/[0.06] p-3">
+            <div key={t[0]} className="border border-foreground/[0.06] p-3">
               <p className="text-[10px] tracking-[0.14em] text-muted uppercase">{t[0]}</p>
               <p className="mt-1 font-mono text-lg">{t[1]}</p>
               <p className="font-mono text-[11px] text-brand">{t[2]}</p>
@@ -192,7 +192,7 @@ export default function ServicesDrum() {
       <div className="sticky top-0 h-svh overflow-hidden">
         <div
           aria-hidden
-          className="absolute inset-0 bg-[radial-gradient(ellipse_50%_55%_at_20%_55%,rgba(36,59,111,0.4),transparent)]"
+          className="absolute inset-0 bg-[radial-gradient(ellipse_50%_55%_at_20%_55%,rgba(47,77,134,0.4),transparent)]"
         />
 
         <div className="relative mx-auto grid h-full max-w-7xl grid-rows-[auto_9.5rem_1fr] gap-4 px-5 pt-20 pb-6 sm:px-6 lg:grid-cols-[1.05fr_0.95fr] lg:grid-rows-1 lg:gap-16 lg:px-10 lg:py-0">
@@ -213,7 +213,7 @@ export default function ServicesDrum() {
             </div>
 
             <p className="mt-auto hidden items-center gap-4 font-mono text-xs text-muted lg:flex">
-              <span className="relative block h-16 w-px bg-white/10">
+              <span className="relative block h-16 w-px bg-foreground/10">
                 <span ref={rail} className="absolute inset-0 origin-top bg-brand" style={{ transform: "scaleY(0)" }} />
               </span>
               {String(active + 1).padStart(2, "0")} / {String(N).padStart(2, "0")}
@@ -229,7 +229,7 @@ export default function ServicesDrum() {
           <div className="min-h-0 lg:flex lg:items-center">
             <div
               key={active}
-              className="doc-in w-full overflow-hidden border border-white/10 bg-surface/70 p-4 shadow-[0_30px_80px_-30px_rgba(0,0,0,0.9)] backdrop-blur-md sm:p-6"
+              className="doc-in w-full overflow-hidden border border-foreground/10 bg-surface/70 p-4 shadow-[0_30px_80px_-30px_rgba(0,0,0,0.9)] backdrop-blur-md sm:p-6"
             >
               <div className="flex items-center justify-between text-[10px] tracking-[0.2em] text-muted uppercase">
                 <span>Client file · {String(active + 1).padStart(2, "0")}</span>

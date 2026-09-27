@@ -6,14 +6,14 @@ export default function Hero() {
     <section className="relative isolate flex min-h-[100svh] flex-col overflow-hidden">
       {/* Aerial London (Thames, Tower Bridge, Canary Wharf), toned to the brand navy */}
       <HeroMedia />
-      <div className="absolute inset-0 -z-20 bg-[#243b6f] opacity-60 mix-blend-color" />
+      <div className="absolute inset-0 -z-20 bg-[#2f4d86] opacity-35 mix-blend-color" />
       {/* Desktop: solid behind the copy, photo fully revealed to its right */}
-      <div className="absolute inset-0 -z-20 hidden bg-gradient-to-r from-background from-0% via-background/80 via-32% to-transparent to-62% lg:block" />
+      <div className="absolute inset-0 -z-20 hidden bg-gradient-to-r from-background from-0% via-background/65 via-30% to-transparent to-58% lg:block" />
       {/* Mobile/tablet: photo on top, copy anchored on a darker base */}
-      <div className="absolute inset-0 -z-20 bg-gradient-to-t from-background from-10% via-background/85 via-45% to-background/15 lg:hidden" />
-      <div className="absolute inset-x-0 top-0 -z-20 h-40 bg-gradient-to-b from-background/70 to-transparent" />
-      <div className="absolute inset-x-0 bottom-0 -z-20 h-56 bg-gradient-to-t from-background via-background/70 to-transparent" />
-      <div className="absolute inset-0 -z-20 bg-[radial-gradient(ellipse_50%_45%_at_80%_25%,rgba(49,106,162,0.3),transparent)]" />
+      <div className="absolute inset-0 -z-20 bg-gradient-to-t from-background from-8% via-background/70 via-42% to-background/10 lg:hidden" />
+      <div className="absolute inset-x-0 top-0 -z-20 h-40 bg-gradient-to-b from-background/55 to-transparent" />
+      <div className="absolute inset-x-0 bottom-0 -z-20 h-56 bg-gradient-to-t from-background via-background/55 to-transparent" />
+      <div className="absolute inset-0 -z-20 bg-[radial-gradient(ellipse_50%_45%_at_80%_25%,rgba(91,147,199,0.35),transparent)]" />
 
       <Header />
 
@@ -69,7 +69,7 @@ export default function Hero() {
       </div>
 
       {/* Trust bar — placeholder credentials, replace with verified ones */}
-      <div className="reveal border-t border-white/10 bg-background/40 backdrop-blur-md" style={{ "--d": "0.8s" }}>
+      <div className="reveal border-t border-foreground/10 bg-background/40 backdrop-blur-md" style={{ "--d": "0.8s" }}>
         <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-x-10 gap-y-4 px-5 py-4 text-[10px] tracking-[0.16em] sm:px-6 sm:py-5 sm:text-[11px] sm:tracking-[0.2em] text-foreground/60 uppercase lg:px-10">
           <ul className="flex flex-wrap gap-x-6 gap-y-2 sm:gap-x-10 sm:gap-y-3">
             {["Chartered accountants", "HMRC registered agent", "Xero · QuickBooks · Sage"].map((t) => (
@@ -81,7 +81,7 @@ export default function Hero() {
           </ul>
           <a href="#clarity" className="hidden items-center gap-3 hover:text-foreground sm:flex">
             Scroll
-            <span className="relative block h-8 w-px overflow-hidden bg-white/20">
+            <span className="relative block h-8 w-px overflow-hidden bg-foreground/20">
               <span className="scroll-tick absolute inset-x-0 top-0 h-3 bg-brand" />
             </span>
           </a>

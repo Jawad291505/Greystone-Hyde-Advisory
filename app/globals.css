@@ -4,16 +4,27 @@
   Palette extracted from /public/logo.svg: #316aa2 (blue), #243b6f (navy).
 */
 :root {
-  --background: #070a10;
-  --surface: #0d121b;
-  --surface-2: #131a26;
-  --line: #1f2937;
-  --foreground: #ecebe6;
-  --muted: #8b9195;
-  --brand: #5b93c7; /* lightened #316aa2 for text on dark */
+  --background: #0f1b2e;
+  --surface: #16233a;
+  --surface-2: #1d2d4a;
+  --line: #2a3b58;
+  --foreground: #f4f3ee;
+  --muted: #9aa3ad;
+  --brand: #6ba0d6; /* lightened #316aa2 for text on dark */
   --logo-blue: #316aa2;
-  --brand-soft: #243b6f;
+  --brand-soft: #2f4d86;
   --gold: #b99a5f;
+
+  /* CSS 3D cube palette — gunmetal on the dark theme; overridden to a
+     brushed-steel tone in .theme-light so it doesn't sit as a dark hole
+     on a light page. */
+  --cube-a: #45597a;
+  --cube-b: #223349;
+  --cube-c: #0d1420;
+  --cube-border: rgba(150, 185, 222, 0.4);
+  --cube-inner-a: #182437;
+  --cube-inner-b: #0e1622;
+  --cube-tile-text: rgba(244, 243, 238, 0.94);
 }
 
 @theme inline {
@@ -34,6 +45,30 @@
 
 html {
   color-scheme: dark;
+}
+
+/*
+  Full light-theme override, scoped to .theme-light so it can be previewed
+  on its own route (/light-preview) without touching the live dark site.
+  Every component reads colors through these tokens, so overriding them
+  here is enough to re-skin the whole page tree underneath.
+*/
+.theme-light {
+  color-scheme: light;
+  --background: #f5f6f8;
+  --surface: #ffffff;
+  --surface-2: #eef1f5;
+  --line: #dbe1e8;
+  --foreground: #101826;
+  --muted: #5b6572;
+  --brand: #2f5f95;
+  --logo-blue: #316aa2;
+  --brand-soft: #dbe6f3;
+  --gold: #96793f;
+
+  /* Cube intentionally keeps the same navy-metal palette as the dark
+     theme (no --cube-* overrides here) — it reads as a deliberate dark
+     accent object against the light page rather than a themed surface. */
 }
 
 body {
@@ -254,6 +289,10 @@ body {
   perspective-origin: 50% 45%;
   display: grid;
   place-items: center;
+  /* Contains the tiles' mix-blend-mode glare to this subtree so it can
+     only ever blend with other cube pieces, never with page content
+     behind/around it (e.g. the intro headline it can scatter over). */
+  isolation: isolate;
 }
 
 .c3d-group,
@@ -274,15 +313,27 @@ body {
   margin: calc(var(--s) / -2) 0 0 calc(var(--s) / -2);
   border-radius: calc(var(--u) * 0.07);
   backface-visibility: hidden;
+}
+
+/* The visual skin lives on a separate child from the transformed/backface-
+   hidden .c3d-face: putting overflow:hidden on the same element as
+   backface-visibility:hidden breaks backface hiding in Chromium, which is
+   what was showing mirrored labels on the top/back faces. */
+.c3d-face-surface {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: inherit;
+  overflow: hidden;
   display: grid;
   place-items: center;
   text-align: center;
   font-family: var(--font-geist-mono), ui-monospace, monospace;
-  font-weight: 600;
+  font-weight: 700;
   font-size: calc(var(--u) * 0.13);
-  letter-spacing: 0.02em;
-  color: rgba(236, 235, 230, 0.85);
-  overflow: hidden;
+  letter-spacing: 0.03em;
+  color: rgba(244, 243, 238, 0.94);
+  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.55), 0 -1px 0 rgba(255, 255, 255, 0.1);
 }
 
 .c3d-front  { transform: translateZ(calc(var(--s) / 2)); }
@@ -292,35 +343,97 @@ body {
 .c3d-top    { transform: rotateX(90deg) translateZ(calc(var(--s) / 2)); }
 .c3d-bottom { transform: rotateX(-90deg) translateZ(calc(var(--s) / 2)); }
 
+/* Milled-metal tiles: a big soft specular blob (the actual "shiny metal"
+   cue — a hairline repeating texture reads as noise at this render size,
+   a blob reads as a reflection), a darker base plate, and a thick layered
+   bevel plus a real drop shadow so each piece looks raised and separate
+   rather than a flat color swatch fused to its neighbours. */
 .c3d-tile {
-  background: linear-gradient(135deg, #141c2b, #0a0f18);
-  border: 1px solid rgba(91, 147, 199, 0.4);
-  box-shadow: inset 0 0 0 calc(var(--u) * 0.05) rgba(5, 8, 14, 0.55), inset 0 1px 0 rgba(150, 190, 232, 0.18);
+  background-image:
+    radial-gradient(130% 85% at 20% 14%, rgba(255, 255, 255, 0.4), transparent 52%),
+    radial-gradient(90% 70% at 88% 92%, rgba(0, 0, 0, 0.35), transparent 60%),
+    linear-gradient(150deg, var(--cube-a) 0%, var(--cube-b) 48%, var(--cube-c) 100%);
+  border: 1px solid var(--cube-border);
+  color: var(--cube-tile-text);
+  box-shadow:
+    inset 0 2px 0 rgba(225, 238, 255, 0.5),
+    inset 0 -2px 0 rgba(0, 0, 0, 0.65),
+    inset 2px 0 0 rgba(225, 238, 255, 0.16),
+    inset -2px 0 0 rgba(0, 0, 0, 0.5),
+    inset 0 0 calc(var(--u) * 0.35) rgba(2, 4, 8, 0.5),
+    0 calc(var(--u) * 0.06) calc(var(--u) * 0.16) rgba(0, 0, 0, 0.55);
 }
 
 .c3d-accent {
-  background: linear-gradient(135deg, #316aa2, #243b6f);
-  border: 1px solid rgba(200, 225, 255, 0.5);
-  color: #ecebe6;
-  box-shadow: inset 0 0 0 calc(var(--u) * 0.05) rgba(14, 30, 60, 0.35), 0 0 calc(var(--u) * 0.3) rgba(49, 106, 162, 0.35);
+  background-image:
+    radial-gradient(130% 85% at 20% 14%, rgba(255, 255, 255, 0.55), transparent 52%),
+    radial-gradient(90% 70% at 88% 92%, rgba(0, 0, 0, 0.3), transparent 60%),
+    linear-gradient(150deg, #7bb0e0 0%, #3f7ab8 48%, #1f3a5c 100%);
+  border: 1px solid rgba(220, 236, 255, 0.6);
+  box-shadow:
+    inset 0 2px 0 rgba(240, 248, 255, 0.65),
+    inset 0 -2px 0 rgba(0, 0, 0, 0.5),
+    inset 2px 0 0 rgba(240, 248, 255, 0.24),
+    inset -2px 0 0 rgba(0, 0, 0, 0.4),
+    0 0 calc(var(--u) * 0.35) rgba(49, 106, 162, 0.55),
+    0 calc(var(--u) * 0.06) calc(var(--u) * 0.16) rgba(0, 0, 0, 0.5);
 }
 
 .c3d-inner {
-  background: #0a0e16;
-  border: 1px solid rgba(91, 147, 199, 0.12);
+  background: linear-gradient(160deg, var(--cube-inner-a), var(--cube-inner-b));
+  border: 1px solid var(--cube-border);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05), inset 0 -1px 0 rgba(0, 0, 0, 0.5);
 }
 
-/* Fixed fake lighting per face direction */
-.c3d-face::after {
+/* Fixed fake lighting per face direction — tuned for stronger tonal
+   separation so the cube reads as milled metal under one key light. */
+.c3d-face-surface::after {
   content: "";
   position: absolute;
   inset: 0;
   pointer-events: none;
   background: var(--shade, transparent);
 }
-.c3d-top    { --shade: linear-gradient(160deg, rgba(190, 215, 245, 0.2), transparent 70%); }
-.c3d-front  { --shade: linear-gradient(160deg, rgba(150, 190, 232, 0.06), rgba(0, 0, 0, 0.12)); }
-.c3d-right  { --shade: linear-gradient(200deg, rgba(0, 0, 0, 0.28), rgba(0, 0, 0, 0.42)); }
-.c3d-left   { --shade: rgba(0, 0, 0, 0.18); }
-.c3d-back   { --shade: rgba(0, 0, 0, 0.35); }
-.c3d-bottom { --shade: rgba(0, 0, 0, 0.5); }
+.c3d-top    { --shade: linear-gradient(160deg, rgba(255, 255, 255, 0.55), rgba(255, 255, 255, 0.12) 30%, transparent 62%); }
+.c3d-front  { --shade: linear-gradient(155deg, rgba(255, 255, 255, 0.14), rgba(0, 0, 0, 0.22) 72%); }
+.c3d-right  { --shade: linear-gradient(200deg, rgba(0, 0, 0, 0.32), rgba(0, 0, 0, 0.52)); }
+.c3d-left   { --shade: rgba(0, 0, 0, 0.26); }
+.c3d-back   { --shade: rgba(0, 0, 0, 0.42); }
+.c3d-bottom { --shade: rgba(0, 0, 0, 0.6); }
+
+/* Moving specular glare: a soft diagonal band sweeps across each glossy
+   face on a loop. Staggered per-piece via --gd so the cube doesn't flash
+   as one flat sheet. Skipped on .c3d-inner (never catches light — those
+   faces only show mid-scatter, tucked between neighbours). */
+.c3d-tile::before,
+.c3d-accent::before {
+  content: "";
+  position: absolute;
+  inset: -50% -70%;
+  background: linear-gradient(
+    112deg,
+    transparent 42%,
+    rgba(255, 255, 255, 0.4) 49%,
+    rgba(255, 255, 255, 0.08) 53%,
+    transparent 62%
+  );
+  transform: translateX(-70%);
+  animation: c3d-glare 6.5s ease-in-out infinite;
+  animation-delay: var(--gd, 0s);
+  pointer-events: none;
+  mix-blend-mode: screen;
+}
+
+@keyframes c3d-glare {
+  0%, 38% { transform: translateX(-70%); }
+  62% { transform: translateX(70%); }
+  100% { transform: translateX(70%); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .c3d-tile::before,
+  .c3d-accent::before {
+    animation: none;
+    opacity: 0;
+  }
+}

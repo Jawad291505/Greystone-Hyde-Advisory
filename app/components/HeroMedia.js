@@ -12,7 +12,7 @@ export default function HeroMedia() {
           fill
           priority
           sizes="100vw"
-          className="object-cover object-[72%_50%] grayscale-[0.55] contrast-110 lg:object-[65%_50%]"
+          className="object-cover object-[72%_50%] grayscale-[0.2] contrast-105 brightness-110 saturate-110 lg:object-[65%_50%]"
         />
       </div>
     </div>

@@ -1,76 +1,26 @@
 "use client";
 
-import dynamic from "next/dynamic";
-import { Component, useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import CubeCssStage from "./CubeCssStage";
-
-// three.js is only fetched once the section is close to the viewport.
-// One retry covers a transient chunk-load failure.
-const CubeScene = dynamic(
-  () => import("./CubeScene").catch(() => import("./CubeScene")),
-  { ssr: false },
-);
-
-function StaticCube() {
-  return (
-    <div className="absolute inset-0 grid place-items-center lg:left-[38%]">
-      <svg viewBox="0 0 200 200" className="w-[min(60vmin,380px)] opacity-90" aria-hidden>
-        <path d="M100 20 L170 60 L100 100 L30 60 Z" fill="#316aa2" fillOpacity=".55" stroke="#5b93c7" />
-        <path d="M30 60 L100 100 L100 180 L30 140 Z" fill="#131a26" stroke="#5b93c7" strokeOpacity=".6" />
-        <path d="M170 60 L100 100 L100 180 L170 140 Z" fill="#0d121b" stroke="#5b93c7" strokeOpacity=".6" />
-      </svg>
-    </div>
-  );
-}
-
-// If the scene throws (no WebGL, etc.), show the static cube instead of a gap.
-class SceneBoundary extends Component {
-  state = { failed: false };
-  static getDerivedStateFromError() {
-    return { failed: true };
-  }
-  render() {
-    return this.state.failed ? <StaticCube /> : this.props.children;
-  }
-}
 
 const clamp = (v) => Math.min(1, Math.max(0, v));
 const DISCIPLINES = ["Tax", "VAT", "Payroll", "Cash flow", "Expenses", "Invoices", "Reporting"];
 
-export default function CubeSection({ forceCss = false }) {
+// CSS-only cube (see CubeCssStage): no WebGL, runs on the compositor, and
+// cannot lose a context or drop frames the way the old three.js scene did.
+export default function CubeSection() {
   const section = useRef(null);
   const progress = useRef(0);
-  const visRef = useRef(false);
-  const nearRef = useRef(false);
-  const [load, setLoad] = useState(false);
-  const [active, setActive] = useState(false);
-  const [small, setSmall] = useState(false);
-  const [failed, setFailed] = useState(false);
 
   useEffect(() => {
     const el = section.current;
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
-    // Warm the 3D chunk during idle time so it is ready before the section arrives.
-    const warm = forceCss ? 0 : window.setTimeout(() => import("./CubeScene").catch(() => {}), 2500);
 
     let raf;
     let smooth = -1;
     let last = performance.now();
     const loop = () => {
       const rect = el.getBoundingClientRect();
-      const vh = window.innerHeight;
-      const near = rect.top < vh * 2 && rect.bottom > -vh;
-      const visible = rect.top < vh * 1.1 && rect.bottom > -vh * 0.1;
-      if (!forceCss && near !== nearRef.current) {
-        nearRef.current = near;
-        if (near) setSmall(window.innerWidth < 768);
-        setLoad(near);
-      }
-      if (visible !== visRef.current) {
-        visRef.current = visible;
-        setActive(visible);
-      }
       const now = performance.now();
       const dt = Math.min((now - last) / 1000, 0.25);
       last = now;
@@ -82,11 +32,8 @@ export default function CubeSection({ forceCss = false }) {
       raf = requestAnimationFrame(loop);
     };
     raf = requestAnimationFrame(loop);
-    return () => {
-      cancelAnimationFrame(raf);
-      clearTimeout(warm);
-    };
-  }, [forceCss]);
+    return () => cancelAnimationFrame(raf);
+  }, []);
 
   return (
     <section
@@ -98,19 +45,11 @@ export default function CubeSection({ forceCss = false }) {
       <div className="sticky top-0 h-svh overflow-hidden">
         <div
           aria-hidden
-          className="absolute inset-0 bg-[radial-gradient(ellipse_45%_50%_at_72%_50%,rgba(36,59,111,0.5),transparent)]"
+          className="absolute inset-0 bg-[radial-gradient(ellipse_45%_50%_at_72%_50%,rgba(47,77,134,0.5),transparent)]"
         />
 
         <div className="absolute inset-0">
-          {forceCss || failed ? (
-            <CubeCssStage progress={progress} />
-          ) : (
-            load && (
-              <SceneBoundary>
-                <CubeScene progress={progress} small={small} active={active} onFail={() => setFailed(true)} />
-              </SceneBoundary>
-            )
-          )}
+          <CubeCssStage progress={progress} />
         </div>
 
         <div className="pointer-events-none relative mx-auto flex h-full max-w-7xl flex-col justify-end px-5 pb-14 sm:px-6 lg:justify-center lg:px-10 lg:pb-0">

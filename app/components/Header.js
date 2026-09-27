@@ -26,7 +26,7 @@ export default function Header() {
     <header
       className={`fixed inset-x-0 top-0 z-50 border-b transition-[background,border-color,backdrop-filter] duration-500 ${
         solid
-          ? "border-white/10 bg-background/70 backdrop-blur-xl"
+          ? "border-foreground/10 bg-background/70 backdrop-blur-xl"
           : "border-transparent bg-transparent"
       }`}
     >
@@ -36,7 +36,8 @@ export default function Header() {
         }`}
       >
         <a href="#" className="flex items-center gap-3">
-          <span className="grid h-10 w-10 place-items-center rounded-md bg-foreground">
+          {/* Fixed white, not theme-linked: the logo mark is a fixed navy and needs a light plate in both themes */}
+          <span className="grid h-10 w-10 place-items-center rounded-md bg-white">
             <Image src="/logo.svg" alt="" width={28} height={28} priority />
           </span>
           <span className="text-xs font-medium tracking-[0.16em] uppercase sm:text-sm sm:tracking-[0.18em]">
@@ -59,7 +60,7 @@ export default function Header() {
         <div className="flex items-center gap-3">
           <a
             href="#contact"
-            className="hidden border border-white/15 px-5 py-2.5 text-sm transition-colors hover:border-brand hover:text-brand sm:block"
+            className="hidden border border-foreground/15 px-5 py-2.5 text-sm transition-colors hover:border-brand hover:text-brand sm:block"
           >
             Get Started
           </a>
@@ -68,7 +69,7 @@ export default function Header() {
             aria-label="Menu"
             aria-expanded={open}
             onClick={() => setOpen((o) => !o)}
-            className="grid h-10 w-10 place-items-center border border-white/15 md:hidden"
+            className="grid h-10 w-10 place-items-center border border-foreground/15 md:hidden"
           >
             <span className="relative block h-3 w-4">
               <span
@@ -87,13 +88,13 @@ export default function Header() {
       </div>
 
       {open && (
-        <nav className="border-t border-white/10 px-6 pb-6 md:hidden">
+        <nav className="border-t border-foreground/10 px-6 pb-6 md:hidden">
           {links.map((l) => (
             <a
               key={l.href}
               href={l.href}
               onClick={() => setOpen(false)}
-              className="block border-b border-white/[0.06] py-4 font-display text-2xl"
+              className="block border-b border-foreground/[0.06] py-4 font-display text-2xl"
             >
               {l.label}
             </a>

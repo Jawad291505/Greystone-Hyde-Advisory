@@ -38,6 +38,7 @@ function buildPieces() {
           outward,
           scatter: [r * Math.sin(b) * Math.cos(a), r * Math.sin(b) * Math.sin(a) * 0.8, r * Math.cos(b) * 0.7],
           spin: [(rand() - 0.5) * 540, (rand() - 0.5) * 540, (rand() - 0.5) * 540],
+          phase: rand() * Math.PI * 2,
           faces: FACES.map((f, i) => {
             const k = idx + i;
             return outward[f] ? { f, label: LABELS[k % LABELS.length], accent: k % 5 === 0 } : { f, inner: true };
@@ -55,6 +56,7 @@ export default function CubeCssStage({ progress }) {
   const pieces = useMemo(() => buildPieces(), []);
 
   useEffect(() => {
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     let raf;
     let u = 90;
 
@@ -69,6 +71,7 @@ export default function CubeCssStage({ progress }) {
     const N = pieces.length;
     const loop = () => {
       const p = progress.current;
+      const t = reduce ? 0 : performance.now() / 1000;
       const assemble = clamp(p / 0.55);
       const settle = ease(clamp((p - 0.15) / 0.8));
       const twist = (1 - ease(clamp((p - 0.55) / 0.3))) * (Math.PI / 2);
@@ -89,17 +92,30 @@ export default function CubeCssStage({ progress }) {
           gz = nz;
           ry = (twist * 180) / Math.PI;
         }
-        const tx = c.scatter[0] * u + (gx * step - c.scatter[0] * u) * local;
-        const ty = c.scatter[1] * u + (-gy * step - c.scatter[1] * u) * local;
-        const tz = c.scatter[2] * u + (gz * step - c.scatter[2] * u) * local;
         const inv = 1 - local;
-        el.style.transform = `translate3d(${tx.toFixed(1)}px,${ty.toFixed(1)}px,${tz.toFixed(1)}px) rotateX(${(c.spin[0] * inv).toFixed(1)}deg) rotateY(${(c.spin[1] * inv + ry * local).toFixed(1)}deg) rotateZ(${(c.spin[2] * inv).toFixed(1)}deg)`;
+        // Idle drift: only while a piece is still scattered (fades out as
+        // it locks into the solved cube via the `inv` factor), so loose
+        // pieces feel weightless instead of frozen mid-air.
+        const fx = Math.sin(t * 0.55 + c.phase) * 0.42 * u * inv;
+        const fy = Math.cos(t * 0.4 + c.phase * 1.7) * 0.5 * u * inv;
+        const fz = Math.sin(t * 0.33 + c.phase * 2.3) * 0.28 * u * inv;
+        const frx = Math.sin(t * 0.3 + c.phase) * 6 * inv;
+        const fry = Math.cos(t * 0.25 + c.phase * 1.4) * 6 * inv;
+
+        const tx = c.scatter[0] * u + (gx * step - c.scatter[0] * u) * local + fx;
+        const ty = c.scatter[1] * u + (-gy * step - c.scatter[1] * u) * local + fy;
+        const tz = c.scatter[2] * u + (gz * step - c.scatter[2] * u) * local + fz;
+        el.style.transform = `translate3d(${tx.toFixed(1)}px,${ty.toFixed(1)}px,${tz.toFixed(1)}px) rotateX(${(c.spin[0] * inv + frx).toFixed(1)}deg) rotateY(${(c.spin[1] * inv + ry * local + fry).toFixed(1)}deg) rotateZ(${(c.spin[2] * inv).toFixed(1)}deg)`;
       });
 
       const g = group.current;
       if (g) {
         const wide = window.innerWidth >= 1024;
-        const x = wide ? window.innerWidth * 0.17 : 0;
+        // Only pull the group rightward as it settles into the solved cube —
+        // applying the full offset throughout also drags the scatter phase's
+        // pieces off the left side, collapsing the "all over the screen"
+        // spread onto the right half.
+        const x = wide ? window.innerWidth * 0.24 * settle : 0;
         const y = wide ? 0 : -window.innerHeight * 0.14;
         const ry = 36 + inv(settle) * 200;
         const rx = -(24 - inv(settle) * 14);
@@ -126,12 +142,14 @@ export default function CubeCssStage({ progress }) {
             }}
             className="c3d-piece"
           >
-            {c.faces.map((f) => (
-              <div
-                key={f.f}
-                className={`c3d-face c3d-${f.f} ${f.inner ? "c3d-inner" : f.accent ? "c3d-accent" : "c3d-tile"}`}
-              >
-                {f.label && <span>{f.label}</span>}
+            {c.faces.map((f, fi) => (
+              <div key={f.f} className={`c3d-face c3d-${f.f}`}>
+                <div
+                  className={`c3d-face-surface ${f.inner ? "c3d-inner" : f.accent ? "c3d-accent" : "c3d-tile"}`}
+                  style={{ "--gd": `${((i * 6 + fi) % 13) * 0.5}s` }}
+                >
+                  {f.label && <span>{f.label}</span>}
+                </div>
               </div>
             ))}
           </div>
