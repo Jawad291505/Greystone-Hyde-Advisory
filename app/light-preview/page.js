@@ -2,7 +2,9 @@ import Hero from "../components/Hero";
 import ClarityIntro from "../components/ClarityIntro";
 import CubeSection from "../components/CubeSection";
 import ServicesDrum from "../components/ServicesDrum";
-import ValueStrip from "../components/ValueStrip";
+import WhyChooseUs from "../components/WhyChooseUs";
+import OurValues from "../components/OurValues";
+import ContactSection from "../components/ContactSection";
 import LightThemeBody from "./LightThemeBody";
 
 // Comparison-only route: full light theme, built by overriding the same
@@ -26,7 +28,9 @@ export default function LightPreview() {
         <ClarityIntro />
         <CubeSection />
         <ServicesDrum />
-        <ValueStrip />
+        <WhyChooseUs />
+        <OurValues />
+        <ContactSection />
       </main>
     </div>
   );

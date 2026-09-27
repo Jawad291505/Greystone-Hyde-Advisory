@@ -43,7 +43,7 @@ function Fragment({ progress, index, total, label, meta }) {
   return (
     <motion.div
       style={{ opacity, y, scale }}
-      className="border border-line bg-surface/70 px-4 py-3.5 backdrop-blur-sm sm:px-5 sm:py-4"
+      className="card px-4 py-3.5 sm:px-5 sm:py-4"
     >
       <div className="flex items-center justify-between">
         <span className="text-sm font-medium">{label}</span>

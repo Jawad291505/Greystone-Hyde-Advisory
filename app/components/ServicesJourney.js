@@ -6,50 +6,40 @@ import { MotionConfig, motion } from "framer-motion";
 import ServicesSceneSmart from "./ServicesSceneSmart";
 import MagneticButton from "./MagneticButton";
 import { STRIPE_PAYMENT_LINK } from "../lib/payments";
+import { SERVICES } from "../lib/services";
 
-// Draft copy — replace with the firm's real wording.
+// The nine services (shared with the homepage) grouped into the scene's
+// three service chapters, plus payments. Draft copy — replace with the
+// firm's real wording.
+const bySlug = Object.fromEntries(SERVICES.map((s, i) => [s.slug, { ...s, n: i + 1 }]));
+
 const CHAPTERS = [
   {
-    id: "accounting",
+    id: "accounting-bookkeeping",
     index: "01",
-    label: "Accounting & Bookkeeping",
+    label: "Accounting, Bookkeeping & Payroll",
     short: "Accounting",
     title: ["Every transaction,", "in its place."],
-    body: "Clean, reconciled books kept up to date — so your ledger reflects reality every month, and year-end is a formality rather than a scramble.",
-    points: [
-      "Bank and card reconciliation",
-      "Invoice, expense and payroll processing",
-      "Year-end accounts and Companies House filings",
-      "Cloud accounting set-up and support",
-    ],
+    body: "The day-to-day finance function, handled — clean books, accurate accounts and a payroll your team can rely on.",
+    services: ["accounting", "bookkeeping", "payroll"],
   },
   {
-    id: "tax",
+    id: "tax-compliance",
     index: "02",
     label: "Tax & Compliance",
     short: "Tax",
     title: ["Filed correctly.", "Filed on time."],
-    body: "VAT, corporation tax and self assessment prepared with care and submitted ahead of the deadline — with every relief and allowance you're entitled to claimed in full.",
-    points: [
-      "Making Tax Digital VAT returns",
-      "Corporation tax and self assessment",
-      "Year-round tax planning",
-      "HMRC enquiry support",
-    ],
+    body: "Compliance done properly and planning done early — so tax is something you manage, not something that happens to you.",
+    services: ["vat", "tax", "tax-planning"],
   },
   {
-    id: "advisory",
+    id: "reporting-advisory",
     index: "03",
-    label: "Business & Financial Advisory",
+    label: "Reporting & Advisory",
     short: "Advisory",
     title: ["See where the numbers", "are heading."],
-    body: "Management accounts, forecasts and scenario models that turn last month's figures into next year's decisions — and an adviser who helps you make them.",
-    points: [
-      "Monthly management accounts and KPIs",
-      "Cash-flow forecasting",
-      "Funding and growth planning",
-      "Scenario modelling",
-    ],
+    body: "Reporting that shows exactly where you stand, and independent advice on where to go next.",
+    services: ["financial-reporting", "management-accounts", "business-advisory"],
   },
   {
     id: "payments",
@@ -148,15 +138,17 @@ function Chapter({ chapter, fallbackCard }) {
       id={chapter.id}
       data-chapter
       aria-labelledby={`${chapter.id}-title`}
-      className="relative flex min-h-[150svh] scroll-mt-0 items-center"
+      className="relative flex min-h-[160svh] scroll-mt-0 items-center"
     >
       <div className="mx-auto w-full max-w-7xl px-5 sm:px-6 lg:px-10">
+        {/* Mobile: the copy runs taller than the space under the scene, so it gets a
+            soft backdrop that fades in from above rather than overlapping the 3D */}
         <motion.div
           variants={reveal}
           initial="hidden"
           whileInView="show"
-          viewport={{ amount: 0.45 }}
-          className="pointer-events-auto mt-[38svh] max-w-md lg:mt-0"
+          viewport={{ amount: 0.25 }}
+          className="pointer-events-auto mt-[38svh] max-w-lg max-lg:-mx-5 max-lg:bg-background/85 max-lg:px-5 max-lg:pt-6 max-lg:pb-4 max-lg:shadow-[0_-56px_48px_-8px_rgba(15,27,46,0.85)] sm:max-lg:-mx-6 sm:max-lg:px-6 lg:mt-0"
         >
           {payments && fallbackCard ? <CardFallback /> : null}
           <motion.div variants={item}>
@@ -169,24 +161,55 @@ function Chapter({ chapter, fallbackCard }) {
           <motion.h2
             variants={item}
             id={`${chapter.id}-title`}
-            className="font-display text-[clamp(2.1rem,5vw,3.6rem)] leading-[1.05] tracking-tight"
+            className="font-display text-[clamp(2.1rem,4.6vw,3.3rem)] leading-[1.05] tracking-tight"
           >
             {chapter.title[0]} <span className="text-brand">{chapter.title[1]}</span>
           </motion.h2>
           <motion.p variants={item} className="mt-5 text-sm leading-relaxed text-foreground/70 sm:text-base">
             {chapter.body}
           </motion.p>
-          <motion.ul variants={item} className="mt-7 border-t border-foreground/[0.08]">
-            {chapter.points.map((p) => (
-              <li
-                key={p}
-                className="flex items-center gap-3 border-b border-foreground/[0.08] py-3 text-[13px] text-foreground/80 sm:text-sm"
-              >
-                <span className={`h-1.5 w-1.5 shrink-0 rounded-full ${payments ? "bg-gold" : "bg-brand"}`} />
-                {p}
-              </li>
-            ))}
-          </motion.ul>
+          {chapter.services ? (
+            <motion.ul variants={item} className="mt-7 border-t border-foreground/[0.08]">
+              {chapter.services.map((slug) => {
+                const s = bySlug[slug];
+                return (
+                  <li
+                    key={slug}
+                    id={slug}
+                    className="scroll-mt-[30svh] border-b border-foreground/[0.08] py-4"
+                  >
+                    <div className="flex items-baseline justify-between gap-4">
+                      <h3 className="font-display text-xl tracking-tight sm:text-2xl">{s.name}</h3>
+                      <span className="font-mono text-[11px] text-muted">
+                        {String(s.n).padStart(2, "0")} / {String(SERVICES.length).padStart(2, "0")}
+                      </span>
+                    </div>
+                    <p className="mt-1.5 text-[13px] leading-relaxed text-foreground/70 sm:text-sm">{s.desc}</p>
+                    <ul className="mt-2.5 flex flex-wrap gap-x-4 gap-y-1 text-[12px] text-foreground/50">
+                      {s.points.map((p) => (
+                        <li key={p} className="flex items-center gap-2">
+                          <span className="h-1 w-1 shrink-0 rounded-full bg-brand" />
+                          {p}
+                        </li>
+                      ))}
+                    </ul>
+                  </li>
+                );
+              })}
+            </motion.ul>
+          ) : (
+            <motion.ul variants={item} className="mt-7 border-t border-foreground/[0.08]">
+              {chapter.points.map((p) => (
+                <li
+                  key={p}
+                  className="flex items-center gap-3 border-b border-foreground/[0.08] py-3 text-[13px] text-foreground/80 sm:text-sm"
+                >
+                  <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-gold" />
+                  {p}
+                </li>
+              ))}
+            </motion.ul>
+          )}
           {payments ? <PaymentActions /> : null}
         </motion.div>
       </div>
@@ -327,18 +350,24 @@ export default function ServicesJourney() {
                   Every business arrives with a different question. Scroll to see how we bring order to
                   the numbers — or go straight to what you need.
                 </p>
-                <ul className="mt-8 flex flex-wrap gap-2.5">
-                  {CHAPTERS.map((c) => (
-                    <li key={c.id}>
-                      <a
-                        href={`#${c.id}`}
-                        className="inline-flex items-center gap-2 rounded-full border border-foreground/15 px-4 py-2 text-[13px] tracking-wide text-foreground/80 transition-colors duration-300 hover:border-brand/60 hover:text-brand"
-                      >
-                        <span className="font-mono text-[11px] text-brand">{c.index}</span>
-                        {c.label}
-                      </a>
-                    </li>
-                  ))}
+                <ul className="mt-8 flex max-w-2xl flex-wrap gap-2">
+                  {[...SERVICES.map((s, i) => ({ href: s.slug, n: i + 1, label: s.name })), { href: "payments", label: "Make a payment" }].map(
+                    (c) => (
+                      <li key={c.href}>
+                        <a
+                          href={`#${c.href}`}
+                          className={`inline-flex items-center gap-2 rounded-full border px-3.5 py-1.5 text-[13px] tracking-wide transition-colors duration-300 hover:border-brand/60 hover:text-brand ${
+                            c.n ? "border-foreground/15 text-foreground/80" : "border-gold/40 text-gold"
+                          }`}
+                        >
+                          {c.n ? (
+                            <span className="font-mono text-[11px] text-brand">{String(c.n).padStart(2, "0")}</span>
+                          ) : null}
+                          {c.label}
+                        </a>
+                      </li>
+                    ),
+                  )}
                 </ul>
               </div>
             </div>

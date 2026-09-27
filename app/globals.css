@@ -15,6 +15,12 @@
   --brand-soft: #2f4d86;
   --gold: #b99a5f;
 
+  /* Cards: solid, one step lighter than the page so they read clearly */
+  --card: #1b2b46;
+  --card-inset: #132139;
+  --card-line: #33486b;
+  --card-shadow: 0 24px 48px -28px rgba(0, 0, 0, 0.7);
+
   /* CSS 3D cube palette — gunmetal on the dark theme; overridden to a
      brushed-steel tone in .theme-light so it doesn't sit as a dark hole
      on a light page. */
@@ -38,6 +44,9 @@
   --color-logo-blue: var(--logo-blue);
   --color-brand-soft: var(--brand-soft);
   --color-gold: var(--gold);
+  --color-card: var(--card);
+  --color-card-inset: var(--card-inset);
+  --color-card-line: var(--card-line);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
   --font-display: var(--font-display);
@@ -65,6 +74,11 @@ html {
   --logo-blue: #316aa2;
   --brand-soft: #dbe6f3;
   --gold: #96793f;
+
+  --card: #ffffff;
+  --card-inset: #f3f5f8;
+  --card-line: #d6dde6;
+  --card-shadow: 0 18px 40px -26px rgba(16, 24, 38, 0.28);
 
   /* Cube intentionally keeps the same navy-metal palette as the dark
      theme (no --cube-* overrides here) — it reads as a deliberate dark
@@ -551,4 +565,20 @@ body {
   .svc-canvas canvas {
     animation: none;
   }
+}
+
+
+/* ---- Cards: one shared surface for every card in the app ---- */
+@utility card {
+  border-radius: 1rem;
+  border: 1px solid var(--card-line);
+  background: var(--card);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04), var(--card-shadow);
+}
+
+/* Nested panel inside a card (charts, tables, inputs) */
+@utility card-inset {
+  border-radius: 0.75rem;
+  border: 1px solid var(--card-line);
+  background: var(--card-inset);
 }

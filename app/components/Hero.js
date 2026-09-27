@@ -158,10 +158,10 @@ export default function Hero() {
             "translate3d(calc(var(--mx, 0) * 20px), calc(var(--my, 0) * 16px), 0)",
         }}
       >
-        <span className="absolute left-0 top-0 h-10 w-10 border-l border-t border-foreground/25" />
-        <span className="absolute right-0 top-0 h-10 w-10 border-r border-t border-foreground/25" />
-        <span className="absolute bottom-0 left-0 h-10 w-10 border-b border-l border-foreground/25" />
-        <span className="absolute bottom-0 right-0 h-10 w-10 border-b border-r border-foreground/25" />
+        <span className="absolute left-0 top-0 h-10 w-10 rounded-tl-2xl border-l border-t border-foreground/25" />
+        <span className="absolute right-0 top-0 h-10 w-10 rounded-tr-2xl border-r border-t border-foreground/25" />
+        <span className="absolute bottom-0 left-0 h-10 w-10 rounded-bl-2xl border-b border-l border-foreground/25" />
+        <span className="absolute bottom-0 right-0 h-10 w-10 rounded-br-2xl border-b border-r border-foreground/25" />
       </div>
 
       {/* Coordinates — floats over the skyline, top right */}

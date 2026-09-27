@@ -1,64 +1,8 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-
-// Draft copy and illustrative figures — replace with the firm's real wording.
-const SERVICES = [
-  {
-    name: "Accounting",
-    desc: "Year-end accounts and statutory filings, prepared accurately and on time.",
-    points: ["Annual accounts & filings", "Companies House and HMRC submissions", "A named accountant who knows your business"],
-    visual: { type: "bars", title: "Profit & loss", rows: [["Revenue", 92, "£482k"], ["Costs", 58, "£301k"], ["Profit", 34, "£181k"]] },
-  },
-  {
-    name: "Bookkeeping",
-    desc: "Clean, reconciled books kept up to date, so you always know where you stand.",
-    points: ["Bank and card reconciliation", "Invoice and expense processing", "Cloud accounting set-up and support"],
-    visual: { type: "rows", title: "Bank feed", rows: [["Client receipt", "£3,420", "✓"], ["Office rent", "−£1,800", "✓"], ["Supplier invoice 118", "−£640", "✓"], ["Unmatched payment", "£210", "·"]] },
-  },
-  {
-    name: "VAT",
-    desc: "Registration, returns and Making Tax Digital compliance handled end to end.",
-    points: ["Registration and scheme advice", "Quarterly MTD-compliant returns", "HMRC enquiry support"],
-    visual: { type: "rows", title: "VAT return", tag: "Filed", rows: [["Box 1 · VAT due on sales", "£18,240"], ["Box 4 · VAT reclaimed", "£6,905"], ["Box 5 · Net VAT due", "£11,335"]] },
-  },
-  {
-    name: "Tax",
-    desc: "Corporation tax, self assessment and personal tax, prepared and filed correctly.",
-    points: ["Corporation tax returns", "Self assessment for directors and owners", "Reliefs and allowances claimed in full"],
-    visual: { type: "rows", title: "Tax computation", rows: [["Taxable profit", "£120,000"], ["Reliefs & allowances", "−£14,500"], ["Provision", "Calculated"]] },
-  },
-  {
-    name: "Payroll",
-    desc: "Reliable payroll and pensions, with RTI submissions and payslips handled for you.",
-    points: ["Payslips and RTI submissions", "Auto-enrolment pensions", "P11D and year-end reporting"],
-    visual: { type: "rows", title: "Payslip", tag: "Processed", rows: [["Gross pay", "£4,200.00"], ["PAYE tax", "−£620.40"], ["Employee NI", "−£287.20"], ["Net pay", "£3,292.40"]] },
-  },
-  {
-    name: "Financial Reporting",
-    desc: "Clear, decision-ready reports that turn the numbers into a story.",
-    points: ["Monthly and quarterly packs", "Board-ready formats", "Budgets against actuals"],
-    visual: { type: "chart", title: "Revenue trend" },
-  },
-  {
-    name: "Management Accounts",
-    desc: "Timely management information: margins, cash and KPIs in a single view.",
-    points: ["KPI dashboards", "Cash-flow forecasts", "Monthly review call"],
-    visual: { type: "tiles", title: "This month", tiles: [["Gross margin", "41%", "+2.1"], ["Cash", "£284k", "+6%"], ["Debtor days", "32", "−4"], ["Runway", "14 mo", "="]] },
-  },
-  {
-    name: "Business Advisory",
-    desc: "Independent, practical advice on growth, funding and change.",
-    points: ["Growth and funding planning", "Scenario modelling", "An ongoing sounding board"],
-    visual: { type: "bars", title: "Scenarios", rows: [["A · Hold", 48, "Lower risk"], ["B · Expand", 72, "Higher return"], ["C · Restructure", 60, "Balanced"]] },
-  },
-  {
-    name: "Tax Planning",
-    desc: "Structured, compliant planning to keep your tax bill as efficient as the law allows.",
-    points: ["Year-round planning, not year-end panic", "Reliefs, allowances and incentives", "Owner remuneration strategy"],
-    visual: { type: "rows", title: "Planning calendar", rows: [["Q1", "Review structure"], ["Q2", "Plan pension & dividends"], ["Q3", "Model year-end position"], ["Q4", "Confirm & implement"]] },
-  },
-];
+import Link from "next/link";
+import { SERVICES } from "../lib/services";
 
 const N = SERVICES.length;
 const clamp = (v) => Math.min(1, Math.max(0, v));
@@ -66,7 +10,7 @@ const smooth = (t) => t * t * (3 - 2 * t);
 
 function Visual({ v }) {
   return (
-    <div className="mt-4 border border-foreground/[0.07] bg-background/50 p-3.5 sm:mt-5 sm:p-4">
+    <div className="mt-4 card-inset p-3.5 sm:mt-5 sm:p-4">
       <div className="mb-3 flex items-center justify-between text-[10px] tracking-[0.2em] text-muted uppercase">
         <span>{v.title}</span>
         {v.tag && <span className="text-brand">● {v.tag}</span>}
@@ -93,7 +37,7 @@ function Visual({ v }) {
                 <span className="text-foreground/80">{r[0]}</span>
                 <span className="font-mono text-muted">{r[2]}</span>
               </div>
-              <div className="h-1.5 bg-foreground/[0.06]">
+              <div className="h-1.5 overflow-hidden rounded-full bg-foreground/[0.06]">
                 <div className="bar h-full bg-gradient-to-r from-logo-blue to-brand" style={{ "--w": `${r[1]}%` }} />
               </div>
             </li>
@@ -118,7 +62,7 @@ function Visual({ v }) {
       {v.type === "tiles" && (
         <div className="grid grid-cols-2 gap-2">
           {v.tiles.map((t) => (
-            <div key={t[0]} className="border border-foreground/[0.06] p-3">
+            <div key={t[0]} className="rounded-lg border border-card-line bg-card p-3">
               <p className="text-[10px] tracking-[0.14em] text-muted uppercase">{t[0]}</p>
               <p className="mt-1 font-mono text-lg">{t[1]}</p>
               <p className="font-mono text-[11px] text-brand">{t[2]}</p>
@@ -199,13 +143,29 @@ export default function ServicesDrum() {
           {/* Left: header + drum */}
           <div className="relative flex flex-col lg:py-28">
             <div>
-              <p className="mb-4 flex items-center gap-3 text-[11px] tracking-[0.22em] text-brand uppercase sm:gap-4 sm:text-xs sm:tracking-[0.28em]">
-                <span className="h-px w-10 bg-brand" />
-                What we do
-              </p>
+              <div className="mb-4 flex items-center justify-between gap-4">
+                <p className="flex items-center gap-3 text-[11px] tracking-[0.22em] text-brand uppercase sm:gap-4 sm:text-xs sm:tracking-[0.28em]">
+                  <span className="h-px w-10 bg-brand" />
+                  What we do
+                </p>
+                {/* Mobile: compact link here, the rows below are height-budgeted */}
+                <Link
+                  href="/services"
+                  className="rounded-full border border-foreground/15 px-3.5 py-1.5 text-[12px] tracking-wide text-foreground/85 transition-colors duration-300 hover:border-brand/60 hover:text-brand lg:hidden"
+                >
+                  All services →
+                </Link>
+              </div>
               <h2 className="font-display text-[clamp(1.5rem,3.2vw,2.5rem)] leading-tight tracking-tight text-foreground/90">
                 Nine services. One accountable team.
               </h2>
+              <Link
+                href="/services"
+                className="group mt-6 hidden items-center gap-3 rounded-full border border-foreground/15 px-6 py-2.5 text-[13px] tracking-wide text-foreground/85 transition-colors duration-300 hover:border-brand/60 hover:text-brand lg:inline-flex"
+              >
+                Explore all services
+                <span className="transition-transform group-hover:translate-x-1">→</span>
+              </Link>
             </div>
 
             <div className="relative mt-4 hidden flex-1 lg:block">
@@ -229,7 +189,7 @@ export default function ServicesDrum() {
           <div className="min-h-0 lg:flex lg:items-center">
             <div
               key={active}
-              className="doc-in w-full overflow-hidden border border-foreground/10 bg-surface/70 p-4 shadow-[0_30px_80px_-30px_rgba(0,0,0,0.9)] backdrop-blur-md sm:p-6"
+              className="doc-in w-full overflow-hidden card p-4 sm:p-6"
             >
               <div className="flex items-center justify-between text-[10px] tracking-[0.2em] text-muted uppercase">
                 <span>Client file · {String(active + 1).padStart(2, "0")}</span>
@@ -246,13 +206,18 @@ export default function ServicesDrum() {
                   </li>
                 ))}
               </ul>
-              <a
-                href="#contact"
-                className="group mt-4 inline-flex sm:mt-5 items-center gap-3 text-sm text-brand"
-              >
-                Discuss {s.name}
-                <span className="transition-transform group-hover:translate-x-1">→</span>
-              </a>
+              <div className="mt-4 flex flex-wrap items-center gap-x-6 gap-y-2 sm:mt-5">
+                <a href="#contact" className="group inline-flex items-center gap-3 text-sm text-brand">
+                  Discuss {s.name}
+                  <span className="transition-transform group-hover:translate-x-1">→</span>
+                </a>
+                <Link
+                  href={`/services#${s.slug}`}
+                  className="text-sm text-foreground/60 underline-offset-4 transition-colors duration-300 hover:text-foreground hover:underline"
+                >
+                  Full details
+                </Link>
+              </div>
             </div>
           </div>
         </div>
