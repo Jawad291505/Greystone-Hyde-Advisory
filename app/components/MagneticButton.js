@@ -5,7 +5,7 @@ import { useRef } from "react";
 // Subtle magnetic pull toward the cursor, snapping back on release with a
 // spring-like ease. Skipped entirely on touch/coarse pointers via CSS
 // (see the pointer-fine check below) — there's no cursor there to react to.
-export default function MagneticButton({ href, children, className = "" }) {
+export default function MagneticButton({ href, children, className = "", ...rest }) {
   const ref = useRef(null);
 
   const onMove = (e) => {
@@ -27,6 +27,7 @@ export default function MagneticButton({ href, children, className = "" }) {
 
   return (
     <a
+      {...rest}
       ref={ref}
       href={href}
       onMouseMove={onMove}

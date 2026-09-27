@@ -7,7 +7,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import MagneticButton from "./MagneticButton";
 
 const links = [
-  { href: "/#services", label: "Services" },
+  { href: "/services", label: "Services" },
   { href: "/#why-us", label: "Why us" },
   { href: "/#process", label: "Process" },
   { href: "/about", label: "About" },
