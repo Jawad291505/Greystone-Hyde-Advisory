@@ -1,125 +1,139 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
+import { motion, useScroll, useSpring, useTransform } from "framer-motion";
 
 const HEADLINE =
   "Accounting is never just numbers. It is invoices, expenses, tax, payroll and cash flow, all moving at once.";
 
-// Scattered "fragments" that settle into an ordered grid as you scroll.
 // Figures are illustrative placeholders.
 const fragments = [
-  { label: "Invoices", meta: "INV-2041 · £3,420", x: -260, y: -110, r: -12 },
-  { label: "Expenses", meta: "48 receipts", x: 180, y: -160, r: 9 },
-  { label: "VAT", meta: "Return due", x: -90, y: 140, r: 14 },
-  { label: "Payroll", meta: "12 employees", x: 300, y: 90, r: -8 },
-  { label: "Cash flow", meta: "+ £12.4k net", x: -320, y: 60, r: 7 },
-  { label: "Reporting", meta: "Monthly pack", x: 120, y: 190, r: -15 },
-  { label: "Tax", meta: "Provision set", x: -40, y: -200, r: 11 },
-  { label: "Documents", meta: "126 files", x: 260, y: -40, r: -10 },
+  { label: "Invoices", meta: "INV-2041 · £3,420" },
+  { label: "Expenses", meta: "48 receipts" },
+  { label: "VAT", meta: "Return due" },
+  { label: "Payroll", meta: "12 employees" },
+  { label: "Cash flow", meta: "+ £12.4k net" },
+  { label: "Reporting", meta: "Monthly pack" },
+  { label: "Tax", meta: "Provision set" },
+  { label: "Documents", meta: "126 files" },
 ];
 
-const clamp = (v) => Math.min(1, Math.max(0, v));
+// One word, revealed by a moving window over the shared, spring-smoothed
+// scroll progress — a soft sweep left-to-right rather than a hard cutoff.
+function Word({ progress, index, total, children }) {
+  const start = (index / total) * 0.6;
+  const opacity = useTransform(progress, [start, start + 0.16], [0.16, 1]);
+  return (
+    <motion.span style={{ opacity }} className="inline-block">
+      {children}{" "}
+    </motion.span>
+  );
+}
+
+// A card settling into the grid — fade, rise and scale only. No rotation or
+// scatter: the "coming together" idea now reads as one clean cascade.
+function Fragment({ progress, index, total, label, meta }) {
+  const start = 0.42 + (index / total) * 0.32;
+  const end = start + 0.22;
+  const opacity = useTransform(progress, [start, end], [0, 1]);
+  const y = useTransform(progress, [start, end], [28, 0]);
+  const scale = useTransform(progress, [start, end], [0.95, 1]);
+  const dot = useTransform(progress, [start, end], [0.25, 1]);
+
+  return (
+    <motion.div
+      style={{ opacity, y, scale }}
+      className="border border-line bg-surface/70 px-4 py-3.5 backdrop-blur-sm sm:px-5 sm:py-4"
+    >
+      <div className="flex items-center justify-between">
+        <span className="text-sm font-medium">{label}</span>
+        <motion.span
+          style={{ opacity: dot }}
+          className="h-1.5 w-1.5 rounded-full bg-brand shadow-[0_0_10px_var(--brand)]"
+        />
+      </div>
+      <p className="mt-1.5 font-mono text-[11px] text-muted">{meta}</p>
+    </motion.div>
+  );
+}
 
 export default function ClarityIntro() {
   const section = useRef(null);
   const words = HEADLINE.split(" ");
 
-  useEffect(() => {
-    const el = section.current;
-    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const set = (p, t, c) => {
-      el.style.setProperty("--p", p.toFixed(4));
-      el.style.setProperty("--t", t.toFixed(4));
-      el.style.setProperty("--c", c.toFixed(4));
-    };
-    if (reduce) {
-      set(1, 1, 1);
-      return;
-    }
+  const { scrollYProgress } = useScroll({
+    target: section,
+    offset: ["start start", "end end"],
+  });
+  const progress = useSpring(scrollYProgress, {
+    stiffness: 120,
+    damping: 26,
+    mass: 0.6,
+  });
 
-    let raf;
-    let smooth = -1;
-    const loop = () => {
-      const rect = el.getBoundingClientRect();
-      const range = rect.height - window.innerHeight;
-      const raw = clamp(-rect.top / range);
-      smooth = smooth < 0 ? raw : smooth + (raw - smooth) * 0.12;
-      set(smooth, clamp(smooth / 0.5), clamp((smooth - 0.4) / 0.5));
-      raf = requestAnimationFrame(loop);
-    };
-    raf = requestAnimationFrame(loop);
-    return () => cancelAnimationFrame(raf);
-  }, []);
+  const kickerOpacity = useTransform(progress, [0, 0.12], [0.3, 1]);
+  const glowOpacity = useTransform(progress, [0.35, 0.75], [0.35, 1]);
+  const captionOpacity = useTransform(progress, [0.82, 1], [0, 1]);
+  const captionY = useTransform(progress, [0.82, 1], [12, 0]);
+  const trail1 = useTransform(progress, [0, 1], [0, -140]);
+  const trail2 = useTransform(progress, [0, 1], [0, -60]);
+  const trail3 = useTransform(progress, [0, 1], [0, -220]);
+  const trail4 = useTransform(progress, [0, 1], [0, -100]);
 
   return (
-    <section
-      id="clarity"
-      ref={section}
-      className="clarity relative h-[260vh]"
-      style={{ "--p": 0, "--t": 0, "--c": 0 }}
-    >
+    <section id="clarity" ref={section} className="relative h-[220vh]">
       {/* Depth layers: drift at different speeds against the static page */}
       <div aria-hidden className="pointer-events-none absolute inset-x-0 top-0 h-full overflow-hidden">
-        <span className="trail left-[12%]" style={{ "--s": -140 }} />
-        <span className="trail left-[38%]" style={{ "--s": -60 }} />
-        <span className="trail left-[71%]" style={{ "--s": -220 }} />
-        <span className="trail left-[90%]" style={{ "--s": -100 }} />
+        <motion.span style={{ y: trail1 }} className="trail-line left-[12%]" />
+        <motion.span style={{ y: trail2 }} className="trail-line left-[38%]" />
+        <motion.span style={{ y: trail3 }} className="trail-line left-[71%]" />
+        <motion.span style={{ y: trail4 }} className="trail-line left-[90%]" />
       </div>
 
       <div className="sticky top-0 flex h-svh flex-col justify-center overflow-hidden">
-        <div
+        <motion.div
           aria-hidden
+          style={{ opacity: glowOpacity }}
           className="pointer-events-none absolute left-1/2 top-1/2 h-[70vmin] w-[70vmin] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(closest-side,rgba(49,106,162,0.22),transparent)]"
-          style={{ opacity: "calc(0.35 + var(--c) * 0.65)" }}
         />
 
         <div className="relative mx-auto w-full max-w-6xl px-5 sm:px-6 lg:px-10">
-          <p
+          <motion.p
+            style={{ opacity: kickerOpacity }}
             className="mb-6 flex items-center gap-3 text-[11px] tracking-[0.22em] text-brand uppercase sm:gap-4 sm:text-xs sm:tracking-[0.28em]"
-            style={{ opacity: "calc(0.3 + var(--t) * 0.7)" }}
           >
             <span className="h-px w-10 bg-brand" />
             From complexity to clarity
-          </p>
+          </motion.p>
 
           <h2 className="max-w-4xl font-display text-[clamp(1.75rem,5.4vw,3.75rem)] leading-[1.12] tracking-tight">
             {words.map((w, i) => (
-              <span
-                key={i}
-                className="word"
-                style={{ "--w": (i / words.length).toFixed(3) }}
-              >
-                {w}{" "}
-              </span>
+              <Word key={i} progress={progress} index={i} total={words.length}>
+                {w}
+              </Word>
             ))}
           </h2>
 
           <div className="mt-10 grid grid-cols-2 gap-2.5 sm:mt-14 sm:gap-3 lg:grid-cols-4">
-            {fragments.map((f) => (
-              <div
+            {fragments.map((f, i) => (
+              <Fragment
                 key={f.label}
-                className="fragment border bg-surface/70 px-4 py-3.5 backdrop-blur-sm sm:px-5 sm:py-4"
-                style={{ "--x": f.x, "--y": f.y, "--r": f.r }}
-              >
-                <div className="flex items-center justify-between">
-                  <span className="text-sm font-medium">{f.label}</span>
-                  <span className="dot h-1.5 w-1.5 rounded-full" />
-                </div>
-                <p className="mt-1.5 font-mono text-[11px] text-muted">{f.meta}</p>
-              </div>
+                progress={progress}
+                index={i}
+                total={fragments.length}
+                label={f.label}
+                meta={f.meta}
+              />
             ))}
           </div>
 
-          <p
+          <motion.p
+            style={{ opacity: captionOpacity, y: captionY }}
             className="mt-8 text-sm text-muted sm:mt-10"
-            style={{
-              opacity: "clamp(0, calc((var(--c) - 0.6) * 2.5), 1)",
-              transform: "translateY(calc((1 - var(--c)) * 12px))",
-            }}
           >
             Every fragment, accounted for. This is what we bring to your
             business.
-          </p>
+          </motion.p>
         </div>
       </div>
     </section>

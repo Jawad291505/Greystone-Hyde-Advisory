@@ -19,6 +19,11 @@ export default function Particles() {
     let target = window.scrollY;
     let cur = target;
     let prev = cur;
+    const pointerFine = window.matchMedia("(pointer: fine)").matches;
+    let mx = 0;
+    let my = 0;
+    let curMx = 0;
+    let curMy = 0;
 
     // Screen-blend glows read as light specks and need a dark backdrop; on the
     // light-preview route the same trick would just wash out to white, so this
@@ -60,11 +65,21 @@ export default function Particles() {
 
     const wrap = (v, m) => ((v % m) + m) % m;
     const onScroll = () => (target = window.scrollY);
+    const onMove = (e) => {
+      mx = e.clientX / w - 0.5;
+      my = e.clientY / h - 0.5;
+    };
 
     const draw = (t) => {
       cur += (target - cur) * 0.1;
       const vel = cur - prev;
       prev = cur;
+      curMx += (mx - curMx) * 0.05;
+      curMy += (my - curMy) * 0.05;
+      // Whole-layer drift toward the cursor — a cheap CSS transform on the
+      // canvas element, not a per-particle recompute — so the field feels
+      // like it belongs to the scene without extra draw cost.
+      canvas.style.transform = `translate3d(${curMx * 10}px, ${curMy * 8}px, 0)`;
       ctx.clearRect(0, 0, w, h);
       const span = h + 80;
 
@@ -112,10 +127,12 @@ export default function Particles() {
 
     window.addEventListener("scroll", onScroll, { passive: true });
     window.addEventListener("resize", resize);
+    if (pointerFine && !reduce) window.addEventListener("mousemove", onMove, { passive: true });
     return () => {
       cancelAnimationFrame(raf);
       window.removeEventListener("scroll", onScroll);
       window.removeEventListener("resize", resize);
+      window.removeEventListener("mousemove", onMove);
     };
   }, []);
 

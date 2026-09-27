@@ -3,6 +3,7 @@ import ClarityIntro from "../components/ClarityIntro";
 import CubeSection from "../components/CubeSection";
 import ServicesDrum from "../components/ServicesDrum";
 import ValueStrip from "../components/ValueStrip";
+import LightThemeBody from "./LightThemeBody";
 
 // Comparison-only route: full light theme, built by overriding the same
 // color tokens the dark site reads (see `.theme-light` in globals.css).
@@ -16,6 +17,7 @@ export const metadata = {
 export default function LightPreview() {
   return (
     <div className="theme-light min-h-screen bg-background text-foreground">
+      <LightThemeBody />
       <div className="border-b border-line bg-brand-soft/60 px-5 py-2 text-center text-xs tracking-wide text-foreground/70">
         Light-theme preview — internal comparison only, not the live site.
       </div>
