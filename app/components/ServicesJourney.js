@@ -148,7 +148,7 @@ function Chapter({ chapter, fallbackCard }) {
           initial="hidden"
           whileInView="show"
           viewport={{ amount: 0.25 }}
-          className="pointer-events-auto mt-[38svh] max-w-lg max-lg:-mx-5 max-lg:bg-background/85 max-lg:px-5 max-lg:pt-6 max-lg:pb-4 max-lg:shadow-[0_-56px_48px_-8px_rgba(15,27,46,0.85)] sm:max-lg:-mx-6 sm:max-lg:px-6 lg:mt-0"
+          className="pointer-events-auto mt-[38svh] max-w-lg max-lg:-mx-5 max-lg:bg-background/85 max-lg:px-5 max-lg:pt-6 max-lg:pb-4 max-lg:shadow-[0_-56px_48px_-8px_color-mix(in_srgb,var(--background)_85%,transparent)] sm:max-lg:-mx-6 sm:max-lg:px-6 lg:mt-0"
         >
           {payments && fallbackCard ? <CardFallback /> : null}
           <motion.div variants={item}>

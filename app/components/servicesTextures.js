@@ -56,11 +56,13 @@ function makeTexture(w, h, draw, maxAnisotropy = 4) {
   return { tex, paint };
 }
 
-function sheetBase(ctx, W, H) {
+// `light`: on the light theme the panel is painted fully opaque in a deeper,
+// more saturated navy — the dark-theme greys read as faded against a pale page.
+function sheetBase(ctx, W, H, light) {
   rr(ctx, 3, 3, W - 6, H - 6, 18);
   const g = ctx.createLinearGradient(0, 0, W, H);
-  g.addColorStop(0, "rgba(36, 55, 88, 0.97)");
-  g.addColorStop(1, "rgba(17, 28, 47, 0.97)");
+  g.addColorStop(0, light ? "#1f3f72" : "rgba(36, 55, 88, 0.97)");
+  g.addColorStop(1, light ? "#0c1a36" : "rgba(17, 28, 47, 0.97)");
   ctx.fillStyle = g;
   ctx.fill();
   ctx.lineWidth = 2;
@@ -96,9 +98,9 @@ const LEDGER_ROWS = [
   ["31 Jul", "Sales invoices batch", "", "2,210.00"],
 ];
 
-export function makeLedgerTexture() {
+export function makeLedgerTexture(light = false) {
   return makeTexture(512, 724, (ctx, W, H, f) => {
-    sheetBase(ctx, W, H);
+    sheetBase(ctx, W, H, light);
     const L = 34;
     const R = W - 34;
 
@@ -192,9 +194,9 @@ const VAT_ROWS = [
   ["9", "Goods acquired (NI)", "0.00"],
 ];
 
-export function makeTaxTexture() {
+export function makeTaxTexture(light = false) {
   return makeTexture(512, 724, (ctx, W, H, f) => {
-    sheetBase(ctx, W, H);
+    sheetBase(ctx, W, H, light);
     const L = 34;
     const R = W - 34;
 

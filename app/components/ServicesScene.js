@@ -230,7 +230,7 @@ function buildField(count) {
   return geometry;
 }
 
-function DataField({ journey, reduce, count }) {
+function DataField({ journey, reduce, count, light }) {
   const geometry = useDisposable(() => buildField(count));
   const material = useDisposable(
     () =>
@@ -239,14 +239,16 @@ function DataField({ journey, reduce, count }) {
         fragmentShader: fieldFragment,
         transparent: true,
         depthWrite: false,
-        blending: THREE.AdditiveBlending,
+        // Additive glow needs a dark backdrop; on a light page it just greys out,
+        // so the light theme draws deeper-toned points with normal blending
+        blending: light ? THREE.NormalBlending : THREE.AdditiveBlending,
         uniforms: {
           uStage: { value: 0 },
           uTime: { value: 0 },
           uSize: { value: 40 },
           uOpacity: { value: 1 },
-          uBlue: { value: new THREE.Color("#6ba0d6") },
-          uGold: { value: new THREE.Color("#b99a5f") },
+          uBlue: { value: new THREE.Color(light ? "#316aa2" : "#6ba0d6") },
+          uGold: { value: new THREE.Color(light ? "#a8843f" : "#b99a5f") },
         },
       }),
   );
@@ -284,9 +286,9 @@ const sheetFrames = Array.from({ length: SHEETS }, (_, i) => {
   ];
 });
 
-function Sheets({ journey, maxAnisotropy }) {
-  const ledger = useDisposable(() => makeLedgerTexture().tex);
-  const tax = useDisposable(() => makeTaxTexture().tex);
+function Sheets({ journey, maxAnisotropy, light }) {
+  const ledger = useDisposable(() => makeLedgerTexture(light).tex);
+  const tax = useDisposable(() => makeTaxTexture(light).tex);
   const geometry = useDisposable(() => new THREE.PlaneGeometry(1.9, 2.69));
   const materials = useDisposable(() =>
     Array.from({ length: SHEETS }, () =>
@@ -296,9 +298,10 @@ function Sheets({ journey, maxAnisotropy }) {
             map,
             transparent: true,
             alphaTest: 0.02, // drop the rounded corners so they don't occlude sheets behind
-            roughness: 0.5,
-            metalness: 0.15,
-            envMapIntensity: 0.5,
+            roughness: light ? 0.6 : 0.5,
+            metalness: light ? 0 : 0.15,
+            // Less room-environment reflection on light, which otherwise greys the navy
+            envMapIntensity: light ? 0.15 : 0.5,
           }),
       ),
     ).flat(),
@@ -649,7 +652,7 @@ function Rig({ journey, mouse, reduce, root, keyLight }) {
   return null;
 }
 
-function Scene({ journey, reduce, mobile }) {
+function Scene({ journey, reduce, mobile, light }) {
   const root = useRef(null);
   const keyLight = useRef(null);
   const mouse = useRef({ x: 0, y: 0, sx: 0, sy: 0 });
@@ -674,8 +677,8 @@ function Scene({ journey, reduce, mobile }) {
       <directionalLight position={[-4, 2, -3]} intensity={0.7} color="#8fb6e0" />
       <Rig journey={journey} mouse={mouse} reduce={reduce} root={root} keyLight={keyLight} />
       <group ref={root}>
-        <DataField journey={journey} reduce={reduce} count={mobile ? 650 : 1400} />
-        <Sheets journey={journey} maxAnisotropy={maxAnisotropy} />
+        <DataField journey={journey} reduce={reduce} count={mobile ? 650 : 1400} light={light} />
+        <Sheets journey={journey} maxAnisotropy={maxAnisotropy} light={light} />
         <Seal journey={journey} />
         <Chart journey={journey} />
         <Card journey={journey} mouse={mouse} reduce={reduce} maxAnisotropy={maxAnisotropy} />
@@ -687,6 +690,8 @@ function Scene({ journey, reduce, mobile }) {
 export default function ServicesScene({ journey, reduce, onContextLost }) {
   const canvasRef = useRef(null);
   const mobile = typeof window !== "undefined" && window.matchMedia("(max-width: 767px)").matches;
+  // Same light-theme check as Particles: only the preview routes carry .theme-light
+  const light = typeof document !== "undefined" && !!document.querySelector(".theme-light");
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -707,11 +712,11 @@ export default function ServicesScene({ journey, reduce, onContextLost }) {
       camera={{ position: [0, 0.2, 10.5], fov: 35, near: 0.1, far: 60 }}
       onCreated={({ gl }) => {
         gl.toneMapping = THREE.ACESFilmicToneMapping;
-        gl.toneMappingExposure = 1.1;
+        gl.toneMappingExposure = light ? 1 : 1.1;
         gl.outputColorSpace = THREE.SRGBColorSpace;
       }}
     >
-      <Scene journey={journey} reduce={reduce} mobile={mobile} />
+      <Scene journey={journey} reduce={reduce} mobile={mobile} light={light} />
     </Canvas>
   );
 }
