@@ -9,7 +9,7 @@ import MagneticButton from "./MagneticButton";
 const links = [
   { href: "/services", label: "Services" },
   { href: "/#why-us", label: "Why us" },
-  { href: "/#process", label: "Process" },
+  { href: "/#approach", label: "Approach" },
   { href: "/about", label: "About" },
 ];
 
@@ -50,23 +50,18 @@ export default function Header() {
 
   return (
     <header
-      className={`fixed inset-x-0 top-0 z-50 border-b transition-[background,border-color,backdrop-filter] duration-500 ${
-        solid
-          ? "border-foreground/[0.08] bg-background/90 backdrop-blur-2xl"
-          : "border-transparent bg-transparent"
-      }`}
+      className={`fixed inset-x-0 top-0 z-50 border-b text-ink transition-[background,border-color,backdrop-filter] duration-500 ${solid
+        ? "border-navy/[0.08] bg-paper/90 backdrop-blur-xl"
+        : "border-transparent bg-transparent"
+        }`}
     >
       <div
-        className={`mx-auto flex max-w-7xl items-center justify-between px-5 transition-[padding] duration-500 sm:px-6 lg:px-10 ${
-          scrolled ? "py-3.5" : "py-5 sm:py-7"
-        }`}
+        className={`mx-auto flex max-w-[88rem] items-center justify-between px-5 transition-[padding] duration-500 sm:px-8 lg:px-12 ${scrolled ? "py-3.5" : "py-5 sm:py-7"
+          }`}
       >
         <Link href="/" className="flex items-center gap-3">
-          {/* Fixed white, not theme-linked: the logo mark is a fixed navy and needs a light plate in both themes */}
-          <span className="grid h-9 w-9 place-items-center rounded-full bg-white">
-            <Image src="/logo.svg" alt="" width={22} height={22} priority />
-          </span>
-          <span className="font-display text-lg tracking-tight">
+          <Image src="/logo.svg" alt="" width={30} height={30} preload />
+          <span className="font-display text-xl tracking-tight text-ink">
             Greystone Hyde
           </span>
         </Link>
@@ -76,7 +71,7 @@ export default function Header() {
             <Link
               key={l.href}
               href={l.href}
-              className="relative text-[13px] tracking-wide text-foreground/65 transition-colors duration-300 hover:text-foreground"
+              className="relative text-[13px] tracking-wide text-navy/70 transition-colors duration-300 hover:text-royal"
             >
               {l.label}
             </Link>
@@ -86,27 +81,25 @@ export default function Header() {
         <div className="flex items-center gap-3">
           <MagneticButton
             href="/#contact"
-            className="hidden rounded-full border border-foreground/15 px-6 py-2.5 text-[13px] tracking-wide text-foreground/85 transition-colors duration-300 hover:border-brand/60 hover:text-brand sm:block"
+            className="hidden rounded-full border border-navy/20 px-6 py-2.5 text-[13px] tracking-wide text-navy transition-colors duration-300 hover:border-navy hover:bg-navy hover:text-white sm:block"
           >
-            Get Started
+            Contact us
           </MagneticButton>
           <button
             type="button"
             aria-label={open ? "Close menu" : "Open menu"}
             aria-expanded={open}
             onClick={() => setOpen((o) => !o)}
-            className="relative z-10 grid h-10 w-10 place-items-center rounded-full border border-foreground/15 md:hidden"
+            className="relative z-10 grid h-10 w-10 place-items-center rounded-full border border-navy/20 md:hidden"
           >
             <span className="relative block h-3 w-4">
               <span
-                className={`absolute left-0 h-px w-4 bg-foreground transition-all duration-300 ${
-                  open ? "top-1.5 rotate-45" : "top-0"
-                }`}
+                className={`absolute left-0 h-px w-4 bg-ink transition-all duration-300 ${open ? "top-1.5 rotate-45" : "top-0"
+                  }`}
               />
               <span
-                className={`absolute left-0 h-px w-4 bg-foreground transition-all duration-300 ${
-                  open ? "top-1.5 -rotate-45" : "top-3"
-                }`}
+                className={`absolute left-0 h-px w-4 bg-ink transition-all duration-300 ${open ? "top-1.5 -rotate-45" : "top-3"
+                  }`}
               />
             </span>
           </button>
@@ -122,14 +115,14 @@ export default function Header() {
             animate="visible"
             exit="exit"
             variants={menuVariants}
-            className="fixed inset-0 -z-10 flex flex-col justify-center bg-background px-6 md:hidden"
+            className="fixed inset-0 -z-10 flex flex-col justify-center bg-paper px-6 md:hidden"
           >
             <ul>
               {links.map((l) => (
                 <motion.li
                   key={l.href}
                   variants={itemVariants}
-                  className="border-b border-foreground/[0.06] py-4"
+                  className="border-b border-navy/[0.08] py-4"
                 >
                   <Link
                     href={l.href}
@@ -145,13 +138,13 @@ export default function Header() {
               variants={itemVariants}
               href="/#contact"
               onClick={() => setOpen(false)}
-              className="mt-8 block rounded-full bg-logo-blue py-4 text-center text-sm font-medium text-white"
+              className="mt-8 block rounded-full bg-navy py-4 text-center text-sm font-medium text-white"
             >
-              Get Started
+              Contact us
             </motion.a>
             <motion.p
               variants={itemVariants}
-              className="mt-10 text-[11px] tracking-[0.2em] text-foreground/35"
+              className="mt-10 text-[11px] tracking-[0.2em] text-navy/45"
             >
               London — Accounting &amp; Advisory
             </motion.p>

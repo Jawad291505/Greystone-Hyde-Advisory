@@ -1,565 +1,351 @@
-I want you to rethink and redesign the existing website into a **world-class premium London accounting and financial services SPA**.
+Redesign the existing website completely.
 
-This is NOT a request to simply add more animations.
+This is not a request to polish the current design or add a few animations. The current visual direction is not working and should be substantially rethought from the ground up while preserving the existing project, brand assets, functionality, and the Rubik's Cube animation where it belongs.
 
-The goal is to create a website that feels like a serious, high-end financial brand where **design, storytelling, trust, services, and motion all work together**.
+Use the Ormeo accounting website case study as an ART-DIRECTION REFERENCE for the level of sophistication, editorial composition, professional photography, typography, whitespace, and premium accounting/financial-services positioning:
 
-Use the existing Next.js project and existing brand assets as the foundation, but you have permission to substantially restructure the current page if necessary.
+https://www.allunan.com/en/works/ormeo
 
----
+Do NOT copy Ormeo's layout, branding, content, or visual details. Use it only to understand the quality bar and overall design philosophy.
 
-# CORE IDEA
+## CORE CREATIVE DIRECTION
 
-The website should communicate one simple idea:
+The website should feel like a:
 
-**Accounting should turn financial complexity into clarity.**
+PREMIUM LONDON ACCOUNTING & FINANCIAL SERVICES FIRM
 
-The experience should progress naturally:
-
-**Trust → Complexity → Organization → Services → Value → Modern Finance → Action**
-
-Do not put every visual idea into the hero.
-
-Each major animation should explain a different business concept.
-
----
-
-# 1. INSPECT THE EXISTING PROJECT FIRST
-
-Before changing anything:
-
-* Inspect the existing Next.js structure.
-* Inspect App Router/Pages Router.
-* Inspect Tailwind and existing styling.
-* Inspect existing components.
-* Inspect dependencies.
-* Inspect `/public/logo.svg`.
-* Extract the actual colors from the logo.
-* Reuse existing good components where appropriate.
-* Identify what can be refactored instead of duplicated.
-
-Do NOT convert the project to another framework.
-
-Do NOT unnecessarily destroy existing functionality.
-
----
-
-# 2. BRAND DIRECTION
-
-The company is a **London-based accounting/financial services agency**.
+It must communicate immediately that real professionals are behind the business.
 
 The design should feel:
 
-* Premium
-* Intelligent
-* Trustworthy
-* Modern
-* Financial
-* Precise
-* Confident
-* Minimal
-* Technologically advanced
+* sophisticated
+* human
+* trustworthy
+* established
+* contemporary
+* editorial
+* premium
+* confident
+* financially credible
+
+It must NOT feel like:
+
+* a SaaS dashboard
+* a fintech startup
+* a generic accounting template
+* a cryptocurrency website
+* an experimental Three.js portfolio
+* an AI-generated website
+* an overly animated agency website
+
+The client specifically wants a NAVY / ROYAL BLUE identity.
+
+However, the overall website should remain BRIGHT.
+
+Use navy and royal blue as the brand foundation while allowing large areas of white, very light blue, soft neutral backgrounds, and controlled blue gradients to create brightness and contrast.
 
 Think:
 
-**high-end London financial consultancy + modern fintech**
+NAVY → ROYAL BLUE → WHITE → LIGHT BLUE
 
-NOT:
+rather than making every section dark.
 
-* Generic accounting template
-* Traditional boring accountant website
-* Generic SaaS landing page
-* Crypto/Web3
-* Neon fintech
-* Excessive glassmorphism
-* AI-generated visual clutter
+## HUMAN-CENTRIC DIRECTION
 
-Use the existing logo as the source of truth.
+The website must communicate that the company works directly with professionals and businesses.
 
-Do NOT assume its colors.
+Photography should therefore play an important role.
 
-Inspect `/public/logo.svg` and build the palette from the actual logo.
+Use sophisticated editorial photography of:
 
----
+* accountants
+* financial professionals
+* business meetings
+* professionals reviewing financial information
+* client consultations
+* teams collaborating
+* people working with documents, laptops, reports and financial data
+* premium modern office environments
 
-# 3. DARK VISUAL SYSTEM
+Avoid cliché stock photography where people are smiling directly at the camera or posing unnaturally.
 
-Keep the entire website dark.
+Photography should feel candid, intelligent and business-oriented.
 
-Use:
+The visitor should think:
 
-* Near-black/charcoal backgrounds
-* Slightly lighter charcoal surfaces
-* Actual logo colors as primary accents
-* Off-white typography
-* Muted gray secondary text
-* Metallic gold only as a secondary accent
+"These are serious professionals who understand businesses."
 
-Do not make gold the main brand color.
+not:
 
-Do not introduce random blue/purple/neon accents.
+"This is an accounting software company."
 
-Use generous negative space.
+## HERO SECTION
 
-The website should feel expensive because of **composition, typography, spacing, depth and restraint**, not because every section contains an effect.
+Completely redesign the hero.
 
----
+Do NOT put the Rubik's Cube in the hero.
 
-# 4. HERO — KEEP IT CLEAN
+The Rubik's Cube is a separate major storytelling section later in the website and must remain there.
 
-The hero is NOT where all the animations belong.
+The hero should immediately communicate:
 
-It should be the cleanest section on the website.
+1. accounting
+2. financial expertise
+3. professional people
+4. trust
+5. premium positioning
 
-Use an elegant composition:
+Explore an editorial composition using high-quality professional imagery rather than a generic split-screen hero.
 
-### Left
+A possible direction is a sophisticated composition of 2–3 photographic moments/cards showing:
 
-A powerful headline about solving financial complexity.
+* an accountant working with financial information
+* professionals discussing business/financial matters
+* financial analysis or client consultation
 
-Supporting copy explaining the accounting/financial service.
+These should NOT look like ordinary UI cards.
 
-Primary CTA:
+They should feel like an art-directed photographic composition with different scales, cropping, overlap, whitespace and subtle movement.
 
-**Get Started**
+The hero should have strong typography and a clear headline.
 
-Optional secondary CTA.
+The visual hierarchy must be extremely intentional.
 
-### Right
+## TYPOGRAPHY
 
-One premium visual/image.
+Use typography as a major design element.
 
-This could be:
+Create:
 
-* A sophisticated financial abstract
-* Architectural London-inspired visual
-* Premium financial visualization
-* Custom 3D object
-* Editorial-style financial image
+* large editorial headlines
+* strong hierarchy
+* generous whitespace
+* restrained supporting text
+* sophisticated section titles
+* carefully designed labels and metadata
 
-Do NOT put the Rubik's cube, dozens of cards, pound coins, invoices and floating financial objects all together here.
+Do not fill the screen with text.
 
-The first viewport should immediately communicate:
+The website should feel expensive because of its composition, not because of excessive decoration.
 
-**“This is a serious premium financial company.”**
+## GRADIENTS
 
-The hero can have subtle parallax/reveal animation, but it should remain calm.
-
----
-
-# 5. SECTION — “FROM COMPLEXITY TO CLARITY”
-
-This is the first major visual experience.
-
-Introduce the problem:
-
-Accounting can involve:
-
-* invoices
-* expenses
-* tax
-* payroll
-* cash flow
-* reporting
-* transactions
-* documents
-* numbers
-
-Initially, represent these as scattered, disconnected financial fragments.
-
-Then use scroll-driven animation to progressively organize them.
-
----
-
-# 6. RUBIK'S CUBE EXPERIENCE
-
-The scattered financial information should gradually form a sophisticated **Rubik's-cube-inspired structure**.
-
-This is the main metaphor:
-
-**Financial complexity → structured system → clarity**
+Gradients ARE allowed and encouraged, but they must remain professional.
 
 Use:
 
-* Three.js / React Three Fiber if appropriate
-* GSAP + ScrollTrigger
-* Actual brand colors
-* Dark materials
-* Subtle financial labels
-
-Possible cube labels:
-
-TAX
-VAT
-PAYROLL
-CASH FLOW
-EXPENSES
-INVOICES
-REPORTING
-
-Do not use traditional Rubik's cube colors.
-
-Do not make it look like a toy.
-
-Make it feel like a **premium architectural financial object**.
-
-The cube can:
-
-1. Begin fragmented
-2. Organize itself
-3. Form
-4. Rotate subtly with scroll
-5. Align perfectly
-6. Resolve into a clean final state
-
-Possible final message:
-
-**Complexity, organized.**
-
-This section should be visually impressive.
-
-This is where the heavy ScrollTrigger animation belongs.
-
----
-
-# 7. SERVICES — MAKE THE BUSINESS CLEAR
-
-After the visual metaphor, clearly explain what the company actually does.
-
-Create a premium services system for appropriate accounting services such as:
-
-* Accounting
-* Bookkeeping
-* VAT
-* Tax
-* Payroll
-* Financial Reporting
-* Management Accounts
-* Business Advisory
-* Tax Planning
-
-Do not blindly include services that are not appropriate to the existing company.
-
-Inspect existing content first.
-
-Present services in a sophisticated interactive layout rather than generic identical cards.
-
-For example:
-
-A large active service panel with smaller services surrounding it.
-
-Hovering/selecting a service can change the main visual/content.
-
-Keep it fast and elegant.
-
----
-
-# 8. LONDON / GBP EXPERIENCE
-
-Create a separate cinematic section around **GBP and financial value**.
-
-This is where the golden pound coins belong.
-
-Do NOT put a large number of coins into the hero.
-
-Use a restrained number of premium metallic £ coins.
-
-The visual language should communicate:
-
-**Value → Movement → Growth → Financial control**
-
-Coins can:
-
-* Move through depth
-* Rotate slowly
-* Follow curved paths
-* React to scrolling
-* Pass behind/around typography
-* Eventually settle into an organized composition
-
-Do not make every coin constantly spin.
-
-Use gold as a secondary premium accent against the dark environment and brand colors.
-
-The London identity should remain subtle.
+* subtle navy → royal blue transitions
+* soft blue atmospheric gradients
+* radial light effects
+* gradients behind photography
+* controlled gradient transitions between sections
 
 Do NOT use:
 
-* Union Jack everywhere
-* Crowns
-* Flags
-* Random London landmarks
-* Generic British imagery
+* neon gradients
+* rainbow gradients
+* glowing cyberpunk effects
+* excessive glassmorphism
+* glowing blobs everywhere
 
-GBP itself is enough to establish the financial/UK context.
+The gradients should support the financial brand rather than become the brand.
 
----
+## ABSOLUTELY NO PARTICLE ANIMATIONS
 
-# 9. WHY US / TRUST
+Remove the previous particle-based visual language.
 
-This section is extremely important.
+Do not use:
 
-Accounting is a trust-based service.
+* floating particle fields
+* star fields
+* random dots
+* particle networks
+* constellation effects
 
-Do not make the website 90% visual animation and 10% actual business information.
+The website should feel premium and human, not technological for the sake of technology.
 
-Explain why a client should trust the company.
+## RUBIK'S CUBE SECTION
 
-Use real available information for:
+KEEP the existing Rubik's Cube animation.
 
-* Qualifications
-* Certifications
-* Experience
-* Industries served
-* Client types
-* Genuine statistics
-* Software/accounting platforms
-* Team
-* Process
-* Testimonials
+However, it must remain a completely separate section from the hero.
 
-If information is unavailable, create clearly identifiable placeholders rather than inventing facts.
+Do not place it in the navigation, hero, or first viewport.
 
-The section should visually feel quieter than the Rubik's cube and coin sections.
+Give it a dedicated storytelling section.
 
----
+The Rubik's Cube should represent:
 
-# 10. PROCESS
+FINANCIAL COMPLEXITY → STRUCTURE → CLARITY
 
-Create a simple premium process:
+The animation should have an actual narrative purpose.
 
-**01 — Understand**
+For example, the section can introduce the idea that accounting involves many moving pieces — accounting, tax, payroll, compliance, reporting and advisory — and the cube visually represents those pieces becoming organized.
 
-Understand the business and financial situation.
+The cube should remain the visual centerpiece of this section.
 
-**02 — Organize**
+Do not surround it with excessive particles or random floating UI.
 
-Bring financial information into order.
+Use controlled gradients, typography, whitespace and subtle financial visual references around it.
 
-**03 — Advise**
+This should be one of the site's major memorable moments.
 
-Identify opportunities, risks and actions.
+## SERVICES
 
-**04 — Support**
+Redesign the services section completely.
 
-Provide ongoing accounting/financial support.
+Services should feel like premium professional offerings rather than generic cards.
 
-Use subtle scroll reveals rather than another massive 3D animation.
+Possible categories:
 
----
+* Accounting
+* Tax
+* Payroll
+* Advisory
+* Financial Planning / Reporting
 
-# 11. PAYMENT TECHNOLOGY — CREDIT CARD → PAYMENT LINK
+Use strong editorial layouts, photography, typography and subtle interaction.
 
-Near the end of the website, create a dedicated interactive payment section.
+Do not make every service a floating rounded rectangle.
 
-This is where the existing credit-card animation belongs.
+## PEOPLE / EXPERTISE
 
-The purpose is to demonstrate modern payment convenience.
+Create a strong human-focused section introducing the professionals behind the firm.
 
-Show a premium financial card.
+This section should reinforce:
 
-Then provide an interaction such as:
+"Real people. Real expertise. Real businesses."
 
-**Create Payment Link**
+Use large photography and sophisticated editorial composition.
 
-When triggered:
+If real team photography/assets exist in the project, prioritize those.
 
-1. Card appears.
-2. Card moves into focus.
-3. Card information reorganizes.
-4. The physical-card representation transforms.
-5. It becomes a clean digital payment-link interface.
-6. The final UI communicates a shareable payment experience.
+Do not invent credentials, statistics, awards, client numbers, or claims.
 
-This should feel like a sophisticated product demonstration.
+## FINANCIAL / PAYMENT INTERACTION
 
-Stripe Payment Links are fundamentally based around creating and sharing a payment link, so use that conceptual flow rather than inventing a complicated payment interaction.
+Keep the existing credit/debit card → Stripe Link concept where it makes sense in the overall story.
 
-If using Stripe branding, do not imply an official partnership unless the company actually has one.
+It should feel like part of a professional client journey rather than a random animation.
 
----
+Keep the interaction polished and restrained.
 
-# 12. FINAL CTA
+## MOTION DESIGN
 
-After the interactive sections, deliberately become quiet again.
+The site should feel alive, but motion must be intentional.
 
-Use large typography and plenty of space.
+Prioritize:
 
-Possible direction:
-
-**Your finances should create clarity, not complexity.**
-
-Then:
-
-**Let's talk.**
-
-CTA:
-
-**Get Started**
-
-The ending should feel confident, not desperate.
-
----
-
-# 13. PAGE RHYTHM
-
-Do not make every section visually intense.
-
-The rhythm should be:
-
-**Quiet → Cinematic → Structured → Cinematic → Quiet → Interactive → Quiet**
-
-Specifically:
-
-Hero
-↓
-Intro
-↓
-Rubik's Cube
-↓
-Services
-↓
-GBP Coins
-↓
-Why Us / Trust
-↓
-Process
-↓
-Credit Card → Payment Link
-↓
-Final CTA
-
-This is important.
-
-Give the user's eyes time to rest between major visual experiences.
-
----
-
-# 14. MOTION SYSTEM
-
-Use GSAP + ScrollTrigger for meaningful scroll-driven sequences.
-
-ScrollTrigger supports scrubbed progress, pinning and responsive scroll-triggered timelines, making it suitable for the dedicated visual sections rather than forcing the entire site into one animation.
-
-Motion principles:
-
-* Slow
-* Cinematic
-* Precise
-* Physical
-* Layered
-* Intentional
+* elegant image reveals
+* typography transitions
+* scroll-linked movement
+* subtle image parallax
+* section transitions
+* smooth card movement
+* controlled gradient transitions
+* refined hover states
+* the Rubik's Cube interaction
 
 Avoid:
 
-* Constant spinning
-* Random floating objects
-* Excessive particles
-* Excessive blur
-* Bouncing UI
-* Fast transitions
-* Animation for animation's sake
+* animation overload
+* constant movement
+* unnecessary 3D
+* particle systems
+* bouncing elements
+* excessive cursor effects
+* gimmicky transitions
 
-Every major animation should communicate something.
+Every animation should support hierarchy, storytelling or interaction.
 
----
+## OVERALL PAGE STORY
 
-# 15. RESPONSIVE DESIGN
+Build a coherent narrative:
 
-Desktop can use the full visual experience.
+01 — HERO
+Professional accounting firm + human expertise
 
-On mobile:
+02 — TRUST / POSITIONING
+Why businesses need clarity and professional financial management
 
-* Simplify 3D
-* Reduce object count
-* Shorten animation sequences
-* Preserve the concept
-* Keep typography strong
-* Maintain negative space
-* Never allow animation to make the site difficult to navigate
+03 — RUBIK'S CUBE
+Complexity → structure → clarity
 
-If necessary, use simplified SVG/CSS versions instead of heavy 3D.
+04 — SERVICES
+Accounting / Tax / Payroll / Advisory
 
----
+05 — PEOPLE
+The professionals behind the numbers
 
-# 16. PERFORMANCE
+06 — FINANCIAL EXPERIENCE
+Digital client/payment experience
 
-Do not initialize every expensive visual at once.
+07 — FINAL CTA
+Strong premium closing statement and contact action
 
-Use:
+The transitions between these sections should feel like one continuous visual story rather than unrelated website blocks.
 
-* Lazy loading
-* Efficient GSAP timelines
-* GPU-friendly transforms
-* Proper cleanup
-* Responsive animation strategies
-* Reduced-motion support
-* Minimal unnecessary dependencies
+## DESIGN QUALITY BAR
 
-The website should still feel fast despite the interactive experiences.
+Aim for Awwwards-level art direction.
 
----
+That does NOT mean adding more effects.
 
-# 17. DEVELOPMENT APPROACH
+The quality should come from:
 
-Do not implement everything in one huge pass.
+* composition
+* typography
+* photography
+* spacing
+* hierarchy
+* transitions
+* interaction design
+* consistency
+* restraint
 
-Build and inspect incrementally:
+A visitor should be impressed before they even understand the animations.
 
-### Phase 1
+## TECHNICAL REQUIREMENTS
 
-Inspect existing project and brand.
+Work within the existing Next.js project.
 
-### Phase 2
+First inspect the existing codebase and understand:
 
-Refine global design system and clean hero.
+* current structure
+* existing components
+* existing assets
+* current Rubik's Cube implementation
+* existing animations
+* fonts
+* responsive behavior
+* dependencies
 
-### Phase 3
+Then redesign the page rather than blindly replacing functionality.
 
-Build/refine Rubik's cube section.
+Do not destroy working functionality unnecessarily.
 
-### Phase 4
+Maintain good performance.
 
-Build/refine services and trust sections.
+Avoid adding large libraries unless they are genuinely necessary.
 
-### Phase 5
+The website must remain:
 
-Build/refine GBP coin experience.
+* responsive
+* accessible
+* SEO-friendly
+* performant
+* maintainable
 
-### Phase 6
+Do not sacrifice page speed for visual effects.
 
-Build/refine payment card → payment link experience.
+## IMPORTANT
 
-### Phase 7
+Do not make small cosmetic changes to the current design.
 
-Final CTA, responsive behavior and transitions.
+Rethink the visual system and composition substantially.
 
-### Phase 8
+The final result should feel like a completely new premium accounting website while still belonging to the same brand.
 
-Performance, accessibility and production QA.
+Before implementing, think through the entire visual system and section-to-section narrative so the result feels designed as ONE EXPERIENCE rather than a collection of AI-generated sections.
 
-After each major phase, run the site and visually inspect it before continuing.
-
----
-
-# FINAL CREATIVE RULE
-
-Do not try to impress the user by putting everything on screen immediately.
-
-**The website should reveal its intelligence as the user scrolls.**
-
-The hero earns attention.
-
-The Rubik's cube explains complexity.
-
-The services explain the business.
-
-The GBP section establishes the London financial identity.
-
-The trust section establishes credibility.
-
-The payment interaction demonstrates modern technology.
-
-The final CTA converts the experience into action.
-
-The result should feel like a **premium London accounting agency that happens to have exceptional interactive design**, not an animation website pretending to be an accounting agency.
+Prioritize design quality over the number of animations.

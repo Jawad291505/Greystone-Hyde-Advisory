@@ -690,8 +690,8 @@ function Scene({ journey, reduce, mobile, light }) {
 export default function ServicesScene({ journey, reduce, onContextLost }) {
   const canvasRef = useRef(null);
   const mobile = typeof window !== "undefined" && window.matchMedia("(max-width: 767px)").matches;
-  // Same light-theme check as Particles: only the preview routes carry .theme-light
-  const light = typeof document !== "undefined" && !!document.querySelector(".theme-light");
+  // The site is now light everywhere, so the scene always uses its light palette.
+  const light = true;
 
   useEffect(() => {
     const canvas = canvasRef.current;

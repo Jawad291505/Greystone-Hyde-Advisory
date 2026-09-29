@@ -10,7 +10,8 @@
   --line: #2a3b58;
   --foreground: #f4f3ee;
   --muted: #9aa3ad;
-  --brand: #6ba0d6; /* lightened #316aa2 for text on dark */
+  --brand: #6ba0d6;
+  /* lightened #316aa2 for text on dark */
   --logo-blue: #316aa2;
   --brand-soft: #2f4d86;
   --gold: #b99a5f;
@@ -31,6 +32,15 @@
   --cube-inner-a: #182437;
   --cube-inner-b: #0e1622;
   --cube-tile-text: rgba(244, 243, 238, 0.94);
+
+  /* Redesign palette: navy → royal → white → light blue */
+  --ink: #0b1a38;
+  --navy: #142a5c;
+  --royal: #2452b5;
+  --royal-soft: #5b82d6;
+  --sky: #eef3fb;
+  --mist: #dde7f5;
+  --paper: #fbfcfe;
 }
 
 @theme inline {
@@ -47,6 +57,13 @@
   --color-card: var(--card);
   --color-card-inset: var(--card-inset);
   --color-card-line: var(--card-line);
+  --color-ink: var(--ink);
+  --color-navy: var(--navy);
+  --color-royal: var(--royal);
+  --color-royal-soft: var(--royal-soft);
+  --color-sky: var(--sky);
+  --color-mist: var(--mist);
+  --color-paper: var(--paper);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
   --font-display: var(--font-display);
@@ -96,6 +113,7 @@ body {
     opacity: 0;
     transform: translateY(24px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -106,6 +124,7 @@ body {
   from {
     transform: scaleY(0);
   }
+
   to {
     transform: scaleY(1);
   }
@@ -121,6 +140,7 @@ body {
   from {
     transform: scale(1.12);
   }
+
   to {
     transform: scale(1);
   }
@@ -130,6 +150,7 @@ body {
   0% {
     transform: translateY(-100%);
   }
+
   100% {
     transform: translateY(300%);
   }
@@ -156,6 +177,7 @@ body {
     opacity: 0;
     transform: scale(1.06);
   }
+
   to {
     opacity: 1;
     transform: scale(1);
@@ -173,10 +195,12 @@ body {
 }
 
 @keyframes float-slow {
+
   0%,
   100% {
     transform: translateY(0);
   }
+
   50% {
     transform: translateY(-8px);
   }
@@ -207,6 +231,7 @@ body {
 }
 
 @media (prefers-reduced-motion: reduce) {
+
   .hero-zoom,
   .scroll-tick,
   .float-slow,
@@ -259,6 +284,7 @@ body {
     transform: translateY(16px);
     filter: blur(4px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -270,6 +296,7 @@ body {
   from {
     width: 0;
   }
+
   to {
     width: var(--w);
   }
@@ -291,6 +318,7 @@ body {
 }
 
 @media (prefers-reduced-motion: reduce) {
+
   .doc-in,
   .bar,
   .trace-now {
@@ -355,12 +383,29 @@ body {
   text-shadow: 0 1px 0 rgba(0, 0, 0, 0.55), 0 -1px 0 rgba(255, 255, 255, 0.1);
 }
 
-.c3d-front  { transform: translateZ(calc(var(--s) / 2)); }
-.c3d-back   { transform: rotateY(180deg) translateZ(calc(var(--s) / 2)); }
-.c3d-right  { transform: rotateY(90deg) translateZ(calc(var(--s) / 2)); }
-.c3d-left   { transform: rotateY(-90deg) translateZ(calc(var(--s) / 2)); }
-.c3d-top    { transform: rotateX(90deg) translateZ(calc(var(--s) / 2)); }
-.c3d-bottom { transform: rotateX(-90deg) translateZ(calc(var(--s) / 2)); }
+.c3d-front {
+  transform: translateZ(calc(var(--s) / 2));
+}
+
+.c3d-back {
+  transform: rotateY(180deg) translateZ(calc(var(--s) / 2));
+}
+
+.c3d-right {
+  transform: rotateY(90deg) translateZ(calc(var(--s) / 2));
+}
+
+.c3d-left {
+  transform: rotateY(-90deg) translateZ(calc(var(--s) / 2));
+}
+
+.c3d-top {
+  transform: rotateX(90deg) translateZ(calc(var(--s) / 2));
+}
+
+.c3d-bottom {
+  transform: rotateX(-90deg) translateZ(calc(var(--s) / 2));
+}
 
 /* Milled-metal tiles: a big soft specular blob (the actual "shiny metal"
    cue — a hairline repeating texture reads as noise at this render size,
@@ -413,12 +458,30 @@ body {
   pointer-events: none;
   background: var(--shade, transparent);
 }
-.c3d-top    { --shade: linear-gradient(160deg, rgba(255, 255, 255, 0.55), rgba(255, 255, 255, 0.12) 30%, transparent 62%); }
-.c3d-front  { --shade: linear-gradient(155deg, rgba(255, 255, 255, 0.14), rgba(0, 0, 0, 0.22) 72%); }
-.c3d-right  { --shade: linear-gradient(200deg, rgba(0, 0, 0, 0.32), rgba(0, 0, 0, 0.52)); }
-.c3d-left   { --shade: rgba(0, 0, 0, 0.26); }
-.c3d-back   { --shade: rgba(0, 0, 0, 0.42); }
-.c3d-bottom { --shade: rgba(0, 0, 0, 0.6); }
+
+.c3d-top {
+  --shade: linear-gradient(160deg, rgba(255, 255, 255, 0.55), rgba(255, 255, 255, 0.12) 30%, transparent 62%);
+}
+
+.c3d-front {
+  --shade: linear-gradient(155deg, rgba(255, 255, 255, 0.14), rgba(0, 0, 0, 0.22) 72%);
+}
+
+.c3d-right {
+  --shade: linear-gradient(200deg, rgba(0, 0, 0, 0.32), rgba(0, 0, 0, 0.52));
+}
+
+.c3d-left {
+  --shade: rgba(0, 0, 0, 0.26);
+}
+
+.c3d-back {
+  --shade: rgba(0, 0, 0, 0.42);
+}
+
+.c3d-bottom {
+  --shade: rgba(0, 0, 0, 0.6);
+}
 
 /* Moving specular glare: a soft diagonal band sweeps across each glossy
    face on a loop. Staggered per-piece via --gd so the cube doesn't flash
@@ -429,13 +492,11 @@ body {
   content: "";
   position: absolute;
   inset: -50% -70%;
-  background: linear-gradient(
-    112deg,
-    transparent 42%,
-    rgba(255, 255, 255, 0.4) 49%,
-    rgba(255, 255, 255, 0.08) 53%,
-    transparent 62%
-  );
+  background: linear-gradient(112deg,
+      transparent 42%,
+      rgba(255, 255, 255, 0.4) 49%,
+      rgba(255, 255, 255, 0.08) 53%,
+      transparent 62%);
   transform: translateX(-70%);
   animation: c3d-glare 6.5s ease-in-out infinite;
   animation-delay: var(--gd, 0s);
@@ -444,12 +505,23 @@ body {
 }
 
 @keyframes c3d-glare {
-  0%, 38% { transform: translateX(-70%); }
-  62% { transform: translateX(70%); }
-  100% { transform: translateX(70%); }
+
+  0%,
+  38% {
+    transform: translateX(-70%);
+  }
+
+  62% {
+    transform: translateX(70%);
+  }
+
+  100% {
+    transform: translateX(70%);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
+
   .c3d-tile::before,
   .c3d-accent::before {
     animation: none;
@@ -552,6 +624,7 @@ body {
   from {
     opacity: 0;
   }
+
   to {
     opacity: 1;
   }

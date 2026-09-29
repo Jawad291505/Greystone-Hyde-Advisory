@@ -1,271 +1,229 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
-import HeroMedia from "./HeroMedia";
-import MagneticButton from "./MagneticButton";
+import Image from "next/image";
+import { useRef } from "react";
+import { motion, useReducedMotion, useScroll, useSpring, useTransform } from "framer-motion";
 
-const clamp = (v, min = 0, max = 1) => Math.min(max, Math.max(min, v));
+const ease = [0.22, 1, 0.36, 1];
 
-const taglines = [
-  "Accounting, tax and advisory for London businesses that want precise numbers, confident decisions and a partner who turns complexity into a clear path forward.",
-  "Real-time numbers, reviewed by chartered accountants — not just software making its best guess.",
-  "One point of contact who knows your business, not a ticket queue that only knows your account number.",
+// Each photograph in the composition: position (as % of the stage so the
+// same arrangement scales from phone to desktop), scroll depth, reveal delay.
+const frames = [
+  {
+    src: "/images/hero-meeting.jpg",
+    alt: "Advisers reviewing printed financial reports together at a meeting table",
+    caption: "Quarterly review",
+    className: "right-0 top-0 h-[74%] w-[66%]",
+    depth: -40,
+    delay: 0.25,
+    sizes: "(min-width: 1024px) 34vw, 66vw",
+    position: "object-[50%_40%]",
+    preload: true,
+  },
+  {
+    src: "/images/hero-analysis.jpg",
+    alt: "Accountant working through figures with a calculator and printed charts",
+    caption: "Analysis",
+    className: "left-0 top-[34%] h-[44%] w-[44%]",
+    depth: -110,
+    delay: 0.45,
+    sizes: "(min-width: 1024px) 22vw, 44vw",
+    position: "object-center",
+  },
+  {
+    src: "/images/hero-consult.jpg",
+    alt: "Business owners in a consultation with their adviser in a modern office",
+    caption: "Client consultation",
+    className: "bottom-0 right-[8%] h-[24%] w-[42%]",
+    depth: -20,
+    delay: 0.65,
+    sizes: "(min-width: 1024px) 21vw, 42vw",
+    position: "object-center",
+  },
 ];
 
-// Cycles the supporting line every few seconds — a quiet crossfade, paused
-// entirely under reduced motion rather than swapped instantly, since a
-// sudden text change is its own kind of motion.
-function RotatingTagline() {
-  const [i, setI] = useState(0);
-
-  useEffect(() => {
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    const id = setInterval(() => setI((v) => (v + 1) % taglines.length), 5500);
-    return () => clearInterval(id);
-  }, []);
+// One photograph: a clip-path reveal on load (wipes up from the bottom edge,
+// with the image settling from a slight zoom inside it), then scroll-linked
+// drift at its own depth so the three frames separate as the page moves.
+function Frame({ f, progress, reduce }) {
+  const y = useTransform(progress, [0, 1], [0, reduce ? 0 : f.depth]);
 
   return (
-    <div
-      className="reveal mt-8 flex max-w-xl gap-4 border-l border-foreground/15 pl-5 sm:mt-10"
-      style={{ "--d": "0.4s" }}
-    >
-      <span className="font-mono text-[11px] text-muted">
-        {String(i + 1).padStart(2, "0")}
-      </span>
-      {/* Grid-stacks every possible tagline in the same cell so the
-          container always sizes to the tallest one — the visible line
-          crossfades in place instead of risking an overlap below it. */}
-      <div className="grid flex-1">
-        <AnimatePresence mode="wait">
-          <motion.p
-            key={i}
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-            className="[grid-area:1/1] text-base leading-relaxed text-foreground/75 sm:text-lg"
-          >
-            {taglines[i]}
-          </motion.p>
-        </AnimatePresence>
-        {taglines.map((t, idx) => (
-          <p
-            key={idx}
-            aria-hidden
-            className="invisible [grid-area:1/1] text-base leading-relaxed sm:text-lg"
-          >
-            {t}
-          </p>
-        ))}
-      </div>
-    </div>
+    <motion.figure style={{ y }} className={`absolute ${f.className}`}>
+      <motion.div
+        initial={reduce ? false : { clipPath: "inset(100% 0% 0% 0%)" }}
+        animate={{ clipPath: "inset(0% 0% 0% 0%)" }}
+        transition={{ duration: 1.4, ease, delay: f.delay }}
+        className="relative h-full w-full overflow-hidden bg-mist shadow-[0_30px_60px_-30px_rgba(11,26,56,0.45)]"
+      >
+        <motion.div
+          initial={reduce ? false : { scale: 1.18 }}
+          animate={{ scale: 1 }}
+          transition={{ duration: 2.2, ease, delay: f.delay }}
+          className="absolute inset-0"
+        >
+          <Image
+            src={f.src}
+            alt={f.alt}
+            fill
+            preload={f.preload}
+            sizes={f.sizes}
+            className={`object-cover ${f.position}`}
+          />
+        </motion.div>
+      </motion.div>
+      <motion.figcaption
+        initial={reduce ? false : { opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.8, delay: f.delay + 1 }}
+        className="mt-2.5 hidden items-center gap-2 font-mono text-[10px] tracking-[0.18em] text-navy/55 uppercase sm:flex"
+      >
+        <span className="h-px w-4 bg-royal/50" />
+        {f.caption}
+      </motion.figcaption>
+    </motion.figure>
   );
 }
 
-// Drives the whole hero's motion from two inputs — pointer position and
-// local scroll progress — written to CSS custom properties on the section
-// root. Every layer below (image, grain, frame marks, headline) reads the
-// same --mx/--my/--sp vars at a different magnitude via calc(), so the
-// scene moves as one coordinated system instead of independent effects,
-// and the only per-frame JS cost is a handful of setProperty calls.
-function useHeroMotion(ref) {
-  useEffect(() => {
-    const el = ref.current;
-    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const pointerFine = window.matchMedia("(pointer: fine)").matches;
+// Headline line that rises out of its own mask.
+function Line({ children, delay, reduce }) {
+  return (
+    <span className="block overflow-hidden pb-[0.08em]">
+      <motion.span
+        initial={reduce ? false : { y: "105%" }}
+        animate={{ y: 0 }}
+        transition={{ duration: 1.1, ease, delay }}
+        className="block"
+      >
+        {children}
+      </motion.span>
+    </span>
+  );
+}
 
-    el.style.setProperty("--mx", 0);
-    el.style.setProperty("--my", 0);
-    el.style.setProperty("--sp", 0);
-
-    if (reduce) return;
-
-    let raf;
-    let targetX = 0;
-    let targetY = 0;
-    let curX = 0;
-    let curY = 0;
-    let targetP = 0;
-    let curP = 0;
-
-    const onMove = (e) => {
-      targetX = (e.clientX / window.innerWidth - 0.5) * 2;
-      targetY = (e.clientY / window.innerHeight - 0.5) * 2;
-    };
-
-    const onScroll = () => {
-      const rect = el.getBoundingClientRect();
-      targetP = clamp(-rect.top / rect.height);
-    };
-
-    const loop = () => {
-      curX += (targetX - curX) * 0.06;
-      curY += (targetY - curY) * 0.06;
-      curP += (targetP - curP) * 0.1;
-      el.style.setProperty("--mx", curX.toFixed(4));
-      el.style.setProperty("--my", curY.toFixed(4));
-      el.style.setProperty("--sp", curP.toFixed(4));
-      raf = requestAnimationFrame(loop);
-    };
-    raf = requestAnimationFrame(loop);
-
-    if (pointerFine) window.addEventListener("mousemove", onMove, { passive: true });
-    window.addEventListener("scroll", onScroll, { passive: true });
-    onScroll();
-
-    return () => {
-      cancelAnimationFrame(raf);
-      window.removeEventListener("mousemove", onMove);
-      window.removeEventListener("scroll", onScroll);
-    };
-  }, [ref]);
+function FadeIn({ children, delay, reduce, className = "" }) {
+  return (
+    <motion.div
+      initial={reduce ? false : { opacity: 0, y: 16 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.9, ease, delay }}
+      className={className}
+    >
+      {children}
+    </motion.div>
+  );
 }
 
 export default function Hero() {
   const section = useRef(null);
-  useHeroMotion(section);
+  const reduce = useReducedMotion();
+
+  const { scrollYProgress } = useScroll({ target: section, offset: ["start start", "end start"] });
+  const progress = useSpring(scrollYProgress, { stiffness: 140, damping: 30, mass: 0.5 });
+  const copyY = useTransform(progress, [0, 1], [0, reduce ? 0 : -60]);
+  const panelY = useTransform(progress, [0, 1], [0, reduce ? 0 : 50]);
 
   return (
     <section
       ref={section}
-      className="relative isolate flex min-h-[100svh] flex-col overflow-hidden"
-      style={{ "--mx": 0, "--my": 0, "--sp": 0 }}
+      aria-labelledby="hero-title"
+      className="relative isolate overflow-hidden bg-paper text-ink"
     >
-      {/* Aerial London (Thames, Tower Bridge, Canary Wharf), toned to the brand navy */}
-      <HeroMedia />
-      {/* Desktop: solid behind the copy, photo fully revealed to its right */}
-      <div className="absolute inset-0 -z-20 hidden bg-gradient-to-r from-background from-0% via-background/65 via-30% to-transparent to-58% lg:block" />
-      {/* Mobile/tablet: photo on top, copy anchored on a darker base */}
-      <div className="absolute inset-0 -z-20 bg-gradient-to-t from-background from-8% via-background/70 via-42% to-background/10 lg:hidden" />
-      <div className="absolute inset-x-0 top-0 -z-20 h-40 bg-gradient-to-b from-background/55 to-transparent" />
-      <div className="absolute inset-x-0 bottom-0 -z-20 h-56 bg-gradient-to-t from-background via-background/55 to-transparent" />
+      {/* Atmosphere: soft light-blue wash, brightest behind the photographs */}
       <div
-        className="absolute inset-0 -z-20 bg-[radial-gradient(ellipse_50%_45%_at_80%_25%,rgba(91,147,199,0.35),transparent)]"
-        style={{
-          opacity: "calc(1 - var(--sp, 0) * 0.6)",
-          transform: "translate3d(calc(var(--mx, 0) * 10px), calc(var(--my, 0) * 8px), 0)",
-        }}
+        aria-hidden
+        className="absolute inset-0 -z-20 bg-[radial-gradient(60%_70%_at_78%_40%,var(--sky),transparent_70%),linear-gradient(180deg,var(--paper),#f4f7fc)]"
       />
 
-      {/* Architectural corner framing — reacts most to the pointer of any layer, reads as a viewfinder locked onto the skyline */}
-      <div
-        aria-hidden
-        className="hero-frame pointer-events-none absolute inset-6 z-10 hidden lg:block"
-        style={{
-          "--d": "1s",
-          transform:
-            "translate3d(calc(var(--mx, 0) * 20px), calc(var(--my, 0) * 16px), 0)",
-        }}
-      >
-        <span className="absolute left-0 top-0 h-10 w-10 rounded-tl-2xl border-l border-t border-foreground/25" />
-        <span className="absolute right-0 top-0 h-10 w-10 rounded-tr-2xl border-r border-t border-foreground/25" />
-        <span className="absolute bottom-0 left-0 h-10 w-10 rounded-bl-2xl border-b border-l border-foreground/25" />
-        <span className="absolute bottom-0 right-0 h-10 w-10 rounded-br-2xl border-b border-r border-foreground/25" />
-      </div>
-
-      {/* Coordinates — floats over the skyline, top right */}
-      <div
-        aria-hidden
-        className="hero-frame pointer-events-none absolute right-10 top-28 z-10 hidden text-right lg:block"
-        style={{
-          "--d": "1.15s",
-          transform:
-            "translate3d(calc(var(--mx, 0) * 26px), calc(var(--my, 0) * 20px), 0)",
-        }}
-      >
-        <p className="font-mono text-[10px] tracking-[0.2em] text-foreground/55 uppercase">
-          51.5072° N
-          <br />
-          0.0877° W
-        </p>
-        <p className="mt-2 flex items-center justify-end gap-2 text-[10px] tracking-[0.22em] text-brand/85 uppercase">
-          City of London
-          <span className="h-1 w-1 rounded-full bg-brand" />
-        </p>
-      </div>
-
-      {/* Vertical edge label — pure architectural signage, no motion of its own */}
-      <p
-        aria-hidden
-        className="pointer-events-none absolute left-6 top-1/2 z-10 hidden origin-left -translate-y-1/2 -rotate-90 text-[10px] tracking-[0.3em] text-foreground/35 uppercase lg:block"
-      >
-        Est. London · Chartered Accountants
-      </p>
-
-      <div
-        className="relative z-10 mx-auto flex w-full max-w-7xl flex-1 items-end px-5 pt-32 pb-10 sm:px-6 sm:pt-40 sm:pb-16 lg:px-10"
-        style={{
-          transform: "translate3d(calc(var(--mx, 0) * -3px), calc(var(--sp, 0) * -18px), 0)",
-          opacity: "calc(1 - var(--sp, 0) * 0.45)",
-        }}
-      >
-        <div className="flex w-full flex-col gap-10 lg:flex-row lg:items-end lg:justify-between">
-          <div className="max-w-3xl">
-            <p
-              className="reveal mb-6 flex items-center gap-3 text-[11px] tracking-[0.22em] sm:mb-8 sm:gap-4 sm:text-xs sm:tracking-[0.28em] text-brand uppercase"
-              style={{ "--d": "0.1s" }}
-            >
-              <span className="h-px w-10 bg-brand" />
-              London Accounting &amp; Advisory
-            </p>
+      <div className="mx-auto grid min-h-[100svh] max-w-[88rem] grid-cols-1 gap-14 px-5 pt-32 pb-14 sm:px-8 lg:grid-cols-12 lg:gap-8 lg:px-12 lg:pt-36 lg:pb-16">
+        {/* Copy */}
+        <motion.div
+          style={{ y: copyY }}
+          className="flex flex-col justify-between lg:col-span-6 lg:pr-6"
+        >
+          <div>
+            <FadeIn reduce={reduce} delay={0.1}>
+              <p className="flex items-center gap-4 text-[11px] font-medium tracking-[0.26em] text-royal uppercase">
+                <span className="h-px w-10 bg-royal" />
+                Accounting, tax &amp; advisory · London
+              </p>
+            </FadeIn>
 
             <h1
-              className="reveal font-display text-[clamp(2.9rem,11vw,7rem)] lg:text-[clamp(4rem,7.4vw,7rem)] leading-[0.98] tracking-tight"
-              style={{ "--d": "0.2s" }}
+              id="hero-title"
+              className="mt-8 font-display text-[clamp(3.1rem,8.4vw,7.4rem)] leading-[0.94] tracking-[-0.02em] text-ink lg:mt-10"
             >
-              Financial
-              <br />
-              complexity,
-              <br />
-              <span className="text-brand italic">made clear.</span>
+              <Line reduce={reduce} delay={0.15}>Clear numbers.</Line>
+              <Line reduce={reduce} delay={0.28}>
+                <em className="text-royal">Considered</em> advice.
+              </Line>
             </h1>
 
-            <RotatingTagline />
+            <FadeIn reduce={reduce} delay={0.55} className="mt-8 max-w-md lg:mt-10">
+              <p className="text-base leading-relaxed text-navy/75 sm:text-[17px]">
+                Greystone Hyde is a London accounting and advisory practice. We
+                work directly with owners and finance teams, on the books, the
+                tax, the payroll and the decisions that follow.
+              </p>
+            </FadeIn>
+
+            <FadeIn reduce={reduce} delay={0.7} className="mt-10 flex flex-wrap items-center gap-x-8 gap-y-5">
+              <a
+                href="#contact"
+                className="group inline-flex items-center gap-4 rounded-full bg-navy py-2 pr-2 pl-7 text-sm font-medium tracking-wide text-white transition-colors duration-500 hover:bg-royal focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-royal"
+              >
+                Book a consultation
+                <span className="grid h-10 w-10 place-items-center rounded-full bg-white/10 transition-transform duration-500 group-hover:translate-x-1">
+                  <svg viewBox="0 0 16 16" className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden>
+                    <path d="M3 8h10M9 4l4 4-4 4" />
+                  </svg>
+                </span>
+              </a>
+              <a
+                href="#services"
+                className="group relative text-sm font-medium text-navy focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-royal"
+              >
+                Explore our services
+                <span className="absolute -bottom-1 left-0 h-px w-full origin-left bg-navy/25" />
+                <span className="absolute -bottom-1 left-0 h-px w-full origin-left scale-x-0 bg-royal transition-transform duration-500 group-hover:scale-x-100" />
+              </a>
+            </FadeIn>
           </div>
 
-          {/* CTAs sit in their own column on desktop — clear of the tagline
-              regardless of how many lines it wraps to at any breakpoint */}
-          <div
-            className="reveal flex flex-col items-stretch gap-5 sm:flex-row sm:items-center lg:flex-col lg:items-end lg:gap-4"
-            style={{ "--d": "0.55s" }}
-          >
-            <MagneticButton
-              href="#contact"
-              className="rounded-full bg-logo-blue px-8 py-4 text-center text-sm font-medium tracking-wide text-white shadow-[0_0_40px_-8px_rgba(49,106,162,0.9)] transition-colors hover:bg-brand"
-            >
-              Get Started
-            </MagneticButton>
-            <a
-              href="#clarity"
-              className="group flex items-center justify-center gap-3 rounded-full border border-foreground/15 px-6 py-3 text-sm text-foreground transition-colors hover:border-brand/60 hover:text-brand sm:justify-start"
-            >
-              Explore services
-              <span className="transition-transform group-hover:translate-x-1">
-                →
-              </span>
-            </a>
-          </div>
-        </div>
-      </div>
+          {/* Practice areas as quiet metadata — describes what we do, makes no claims */}
+          <FadeIn reduce={reduce} delay={0.9} className="mt-16 hidden lg:block">
+            <dl className="grid max-w-lg grid-cols-3 border-t border-navy/10 pt-5">
+              {[
+                ["01", "Accounting & reporting"],
+                ["02", "Tax & payroll"],
+                ["03", "Business advisory"],
+              ].map(([n, label]) => (
+                <div key={n}>
+                  <dt className="font-mono text-[10px] text-royal">{n}</dt>
+                  <dd className="mt-1.5 pr-4 text-[13px] leading-snug text-navy/70">{label}</dd>
+                </div>
+              ))}
+            </dl>
+          </FadeIn>
+        </motion.div>
 
-      {/* Trust bar — placeholder credentials, replace with verified ones */}
-      <div className="reveal relative z-10 border-t border-foreground/10 bg-background/40 backdrop-blur-md" style={{ "--d": "0.8s" }}>
-        <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-x-10 gap-y-4 px-5 py-4 text-[10px] tracking-[0.16em] sm:px-6 sm:py-5 sm:text-[11px] sm:tracking-[0.2em] text-foreground/60 uppercase lg:px-10">
-          <ul className="flex flex-wrap gap-x-6 gap-y-2 sm:gap-x-10 sm:gap-y-3">
-            {["Chartered accountants", "HMRC registered agent", "Xero · QuickBooks · Sage"].map((t) => (
-              <li key={t} className="flex items-center gap-3">
-                <span className="h-1 w-1 rounded-full bg-brand" />
-                {t}
-              </li>
+        {/* Photographic composition */}
+        <div className="relative lg:col-span-6">
+          {/* Brand anchor: a navy → royal plane the photographs sit against, bleeding off the right edge */}
+          <motion.div
+            aria-hidden
+            style={{ y: panelY }}
+            initial={reduce ? false : { scaleX: 0 }}
+            animate={{ scaleX: 1 }}
+            transition={{ duration: 1.6, ease, delay: 0.05 }}
+            className="absolute top-[12%] -right-5 bottom-[18%] left-[30%] -z-10 origin-right bg-[linear-gradient(155deg,var(--navy)_0%,var(--royal)_100%)] sm:-right-8 lg:-right-12 min-[88rem]:right-[calc((88rem_-_100vw)/2_-_3rem)]"
+          />
+
+          <div className="relative mx-auto aspect-[4/5] w-full max-w-xl sm:aspect-[5/5] lg:mx-0 lg:aspect-auto lg:h-full lg:max-w-none lg:min-h-[36rem]">
+            {frames.map((f) => (
+              <Frame key={f.src} f={f} progress={progress} reduce={reduce} />
             ))}
-          </ul>
-          <a href="#clarity" className="hidden items-center gap-3 hover:text-foreground sm:flex">
-            Scroll
-            <span className="relative block h-8 w-px overflow-hidden bg-foreground/20">
-              <span className="scroll-tick absolute inset-x-0 top-0 h-3 bg-brand" />
-            </span>
-          </a>
+          </div>
         </div>
       </div>
     </section>

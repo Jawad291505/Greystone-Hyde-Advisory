@@ -71,8 +71,8 @@ const item = {
 
 function Eyebrow({ children }) {
   return (
-    <p className="mb-5 flex items-center gap-3 text-[11px] tracking-[0.22em] text-brand uppercase sm:text-xs sm:tracking-[0.28em]">
-      <span className="h-px w-10 bg-brand" />
+    <p className="mb-5 flex items-center gap-3 text-[11px] tracking-[0.22em] text-royal uppercase sm:text-xs sm:tracking-[0.28em]">
+      <span className="h-px w-10 bg-royal" />
       {children}
     </p>
   );
@@ -92,14 +92,14 @@ function CardFallback() {
   return (
     <div
       aria-hidden
-      className="mb-8 aspect-[1.585] w-full max-w-sm rounded-2xl border border-white/15 bg-[linear-gradient(135deg,#0c1629,#1b305c_55%,#2c5d93)] p-6 shadow-[0_30px_60px_-20px_rgba(0,0,0,0.6)]"
+      className="mb-8 aspect-[1.585] w-full max-w-sm rounded-2xl border border-white/15 bg-[linear-gradient(135deg,var(--ink),var(--navy)_55%,var(--royal))] p-6 shadow-[0_30px_60px_-24px_rgba(11,26,56,0.55)]"
     >
       <div className="flex h-full flex-col justify-between">
-        <span className="font-display text-xl text-foreground">Greystone Hyde</span>
-        <span className="font-mono text-lg tracking-[0.2em] text-foreground/90">•••• •••• •••• 0427</span>
-        <span className="flex items-end justify-between text-[10px] tracking-[0.2em] text-foreground/55 uppercase">
+        <span className="font-display text-xl text-white">Greystone Hyde</span>
+        <span className="font-mono text-lg tracking-[0.2em] text-white/90">•••• •••• •••• 0427</span>
+        <span className="flex items-end justify-between text-[10px] tracking-[0.2em] text-white/55 uppercase">
           Client payments
-          <span className="font-display text-2xl tracking-normal text-gold normal-case italic">Debit</span>
+          <span className="font-display text-2xl tracking-normal text-[#8fb4ff] normal-case italic">Debit</span>
         </span>
       </div>
     </div>
@@ -114,7 +114,7 @@ function PaymentActions() {
         target="_blank"
         rel="noopener noreferrer"
         aria-label="Pay securely with Stripe (opens in a new tab)"
-        className="rounded-full bg-logo-blue px-8 py-3.5 text-sm font-medium tracking-wide text-white shadow-[0_12px_40px_-12px_rgba(49,106,162,0.9)] transition-colors duration-300 hover:bg-[#3a78b5] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand"
+        className="rounded-full bg-navy px-8 py-3.5 text-sm font-medium tracking-wide text-white shadow-[0_12px_40px_-12px_rgba(20,42,92,0.45)] transition-colors duration-300 hover:bg-royal focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-royal"
       >
         <span className="flex items-center gap-2.5">
           <LockIcon />
@@ -123,7 +123,7 @@ function PaymentActions() {
       </MagneticButton>
       <Link
         href="/#contact"
-        className="text-[13px] tracking-wide text-foreground/65 underline-offset-4 transition-colors duration-300 hover:text-brand hover:underline"
+        className="text-[13px] tracking-wide text-ink/65 underline-offset-4 transition-colors duration-300 hover:text-royal hover:underline"
       >
         Questions about an invoice?
       </Link>
@@ -148,13 +148,13 @@ function Chapter({ chapter, fallbackCard }) {
           initial="hidden"
           whileInView="show"
           viewport={{ amount: 0.25 }}
-          className="pointer-events-auto mt-[38svh] max-w-lg max-lg:-mx-5 max-lg:bg-background/85 max-lg:px-5 max-lg:pt-6 max-lg:pb-4 max-lg:shadow-[0_-56px_48px_-8px_color-mix(in_srgb,var(--background)_85%,transparent)] sm:max-lg:-mx-6 sm:max-lg:px-6 lg:mt-0"
+          className="pointer-events-auto mt-[38svh] max-w-lg max-lg:-mx-5 max-lg:bg-paper/85 max-lg:px-5 max-lg:pt-6 max-lg:pb-4 max-lg:shadow-[0_-56px_48px_-8px_color-mix(in_srgb,var(--paper)_85%,transparent)] sm:max-lg:-mx-6 sm:max-lg:px-6 lg:mt-0"
         >
           {payments && fallbackCard ? <CardFallback /> : null}
           <motion.div variants={item}>
             <Eyebrow>
               <span className="font-mono">{chapter.index}</span>
-              <span className="text-foreground/30">—</span>
+              <span className="text-ink/30">—</span>
               {chapter.label}
             </Eyebrow>
           </motion.div>
@@ -163,32 +163,32 @@ function Chapter({ chapter, fallbackCard }) {
             id={`${chapter.id}-title`}
             className="font-display text-[clamp(2.1rem,4.6vw,3.3rem)] leading-[1.05] tracking-tight"
           >
-            {chapter.title[0]} <span className="text-brand">{chapter.title[1]}</span>
+            {chapter.title[0]} <span className="text-royal">{chapter.title[1]}</span>
           </motion.h2>
-          <motion.p variants={item} className="mt-5 text-sm leading-relaxed text-foreground/70 sm:text-base">
+          <motion.p variants={item} className="mt-5 text-sm leading-relaxed text-ink/70 sm:text-base">
             {chapter.body}
           </motion.p>
           {chapter.services ? (
-            <motion.ul variants={item} className="mt-7 border-t border-foreground/[0.08]">
+            <motion.ul variants={item} className="mt-7 border-t border-navy/[0.08]">
               {chapter.services.map((slug) => {
                 const s = bySlug[slug];
                 return (
                   <li
                     key={slug}
                     id={slug}
-                    className="scroll-mt-[30svh] border-b border-foreground/[0.08] py-4"
+                    className="scroll-mt-[30svh] border-b border-navy/[0.08] py-4"
                   >
                     <div className="flex items-baseline justify-between gap-4">
                       <h3 className="font-display text-xl tracking-tight sm:text-2xl">{s.name}</h3>
-                      <span className="font-mono text-[11px] text-muted">
+                      <span className="font-mono text-[11px] text-navy/50">
                         {String(s.n).padStart(2, "0")} / {String(SERVICES.length).padStart(2, "0")}
                       </span>
                     </div>
-                    <p className="mt-1.5 text-[13px] leading-relaxed text-foreground/70 sm:text-sm">{s.desc}</p>
-                    <ul className="mt-2.5 flex flex-wrap gap-x-4 gap-y-1 text-[12px] text-foreground/50">
+                    <p className="mt-1.5 text-[13px] leading-relaxed text-ink/70 sm:text-sm">{s.desc}</p>
+                    <ul className="mt-2.5 flex flex-wrap gap-x-4 gap-y-1 text-[12px] text-ink/50">
                       {s.points.map((p) => (
                         <li key={p} className="flex items-center gap-2">
-                          <span className="h-1 w-1 shrink-0 rounded-full bg-brand" />
+                          <span className="h-1 w-1 shrink-0 rounded-full bg-royal" />
                           {p}
                         </li>
                       ))}
@@ -198,13 +198,13 @@ function Chapter({ chapter, fallbackCard }) {
               })}
             </motion.ul>
           ) : (
-            <motion.ul variants={item} className="mt-7 border-t border-foreground/[0.08]">
+            <motion.ul variants={item} className="mt-7 border-t border-navy/[0.08]">
               {chapter.points.map((p) => (
                 <li
                   key={p}
-                  className="flex items-center gap-3 border-b border-foreground/[0.08] py-3 text-[13px] text-foreground/80 sm:text-sm"
+                  className="flex items-center gap-3 border-b border-navy/[0.08] py-3 text-[13px] text-ink/80 sm:text-sm"
                 >
-                  <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-gold" />
+                  <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-royal" />
                   {p}
                 </li>
               ))}
@@ -299,16 +299,16 @@ export default function ServicesJourney() {
     <MotionConfig reducedMotion="user">
       <div ref={section} className="relative">
         {/* Sticky 3D stage behind the copy */}
-        <div className="sticky top-0 -mb-[100svh] h-svh overflow-hidden bg-background">
+        <div className="sticky top-0 -mb-[100svh] h-svh overflow-hidden bg-paper">
           <div
             aria-hidden
-            className="absolute inset-0 bg-[radial-gradient(ellipse_60%_55%_at_68%_45%,rgba(49,106,162,0.16),transparent)] max-lg:bg-[radial-gradient(ellipse_80%_45%_at_50%_30%,rgba(49,106,162,0.18),transparent)]"
+            className="absolute inset-0 bg-[radial-gradient(ellipse_60%_55%_at_68%_45%,rgba(36,82,181,0.12),transparent)] max-lg:bg-[radial-gradient(ellipse_80%_45%_at_50%_30%,rgba(36,82,181,0.12),transparent)]"
           />
           <ServicesSceneSmart journey={journey} reduce={reduce} onUnavailable={onUnavailable} />
           {/* Legibility scrims: copy sits left on desktop, bottom on mobile */}
           <div
             aria-hidden
-            className="absolute inset-0 bg-gradient-to-t from-background from-25% via-background/60 via-50% to-transparent to-70% lg:bg-gradient-to-r lg:from-background/85 lg:from-0% lg:via-background/25 lg:via-40% lg:to-transparent lg:to-60%"
+            className="absolute inset-0 bg-gradient-to-t from-paper from-25% via-paper/60 via-50% to-transparent to-70% lg:bg-gradient-to-r lg:from-paper/85 lg:from-0% lg:via-paper/25 lg:via-40% lg:to-transparent lg:to-60%"
           />
 
           <nav
@@ -320,14 +320,13 @@ export default function ServicesJourney() {
               return (
                 <a key={c.id} href={`#${c.id}`} className="group flex items-center justify-end gap-3">
                   <span
-                    className={`text-[11px] tracking-[0.18em] uppercase transition-colors duration-500 ${
-                      on ? "text-foreground" : "text-foreground/35 group-hover:text-foreground/70"
-                    }`}
+                    className={`text-[11px] tracking-[0.18em] uppercase transition-colors duration-500 ${on ? "text-ink" : "text-ink/35 group-hover:text-ink/70"
+                      }`}
                   >
                     {c.short}
                   </span>
                   <span
-                    className={`h-px transition-all duration-500 ${on ? "w-10 bg-brand" : "w-5 bg-foreground/25"}`}
+                    className={`h-px transition-all duration-500 ${on ? "w-10 bg-royal" : "w-5 bg-navy/25"}`}
                   />
                 </a>
               );
@@ -344,9 +343,9 @@ export default function ServicesJourney() {
                   id="services-title"
                   className="font-display text-[clamp(2.6rem,7.4vw,5.6rem)] leading-[1] tracking-tight"
                 >
-                  What are you <span className="text-brand">looking for?</span>
+                  What are you <span className="text-royal">looking for?</span>
                 </h1>
-                <p className="mt-6 max-w-lg text-sm leading-relaxed text-foreground/70 sm:text-base">
+                <p className="mt-6 max-w-lg text-sm leading-relaxed text-ink/70 sm:text-base">
                   Every business arrives with a different question. Scroll to see how we bring order to
                   the numbers — or go straight to what you need.
                 </p>
@@ -356,12 +355,11 @@ export default function ServicesJourney() {
                       <li key={c.href}>
                         <a
                           href={`#${c.href}`}
-                          className={`inline-flex items-center gap-2 rounded-full border px-3.5 py-1.5 text-[13px] tracking-wide transition-colors duration-300 hover:border-brand/60 hover:text-brand ${
-                            c.n ? "border-foreground/15 text-foreground/80" : "border-gold/40 text-gold"
-                          }`}
+                          className={`inline-flex items-center gap-2 rounded-full border px-3.5 py-1.5 text-[13px] tracking-wide transition-colors duration-300 hover:border-royal/60 hover:text-royal ${c.n ? "border-navy/15 text-ink/80" : "border-royal/40 text-royal"
+                            }`}
                         >
                           {c.n ? (
-                            <span className="font-mono text-[11px] text-brand">{String(c.n).padStart(2, "0")}</span>
+                            <span className="font-mono text-[11px] text-royal">{String(c.n).padStart(2, "0")}</span>
                           ) : null}
                           {c.label}
                         </a>

@@ -1,6 +1,5 @@
 import { Geist, Geist_Mono, Instrument_Serif } from "next/font/google";
 import "./globals.css";
-import Particles from "./components/Particles";
 import SmoothScroll from "./components/SmoothScroll";
 import Header from "./components/Header";
 
@@ -34,7 +33,6 @@ export default function RootLayout({ children }) {
     >
       <body className="min-h-full flex flex-col">
         <SmoothScroll />
-        <Particles />
         <Header />
         {children}
       </body>

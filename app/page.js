@@ -1,7 +1,6 @@
 import Hero from "./components/Hero";
-import ClarityIntro from "./components/ClarityIntro";
-import CubeSection from "./components/CubeSection";
-import ServicesDrum from "./components/ServicesDrum";
+import Positioning from "./components/Positioning";
+import ServicesGrid from "./components/ServicesGrid";
 import WhyChooseUs from "./components/WhyChooseUs";
 import OurValues from "./components/OurValues";
 import ContactSection from "./components/ContactSection";
@@ -10,12 +9,9 @@ export default function Home() {
   return (
     <main>
       <Hero />
-      <ClarityIntro />
-      <CubeSection />
-      <ServicesDrum />
+      <ServicesGrid />
+      <Positioning />
       <WhyChooseUs />
-      <OurValues />
-      <ContactSection />
     </main>
   );
 }

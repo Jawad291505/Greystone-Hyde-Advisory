@@ -21,7 +21,7 @@ function rng(seed) {
   };
 }
 
-function buildPieces() {
+function buildPieces(spread = 1) {
   const rand = rng(7);
   const out = [];
   let idx = 0;
@@ -31,7 +31,7 @@ function buildPieces() {
         const outward = { right: x === 1, left: x === -1, top: y === 1, bottom: y === -1, front: z === 1, back: z === -1 };
         const a = rand() * Math.PI * 2;
         const b = Math.acos(2 * rand() - 1);
-        const r = 3.2 + rand() * 2.6; // in units of one piece
+        const r = (3.2 + rand() * 2.6) * spread; // in units of one piece
         out.push({
           g: [x, y, z],
           top: y === 1,
@@ -49,11 +49,13 @@ function buildPieces() {
   return out;
 }
 
-export default function CubeCssStage({ progress }) {
+// offsetX: where the solved cube settles on wide screens, as a fraction of
+// viewport width from centre (positive = right). spread scales the scatter.
+export default function CubeCssStage({ progress, offsetX = 0.24, offsetYMobile = -0.14, spread = 1 }) {
   const scene = useRef(null);
   const group = useRef(null);
   const nodes = useRef([]);
-  const pieces = useMemo(() => buildPieces(), []);
+  const pieces = useMemo(() => buildPieces(spread), [spread]);
 
   useEffect(() => {
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -115,8 +117,8 @@ export default function CubeCssStage({ progress }) {
         // applying the full offset throughout also drags the scatter phase's
         // pieces off the left side, collapsing the "all over the screen"
         // spread onto the right half.
-        const x = wide ? window.innerWidth * 0.24 * settle : 0;
-        const y = wide ? 0 : -window.innerHeight * 0.14;
+        const x = wide ? window.innerWidth * offsetX * settle : 0;
+        const y = wide ? 0 : window.innerHeight * offsetYMobile;
         const ry = 36 + inv(settle) * 200;
         const rx = -(24 - inv(settle) * 14);
         g.style.transform = `translate3d(${x.toFixed(0)}px,${y.toFixed(0)}px,0) rotateX(${rx.toFixed(1)}deg) rotateY(${ry.toFixed(1)}deg)`;
@@ -129,7 +131,7 @@ export default function CubeCssStage({ progress }) {
       cancelAnimationFrame(raf);
       window.removeEventListener("resize", size);
     };
-  }, [pieces, progress]);
+  }, [pieces, progress, offsetX, offsetYMobile]);
 
   return (
     <div ref={scene} className="c3d-scene absolute inset-0" aria-hidden>
