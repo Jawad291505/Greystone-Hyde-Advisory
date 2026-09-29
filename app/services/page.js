@@ -13,7 +13,7 @@ export default function ServicesPage() {
       <ServicesJourney />
 
       {/* Closing CTA: the same navy → royal plane used behind the hero photographs */}
-      <section className="relative overflow-hidden bg-[linear-gradient(155deg,var(--navy)_0%,var(--royal)_100%)] text-white">
+      <section className="relative mx-3 mb-3 overflow-hidden rounded-panel bg-[linear-gradient(155deg,var(--navy)_0%,var(--royal)_100%)] text-white">
         <div aria-hidden className="pointer-events-none absolute -top-1/3 right-[-10%] h-[120%] w-[55%] bg-[radial-gradient(closest-side,rgba(255,255,255,0.12),transparent)]" />
         <div className="relative mx-auto grid max-w-[88rem] gap-10 px-5 py-24 sm:px-8 lg:grid-cols-12 lg:items-end lg:px-12 lg:py-32">
           <div className="lg:col-span-7">

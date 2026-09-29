@@ -191,7 +191,9 @@ export default function Hero() {
   const p = useTransform(() => intro.get() * (1 - expand.get()));
   const clipPath = useTransform(
     p,
-    (v) => `inset(calc(var(--t) * ${v}) calc(var(--r) * ${v}) calc(var(--b) * ${v}) calc(var(--l) * ${v}))`,
+    // Corners round with the frame, and square off again as it opens to full bleed.
+    (v) =>
+      `inset(calc(var(--t) * ${v}) calc(var(--r) * ${v}) calc(var(--b) * ${v}) calc(var(--l) * ${v}) round calc(var(--radius-panel) * ${v}))`,
   );
   // At rest the frame shows the stage's right half; shifting the photo right
   // with the clip keeps the pencil hand centred in it, and at full bleed the
@@ -213,8 +215,8 @@ export default function Hero() {
       className="relative bg-paper bg-[radial-gradient(70%_60%_at_18%_32%,var(--sky),transparent_72%)] text-ink lg:h-[190svh] motion-reduce:lg:h-auto"
     >
       <div
-        style={{ "--l": desktop ? col(0.5) : "0%" }}
-        className="relative isolate [--b:0%] [--r:0%] [--t:0%] lg:sticky lg:top-0 lg:h-svh lg:overflow-hidden lg:[--b:10%] lg:[--t:15%]"
+        style={desktop ? { "--l": col(0.5) } : undefined}
+        className="relative isolate [--b:0%] [--l:1.25rem] [--r:1.25rem] [--t:0%] sm:[--l:2rem] sm:[--r:2rem] lg:[--r:0%] lg:sticky lg:top-0 lg:h-svh lg:overflow-hidden lg:[--b:10%] lg:[--t:15%]"
       >
         <LedgerRules reduce={reduce} />
 
@@ -402,7 +404,7 @@ export default function Hero() {
             initial={reduce ? false : { clipPath: "inset(100% 0% 0% 0%)" }}
             animate={ready ? { clipPath: "inset(0% 0% 0% 0%)" } : undefined}
             transition={{ duration: 1.2, ease, delay: T.detail }}
-            className="relative aspect-[4/3] overflow-hidden bg-navy shadow-[0_30px_60px_-30px_rgba(11,26,56,0.55)]"
+            className="relative aspect-[4/3] overflow-hidden rounded-inner bg-navy shadow-[0_30px_60px_-30px_rgba(11,26,56,0.55)]"
           >
             {/* Oversized and offset so the frame shows only the hands and papers */}
             <div className="absolute top-[-140%] left-[-65%] h-[270%] w-[294%]">

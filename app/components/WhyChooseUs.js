@@ -63,8 +63,9 @@ export default function WhyChooseUs() {
 
   return (
     <section id="why-us" aria-labelledby="why-title" className="relative scroll-mt-20 bg-paper text-ink">
-      {/* Navy band: the one deep-colour moment between bright sections */}
-      <div className="relative overflow-hidden bg-[linear-gradient(165deg,var(--navy)_0%,var(--ink)_70%)] text-white">
+      {/* Navy band: the one deep-colour moment between bright sections, inset
+          from the page edges as a rounded panel */}
+      <div className="relative mx-3 overflow-hidden rounded-panel bg-[linear-gradient(165deg,var(--navy)_0%,var(--ink)_70%)] text-white">
         <div aria-hidden className="pointer-events-none absolute -top-1/4 right-[-10%] h-[90%] w-[60%] bg-[radial-gradient(closest-side,rgba(36,82,181,0.5),transparent)]" />
         <div aria-hidden className="pointer-events-none absolute bottom-[-30%] left-[-10%] h-[70%] w-[50%] bg-[radial-gradient(closest-side,rgba(91,130,214,0.18),transparent)]" />
 
@@ -106,7 +107,7 @@ export default function WhyChooseUs() {
             whileInView={{ clipPath: "inset(0% 0% 0% 0%)" }}
             viewport={{ once: true, margin: "-15%" }}
             transition={{ duration: 1.4, ease }}
-            className="relative aspect-[4/5] overflow-hidden bg-mist lg:sticky lg:top-28"
+            className="relative aspect-[4/5] overflow-hidden rounded-panel bg-mist lg:sticky lg:top-28"
           >
             <motion.div style={{ y: photoY }} className="absolute inset-x-0 -inset-y-[12%]">
               <Image

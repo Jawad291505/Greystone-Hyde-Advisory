@@ -134,7 +134,7 @@ export default function Positioning() {
                         transition={{ duration: 1.4, ease }}
                         className="mt-20 lg:mt-28"
                     >
-                        <div ref={imageRef} className="relative aspect-[4/3] overflow-hidden bg-mist">
+                        <div ref={imageRef} className="relative aspect-[4/3] overflow-hidden rounded-panel bg-mist">
                             <motion.div style={{ y: imageY }} className="absolute -inset-y-[10%] inset-x-0">
                                 <Image
                                     src="/images/desk-documents.jpg"

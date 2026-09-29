@@ -4,8 +4,8 @@ import { SERVICES } from "../lib/services";
 
 const N = SERVICES.length;
 
-// Every service visible at once, side by side: a ruled editorial grid
-// (hairline dividers, no floating cards). No scroll-linked motion; each
+// Every service visible at once, side by side: a grid of soft, rounded
+// cards that lift to white on hover. No scroll-linked motion; each
 // navy report panel animates its chart and headline figure once on first view.
 export default function ServicesGrid() {
     return (
@@ -33,46 +33,48 @@ export default function ServicesGrid() {
                     </p>
                 </div>
 
-                <ul className="mt-16 grid border-t border-l border-navy/10 sm:grid-cols-2 lg:mt-20 lg:grid-cols-3">
+                <ul className="mt-16 grid gap-4 sm:grid-cols-2 lg:mt-20 lg:grid-cols-3 lg:gap-5">
                     {SERVICES.map((s, i) => (
                         <li
                             key={s.slug}
-                            className="group flex flex-col border-r border-b border-navy/10 p-7 transition-colors duration-500 hover:bg-white sm:p-9"
+                            className="group flex flex-col overflow-hidden rounded-panel border border-navy/10 bg-white/50 pb-7 transition-[background-color,box-shadow] duration-500 hover:bg-white hover:shadow-[0_30px_60px_-40px_rgba(11,26,56,0.45)] sm:pb-9"
                         >
-                            <div className="transition-[transform,box-shadow] duration-500 group-hover:-translate-y-1 group-hover:shadow-[0_28px_50px_-30px_rgba(11,26,56,0.6)]">
-                                <ServiceIllustration slug={s.slug} />
-                            </div>
+                            {/* Flush to the card's top, left and right edges; the card's
+                                rounded corners clip its top corners */}
+                            <ServiceIllustration slug={s.slug} />
 
-                            <p className="mt-8 font-mono text-xs tracking-[0.2em] text-royal">
-                                {String(i + 1).padStart(2, "0")}
-                            </p>
-                            <h3 className="mt-2 font-display text-[2rem] leading-[1.05] tracking-tight text-ink">
-                                {s.name}
-                            </h3>
-                            <p className="mt-3 text-[15px] leading-relaxed text-navy/80">{s.desc}</p>
+                            <div className="flex flex-1 flex-col px-7 sm:px-9">
+                                <p className="mt-8 font-mono text-xs tracking-[0.2em] text-royal">
+                                    {String(i + 1).padStart(2, "0")}
+                                </p>
+                                <h3 className="mt-2 font-display text-[2rem] leading-[1.05] tracking-tight text-ink">
+                                    {s.name}
+                                </h3>
+                                <p className="mt-3 text-[15px] leading-relaxed text-navy/80">{s.desc}</p>
 
-                            <ul className="mt-6 border-t border-navy/10">
-                                {s.points.map((p) => (
-                                    <li key={p} className="flex items-baseline gap-3 border-b border-navy/10 py-3 text-sm text-ink/85">
-                                        <span className="h-px w-3 shrink-0 -translate-y-1 bg-royal" />
-                                        {p}
-                                    </li>
-                                ))}
-                            </ul>
+                                <ul className="mt-6 border-t border-navy/10">
+                                    {s.points.map((p) => (
+                                        <li key={p} className="flex items-baseline gap-3 border-b border-navy/10 py-3 text-sm text-ink/85">
+                                            <span className="h-px w-3 shrink-0 -translate-y-1 bg-royal" />
+                                            {p}
+                                        </li>
+                                    ))}
+                                </ul>
 
-                            <div className="mt-auto flex flex-wrap items-center gap-x-6 gap-y-2 pt-7 text-sm font-medium">
-                                <a href="#contact" className="inline-flex items-center gap-2 text-royal">
-                                    Discuss {s.name.toLowerCase()}
-                                    <span className="transition-transform duration-500 group-hover:translate-x-1" aria-hidden>
-                                        →
-                                    </span>
-                                </a>
-                                <Link
-                                    href={`/services#${s.slug}`}
-                                    className="text-navy/60 underline decoration-navy/20 underline-offset-4 transition-colors hover:text-ink hover:decoration-ink"
-                                >
-                                    Full details
-                                </Link>
+                                <div className="mt-auto flex flex-wrap items-center gap-x-6 gap-y-2 pt-7 text-sm font-medium">
+                                    <a href="#contact" className="inline-flex items-center gap-2 text-royal">
+                                        Discuss {s.name.toLowerCase()}
+                                        <span className="transition-transform duration-500 group-hover:translate-x-1" aria-hidden>
+                                            →
+                                        </span>
+                                    </a>
+                                    <Link
+                                        href={`/services#${s.slug}`}
+                                        className="text-navy/60 underline decoration-navy/20 underline-offset-4 transition-colors hover:text-ink hover:decoration-ink"
+                                    >
+                                        Full details
+                                    </Link>
+                                </div>
                             </div>
                         </li>
                     ))}

@@ -64,6 +64,12 @@
   --color-sky: var(--sky);
   --color-mist: var(--mist);
   --color-paper: var(--paper);
+  /* Corner radii: soft, consistent rounding across the site.
+     panel → large bands and photographs, card → cards and illustration
+     panels, inner → small crops and nested boxes. */
+  --radius-panel: 2rem;
+  --radius-card: 1.5rem;
+  --radius-inner: 1rem;
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
   --font-display: var(--font-display);
