@@ -67,6 +67,7 @@
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
   --font-display: var(--font-display);
+  --font-editorial: var(--font-editorial);
 }
 
 html {
@@ -163,6 +164,13 @@ body {
 .hero-parallax {
   will-change: transform;
   transition: transform 0.1s linear;
+}
+
+/* Preloader: never under reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  #preloader {
+    display: none;
+  }
 }
 
 /* Static film-grain texture (single SVG turbulence tile, no per-frame cost) */

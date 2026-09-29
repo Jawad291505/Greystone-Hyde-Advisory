@@ -1,7 +1,8 @@
-import { Geist, Geist_Mono, Instrument_Serif } from "next/font/google";
+import { Geist, Geist_Mono, Instrument_Serif, Newsreader } from "next/font/google";
 import "./globals.css";
 import SmoothScroll from "./components/SmoothScroll";
 import Header from "./components/Header";
+import Preloader from "./components/Preloader";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -19,6 +20,15 @@ const display = Instrument_Serif({
   weight: "400",
 });
 
+// Editorial display face for the hero: variable weight plus the optical-size
+// axis, so the headline is drawn from the high-contrast display cut.
+const editorial = Newsreader({
+  variable: "--font-editorial",
+  subsets: ["latin"],
+  style: ["normal", "italic"],
+  axes: ["opsz"],
+});
+
 export const metadata = {
   title: "Greystone Hyde Advisory | London Accounting & Financial Advisory",
   description:
@@ -29,9 +39,13 @@ export default function RootLayout({ children }) {
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} ${display.variable} h-full antialiased`}
+      className={`${geistSans.variable} ${geistMono.variable} ${display.variable} ${editorial.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
+        <noscript>
+          <style>{`#preloader{display:none}`}</style>
+        </noscript>
+        <Preloader />
         <SmoothScroll />
         <Header />
         {children}
