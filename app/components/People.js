@@ -1,156 +1,164 @@
 "use client";
 
 import Image from "next/image";
-import { useRef } from "react";
-import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
+import LineIcon from "./LineIcons";
 
 const ease = [0.22, 1, 0.36, 1];
 
-// The roles a client works with. Describes responsibilities only: no names,
-// credentials or tenure until the firm supplies real team details.
+// The specialisms a client works with. Describes responsibilities only: no
+// names, credentials or tenure until the firm supplies real team details.
 const roles = [
     {
+        icon: "contact",
         role: "Client accountant",
         focus: "Your day-to-day contact",
         body: "Owns your books, deadlines and questions. The person who knows your business best.",
     },
     {
+        icon: "review",
         role: "Tax specialist",
         focus: "Corporate & personal tax",
         body: "Prepares returns, reviews reliefs and plans ahead of year end, not after it.",
     },
     {
+        icon: "payday",
         role: "Payroll specialist",
         focus: "Payroll & pensions",
         body: "Runs each pay cycle, RTI submissions and auto-enrolment, on the same date every month.",
     },
     {
+        icon: "direction",
         role: "Advisory partner",
         focus: "Growth & decisions",
         body: "Joins when the questions get bigger: funding, structure, expansion and change.",
     },
 ];
 
-function Reveal({ children, delay = 0, className = "" }) {
-    const reduce = useReducedMotion();
-    return (
-        <motion.div
-            initial={reduce ? false : { opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-10%" }}
-            transition={{ duration: 0.9, ease, delay }}
-            className={className}
-        >
-            {children}
-        </motion.div>
-    );
-}
+const list = { show: { transition: { staggerChildren: 0.1 } } };
+const cardIn = {
+    hidden: { opacity: 0, y: 24 },
+    show: { opacity: 1, y: 0, transition: { duration: 0.9, ease } },
+};
 
-// Photograph revealed with a clip wipe, with gentle parallax inside its frame.
-function Photo({ src, alt, sizes, className, from = "bottom", depth = 8 }) {
-    const ref = useRef(null);
-    const reduce = useReducedMotion();
-    const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "end start"] });
-    const y = useTransform(scrollYProgress, [0, 1], reduce ? ["0%", "0%"] : [`-${depth}%`, `${depth}%`]);
-    const hidden = from === "bottom" ? "inset(100% 0% 0% 0%)" : "inset(0% 0% 0% 100%)";
-
-    return (
-        <motion.div
-            ref={ref}
-            initial={reduce ? false : { clipPath: hidden }}
-            whileInView={{ clipPath: "inset(0% 0% 0% 0%)" }}
-            viewport={{ once: true, margin: "-15%" }}
-            transition={{ duration: 1.4, ease }}
-            className={`relative overflow-hidden bg-mist ${className}`}
-        >
-            <motion.div style={{ y }} className="absolute inset-x-0 -inset-y-[12%]">
-                <Image src={src} alt={alt} fill sizes={sizes} className="object-cover" />
-            </motion.div>
-        </motion.div>
-    );
-}
-
+// Who a client works with, told through expertise rather than team photos:
+// the introduction across the top, then the City photograph beside the four
+// specialisms as cards.
 export default function People() {
-    return (
-        <section id="people" aria-labelledby="people-title" className="relative scroll-mt-20 overflow-hidden bg-paper text-ink">
-            {/* Light-blue wash that carries in from the cube's glow above */}
-            <div aria-hidden className="absolute inset-0 -z-0 bg-[linear-gradient(180deg,var(--paper)_0%,var(--sky)_45%,var(--paper)_100%)]" />
+    const reduce = useReducedMotion();
 
-            <div className="relative mx-auto max-w-[88rem] px-5 py-28 sm:px-8 lg:px-12 lg:py-36">
+    return (
+        <section id="people" aria-labelledby="people-title" className="relative scroll-mt-20 bg-paper text-ink">
+            <div className="mx-auto max-w-[88rem] px-5 py-24 sm:px-8 lg:px-12 lg:py-28">
                 <div className="flex items-center justify-between border-t border-navy/10 pt-5 font-mono text-[10px] tracking-[0.2em] text-navy/50 uppercase">
-                    <span>04 — People</span>
-                    <span className="hidden sm:inline">The team behind the numbers</span>
+                    <span>04 — Expertise</span>
+                    <span className="hidden sm:inline">Who you&apos;ll work with</span>
                 </div>
 
-                <div className="mt-14 grid gap-10 lg:mt-20 lg:grid-cols-12 lg:gap-8">
-                    <h2
-                        id="people-title"
-                        className="font-display text-[clamp(2.6rem,6.4vw,6rem)] leading-[0.96] tracking-[-0.02em] lg:col-span-8"
-                    >
-                        Real people.
-                        <br />
-                        Real expertise.
-                        <br />
-                        <em className="text-royal">Real businesses.</em>
-                    </h2>
-                    <Reveal delay={0.15} className="flex items-end lg:col-span-4">
-                        <p className="max-w-sm text-base leading-relaxed text-navy/75">
+                {/* Introduction */}
+                <motion.div
+                    initial={reduce ? false : { opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true, margin: "-10%" }}
+                    transition={{ duration: 0.9, ease }}
+                    className="mt-10 grid gap-6 lg:mt-14 lg:grid-cols-12 lg:items-end lg:gap-8"
+                >
+                        <h2
+                            id="people-title"
+                            className="font-display text-[clamp(2.4rem,5vw,4.2rem)] leading-[1.02] tracking-[-0.015em] text-balance lg:col-span-7"
+                        >
+                            Experienced accountants and advisers{" "}
+                            <em className="text-royal">who work directly with you.</em>
+                        </h2>
+                        <div className="lg:col-span-4 lg:col-start-9">
+                        <p className="max-w-md text-base leading-relaxed text-navy/75">
                             You won&apos;t be passed between departments or left waiting in a
                             support queue. A small, consistent team works on your account and
                             knows the history behind every number.
                         </p>
-                    </Reveal>
-                </div>
+                        <a
+                            href="#contact"
+                            className="group mt-6 inline-flex items-center gap-2 text-sm font-medium text-royal focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-royal"
+                        >
+                            Book a consultation
+                            <span aria-hidden className="transition-transform duration-500 group-hover:translate-x-1">
+                                →
+                            </span>
+                        </a>
+                        </div>
+                </motion.div>
 
-                {/* Editorial photo composition: one large frame, one offset detail */}
-                <div className="relative mt-16 lg:mt-24">
-                    <Photo
-                        src="/images/team-office.jpg"
-                        alt="A small team of advisers working together around a table in a bright office"
-                        sizes="(min-width: 1024px) 70vw, 100vw"
-                        className="aspect-[4/3] lg:mr-[26%] lg:aspect-[16/9]"
-                    />
-                    <div className="relative mt-4 ml-[30%] lg:absolute lg:right-0 lg:-bottom-20 lg:mt-0 lg:ml-0 lg:w-[34%]">
-                        <Photo
-                            src="/images/team-discussion.jpg"
-                            alt="Two colleagues discussing a report on a laptop"
-                            sizes="(min-width: 1024px) 30vw, 70vw"
-                            from="right"
-                            depth={12}
-                            className="aspect-[4/5] shadow-[0_40px_70px_-40px_rgba(11,26,56,0.55)]"
+                <div className="mt-12 grid gap-4 lg:mt-16 lg:grid-cols-12 lg:gap-5">
+                    {/* The work itself: a report under review, not a team photo.
+                        Photo: Towfiqu barbhuiya, Unsplash (Unsplash License) */}
+                    {/* The frame is watched for visibility and the clip is animated on an
+                        inner layer: a fully clipped element never registers as in view */}
+                    <motion.figure
+                        initial={reduce ? false : "hidden"}
+                        whileInView="show"
+                        viewport={{ once: true, margin: "-10%" }}
+                        className="relative m-0 aspect-[16/10] overflow-hidden rounded-card sm:aspect-[2/1] lg:col-span-5 lg:aspect-auto"
+                    >
+                        <motion.div
+                            variants={{
+                                hidden: { clipPath: "inset(100% 0% 0% 0%)" },
+                                show: { clipPath: "inset(0% 0% 0% 0%)", transition: { duration: 1.4, ease } },
+                            }}
+                            className="absolute inset-0 bg-navy"
+                        >
+                        <Image
+                            src="/images/advisory-review.jpg"
+                            alt="An adviser in a suit reviewing financial charts beside a calculator, pen and printed reports"
+                            fill
+                            sizes="(min-width: 1024px) 40vw, 100vw"
+                            className="object-cover object-[55%_50%] [filter:saturate(0.45)_contrast(1.08)_brightness(0.97)]"
                         />
-                        <p className="mt-3 flex items-center gap-2 font-mono text-[10px] tracking-[0.18em] text-navy/50 uppercase">
-                            <span className="h-px w-4 bg-royal/50" />
-                            Working sessions, not handovers
-                        </p>
-                    </div>
-                </div>
+                        {/* House grade: navy-tinted, deepest where the caption sits */}
+                        <div className="absolute inset-0 bg-[linear-gradient(200deg,rgba(36,82,181,0.25)_0%,rgba(20,42,92,0.45)_55%,rgba(11,26,56,0.85)_100%)] mix-blend-multiply" />
+                        <div className="hero-grain absolute inset-0 opacity-[0.14]" />
+                        </motion.div>
+                        <figcaption className="absolute inset-x-0 bottom-0 p-7">
+                            <p className="font-display text-[clamp(1.6rem,2.2vw,2rem)] leading-tight tracking-tight text-paper">
+                                Every figure reviewed,
+                                <br />
+                                <em className="text-sky">every return checked.</em>
+                            </p>
+                            <p className="mt-3 flex items-center gap-2 font-mono text-[10px] tracking-[0.18em] text-paper/65 uppercase">
+                                <span className="h-px w-4 bg-paper/40" />
+                                Qualified, human review
+                            </p>
+                        </figcaption>
+                    </motion.figure>
 
-                {/* Roles */}
-                <div className="mt-24 lg:mt-44">
-                    <Reveal>
-                        <p className="font-display text-[clamp(1.6rem,2.6vw,2.2rem)] leading-tight tracking-tight">
-                            Who you&apos;ll work with
-                        </p>
-                    </Reveal>
-
-                    <ol className="mt-10 grid border-t border-navy/15 sm:grid-cols-2 lg:grid-cols-4">
+                    {/* The four specialisms */}
+                    <motion.ol
+                        variants={list}
+                        initial={reduce ? false : "hidden"}
+                        whileInView="show"
+                        viewport={{ once: true, margin: "-10%" }}
+                        className="grid gap-4 sm:grid-cols-2 lg:col-span-7 lg:gap-5"
+                    >
                         {roles.map((r, i) => (
-                            <li
+                            <motion.li
                                 key={r.role}
-                                className="group relative border-b border-navy/15 py-8 sm:pr-8 lg:border-b-0 lg:border-r lg:px-8 lg:first:pl-0 lg:last:border-r-0"
+                                variants={cardIn}
+                                className="group relative overflow-hidden rounded-card border border-navy/10 bg-white/60 p-7 transition-[background-color,border-color,box-shadow] duration-500 hover:border-royal/20 hover:bg-white hover:shadow-[0_30px_60px_-44px_rgba(11,26,56,0.4)]"
                             >
-                                <Reveal delay={i * 0.08}>
-                                    {/* Royal rule grows across on hover */}
-                                    <span className="absolute top-[-1px] left-0 h-px w-full origin-left scale-x-0 bg-royal transition-transform duration-700 group-hover:scale-x-100" />
-                                    <p className="font-mono text-[11px] text-royal">{String(i + 1).padStart(2, "0")}</p>
-                                    <h3 className="mt-4 font-display text-[1.75rem] leading-tight tracking-tight">{r.role}</h3>
-                                    <p className="mt-1 font-mono text-[10px] tracking-[0.16em] text-navy/50 uppercase">{r.focus}</p>
-                                    <p className="mt-5 text-[15px] leading-relaxed text-navy/75">{r.body}</p>
-                                </Reveal>
-                            </li>
+                                {/* Royal rule draws across the top on hover */}
+                                <span
+                                    aria-hidden
+                                    className="absolute top-0 left-0 h-0.5 w-full origin-left scale-x-0 bg-royal transition-transform duration-700 group-hover:scale-x-100"
+                                />
+                                <div className="flex items-start justify-between">
+                                    <LineIcon name={r.icon} className="h-11 w-11" />
+                                    <span className="font-mono text-[11px] text-navy/40">{String(i + 1).padStart(2, "0")}</span>
+                                </div>
+                                <h3 className="mt-6 font-display text-[1.65rem] leading-tight tracking-tight">{r.role}</h3>
+                                <p className="mt-1 font-mono text-[10px] tracking-[0.16em] text-royal uppercase">{r.focus}</p>
+                                <p className="mt-4 text-[15px] leading-relaxed text-navy/75">{r.body}</p>
+                            </motion.li>
                         ))}
-                    </ol>
+                    </motion.ol>
                 </div>
             </div>
         </section>

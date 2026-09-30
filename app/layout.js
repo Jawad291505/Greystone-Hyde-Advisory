@@ -2,6 +2,7 @@ import { Geist, Geist_Mono, Instrument_Serif, Newsreader } from "next/font/googl
 import "./globals.css";
 import SmoothScroll from "./components/SmoothScroll";
 import Header from "./components/Header";
+import Footer from "./components/Footer";
 import Preloader from "./components/Preloader";
 
 const geistSans = Geist({
@@ -49,6 +50,7 @@ export default function RootLayout({ children }) {
         <SmoothScroll />
         <Header />
         {children}
+        <Footer />
       </body>
     </html>
   );

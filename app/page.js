@@ -2,8 +2,8 @@ import Hero from "./components/Hero";
 import Positioning from "./components/Positioning";
 import ServicesGrid from "./components/ServicesGrid";
 import WhyChooseUs from "./components/WhyChooseUs";
+import People from "./components/People";
 import Coverage from "./components/Coverage";
-import OurValues from "./components/OurValues";
 import ContactSection from "./components/ContactSection";
 
 export default function Home() {
@@ -13,7 +13,9 @@ export default function Home() {
       <ServicesGrid />
       <Positioning />
       <WhyChooseUs />
+      <People />
       <Coverage />
+      <ContactSection />
     </main>
   );
 }

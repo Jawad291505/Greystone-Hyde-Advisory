@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useId, useRef } from "react";
+import { useEffect, useId, useLayoutEffect, useRef } from "react";
 import { animate, motion, useInView, useReducedMotion } from "framer-motion";
 
 // Report-style panels for each service: a headline figure, a real chart
@@ -320,13 +320,21 @@ function Chart({ chart, gid }) {
     );
 }
 
-// Headline figure that counts up once when the panel first appears.
+// Headline figure that counts up once when the panel first appears. One text
+// node, rendered with the final value (so it never reads as two numbers) and
+// reset to zero before paint until the panel is in view.
 function Kpi({ value, format, active }) {
     const ref = useRef(null);
     const reduce = useReducedMotion();
     const { prefix = "", suffix = "", decimals = 0 } = format;
     const fmt = (v) =>
         `${prefix}${v.toLocaleString("en-GB", { minimumFractionDigits: decimals, maximumFractionDigits: decimals })}${suffix}`;
+
+    useLayoutEffect(() => {
+        if (!reduce && !active && ref.current) ref.current.textContent = fmt(0);
+        // Only on mount
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     useEffect(() => {
         if (!active || !ref.current) return;
@@ -345,12 +353,9 @@ function Kpi({ value, format, active }) {
     }, [active, reduce, value]);
 
     return (
-        <>
-            <span className="sr-only">{fmt(value)}</span>
-            <span ref={ref} aria-hidden className="tabular-nums">
-                {fmt(0)}
-            </span>
-        </>
+        <span ref={ref} className="tabular-nums">
+            {fmt(value)}
+        </span>
     );
 }
 
@@ -368,15 +373,15 @@ export default function ServicePanel({ slug }) {
             ref={ref}
             initial={reduce ? false : "hidden"}
             animate={active ? "show" : "hidden"}
-            className="relative overflow-hidden bg-[linear-gradient(160deg,var(--navy)_0%,var(--ink)_100%)] p-5 text-white sm:p-6"
+            className="relative overflow-hidden bg-[linear-gradient(160deg,var(--navy)_0%,var(--ink)_100%)] p-6 text-white sm:p-7"
         >
             {/* Soft royal light, top right */}
             <div aria-hidden className="pointer-events-none absolute -top-1/3 -right-1/4 h-[80%] w-[70%] bg-[radial-gradient(closest-side,rgba(36,82,181,0.55),transparent)]" />
 
             <div className="relative">
-                <div className="flex items-center justify-between font-mono text-[9.5px] tracking-[0.18em] uppercase">
-                    <span className="text-white/55">{p.title}</span>
-                    <span className="flex items-center gap-1.5 text-[#8fb4ff]">
+                <div className="flex items-center justify-between gap-3 font-mono text-[10px] tracking-[0.18em] uppercase">
+                    <span className="truncate text-white/55">{p.title}</span>
+                    <span className="flex shrink-0 items-center gap-1.5 text-[#8fb4ff]">
                         <span className="h-1.5 w-1.5 rounded-full bg-[#8fb4ff]" />
                         {p.tag}
                     </span>
@@ -384,8 +389,8 @@ export default function ServicePanel({ slug }) {
 
                 <div className="mt-5 flex items-end justify-between gap-4">
                     <div>
-                        <p className="text-[11px] text-white/55">{p.kpi.label}</p>
-                        <p className="mt-1 font-display text-[2.1rem] leading-none tracking-tight">
+                        <p className="text-xs text-white/60">{p.kpi.label}</p>
+                        <p className="mt-1.5 font-display text-[2.25rem] leading-none tracking-tight">
                             <Kpi value={p.kpi.value} format={p.kpi.format} active={active} />
                         </p>
                     </div>
@@ -400,7 +405,7 @@ export default function ServicePanel({ slug }) {
                         </ul>
                     )}
                 </div>
-                <p className="mt-2 text-[11px] text-[#8fb4ff]">{p.kpi.delta}</p>
+                <p className="mt-2 text-xs text-[#8fb4ff]">{p.kpi.delta}</p>
 
                 <div className="mt-5">
                     <Chart chart={p.chart} gid={gid} />
@@ -409,13 +414,13 @@ export default function ServicePanel({ slug }) {
                 <dl className="mt-4 grid grid-cols-3 border-t border-white/10 pt-3">
                     {p.rows.map(([label, value]) => (
                         <div key={label} className="min-w-0">
-                            <dt className="truncate font-mono text-[9px] tracking-[0.1em] text-white/45 uppercase">{label}</dt>
-                            <dd className="mt-1 font-mono text-[12px] tabular-nums text-white/90">{value}</dd>
+                            <dt className="truncate font-mono text-[10px] tracking-[0.1em] text-white/50 uppercase">{label}</dt>
+                            <dd className="mt-1 font-mono text-[13px] tabular-nums text-white/90">{value}</dd>
                         </div>
                     ))}
                 </dl>
 
-                <p className="mt-3 text-right font-mono text-[8.5px] tracking-[0.16em] text-white/30 uppercase">
+                <p className="mt-4 text-right font-mono text-[9px] tracking-[0.16em] text-white/35 uppercase">
                     Illustrative figures
                 </p>
             </div>

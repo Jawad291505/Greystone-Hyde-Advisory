@@ -10,6 +10,7 @@ const links = [
   { href: "/services", label: "Services" },
   { href: "/#why-us", label: "Why us" },
   { href: "/#approach", label: "Approach" },
+  { href: "/#people", label: "Expertise" },
   { href: "/about", label: "About" },
 ];
 
@@ -81,9 +82,9 @@ export default function Header() {
         <div className="flex items-center gap-3">
           <MagneticButton
             href="/#contact"
-            className="hidden rounded-full border border-navy/20 px-6 py-2.5 text-[13px] tracking-wide text-navy transition-colors duration-300 hover:border-navy hover:bg-navy hover:text-white sm:block"
+            className="rounded-full bg-navy px-6 py-2.5 max-sm:hidden text-[13px] font-medium tracking-wide text-white transition-colors duration-500 hover:bg-royal focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-royal sm:block"
           >
-            Contact us
+            Book a consultation
           </MagneticButton>
           <button
             type="button"
@@ -138,9 +139,9 @@ export default function Header() {
               variants={itemVariants}
               href="/#contact"
               onClick={() => setOpen(false)}
-              className="mt-8 block rounded-full bg-navy py-4 text-center text-sm font-medium text-white"
+              className="mt-8 block rounded-full bg-navy py-4 text-center text-sm font-medium tracking-wide text-white"
             >
-              Contact us
+              Book a consultation
             </motion.a>
             <motion.p
               variants={itemVariants}

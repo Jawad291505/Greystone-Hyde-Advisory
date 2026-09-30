@@ -1,9 +1,8 @@
 "use client";
 
-import Image from "next/image";
-import { useRef } from "react";
-import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import CountUp from "./CountUp";
+import LineIcon from "./LineIcons";
 import { SERVICES } from "../lib/services";
 
 const ease = [0.22, 1, 0.36, 1];
@@ -19,14 +18,17 @@ const figures = [
 ];
 
 const reasons = [
-  { title: "Business-first advice", body: "We read your numbers against your goals, not just the compliance checklist." },
-  { title: "Precision in reporting", body: "Clean, reconciled books and reports you can act on without a translator." },
-  { title: "Proactive, not reactive", body: "Risks, reliefs and deadlines flagged before they become problems." },
-  { title: "Fixed, transparent fees", body: "Agreed up front, in writing. No surprise invoices at year end." },
-  { title: "Modern, cloud-based finance", body: "Live figures in Xero, QuickBooks or Sage, never a year out of date." },
-  { title: "Discreet by default", body: "Your affairs stay yours. Confidentiality is built into how we work." },
+  { icon: "target", title: "Business-first advice", body: "We read your numbers against your goals, not just the compliance checklist." },
+  { icon: "precision", title: "Precision in reporting", body: "Clean, reconciled books and reports you can act on without a translator." },
+  { icon: "proactive", title: "Proactive, not reactive", body: "Risks, reliefs and deadlines flagged before they become problems." },
+  { icon: "fees", title: "Fixed, transparent fees", body: "Agreed up front, in writing. No surprise invoices at year end." },
+  { icon: "cloud", title: "Modern, cloud-based finance", body: "Live figures in Xero, QuickBooks or Sage, never a year out of date." },
+  { icon: "shield", title: "Discreet by default", body: "Your affairs stay yours. Confidentiality is built into how we work." },
 ];
 
+// Value and label read as one unit: the figure, then its label directly
+// beneath, then the supporting line. Single-digit commitments are set
+// statically; counting 0 → 1 adds motion without meaning.
 function Figure({ f, i }) {
   const reduce = useReducedMotion();
   return (
@@ -35,31 +37,28 @@ function Figure({ f, i }) {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-10%" }}
       transition={{ duration: 0.9, ease, delay: i * 0.1 }}
-      className="relative border-b border-white/10 py-10 sm:border-r sm:px-8 sm:even:border-r-0 lg:border-b-0 lg:first:pl-0 lg:even:border-r lg:last:border-r-0"
+      className="relative border-white/10 py-9 max-lg:odd:pr-6 max-lg:even:border-l max-lg:even:pl-6 max-lg:[&:nth-child(-n+2)]:border-b lg:border-l lg:px-8 lg:first:border-l-0 lg:first:pl-0"
     >
-      {/* Rule that draws across as the figure counts */}
+      {/* Rule that draws across as the figure lands */}
       <motion.span
         aria-hidden
         initial={reduce ? false : { scaleX: 0 }}
         whileInView={{ scaleX: 1 }}
         viewport={{ once: true, margin: "-10%" }}
         transition={{ duration: 1.8, ease, delay: 0.2 + i * 0.12 }}
-        className="absolute top-0 left-0 h-px w-full origin-left bg-[#8fb4ff] sm:left-8 sm:w-[calc(100%-4rem)] lg:first:left-0"
+        className={`absolute top-[-1px] h-px w-10 origin-left bg-[#8fb4ff] ${i === 0 ? "left-0" : i === 2 ? "left-0 lg:left-8" : "left-6 lg:left-8"}`}
       />
-      <p className="font-display text-[clamp(4rem,7vw,6.5rem)] leading-none tracking-[-0.03em] text-white">
-        <CountUp to={f.to} suffix={f.suffix} delay={0.2 + i * 0.12} duration={f.to > 10 ? 2.2 : 1.2} />
+      <p className="font-display text-[clamp(3rem,5.5vw,4.75rem)] leading-[0.9] tracking-[-0.02em] whitespace-nowrap text-white">
+        {f.to > 10 ? <CountUp to={f.to} suffix={f.suffix} delay={0.2 + i * 0.12} duration={2.2} /> : `${f.to}${f.suffix ?? ""}`}
       </p>
-      <p className="mt-5 font-mono text-[10px] tracking-[0.2em] text-[#8fb4ff] uppercase">{f.label}</p>
-      <p className="mt-2 max-w-[16rem] text-sm leading-relaxed text-white/65">{f.body}</p>
+      <p className="mt-3 font-mono text-[11px] tracking-[0.18em] text-[#8fb4ff] uppercase">{f.label}</p>
+      <p className="mt-3 max-w-[16rem] text-sm leading-relaxed text-white/65">{f.body}</p>
     </motion.li>
   );
 }
 
 export default function WhyChooseUs() {
-  const photoRef = useRef(null);
   const reduce = useReducedMotion();
-  const { scrollYProgress } = useScroll({ target: photoRef, offset: ["start end", "end start"] });
-  const photoY = useTransform(scrollYProgress, [0, 1], reduce ? ["0%", "0%"] : ["-10%", "10%"]);
 
   return (
     <section id="why-us" aria-labelledby="why-title" className="relative scroll-mt-20 bg-paper text-ink">
@@ -71,7 +70,7 @@ export default function WhyChooseUs() {
 
         <div className="relative mx-auto max-w-[88rem] px-5 pt-28 pb-16 sm:px-8 lg:px-12 lg:pt-36 lg:pb-24">
           <div className="flex items-center justify-between border-t border-white/15 pt-5 font-mono text-[10px] tracking-[0.2em] text-white/50 uppercase">
-            <span>04 — Why choose us</span>
+            <span>03 — Why choose us</span>
             <span className="hidden sm:inline">Our value, your advantage</span>
           </div>
 
@@ -90,7 +89,7 @@ export default function WhyChooseUs() {
             </p>
           </div>
 
-          <ul className="mt-16 grid border-t border-white/10 sm:grid-cols-2 lg:mt-24 lg:grid-cols-4">
+          <ul className="mt-16 grid grid-cols-2 border-t border-white/10 lg:mt-24 lg:grid-cols-4">
             {figures.map((f, i) => (
               <Figure key={f.label} f={f} i={i} />
             ))}
@@ -98,53 +97,40 @@ export default function WhyChooseUs() {
         </div>
       </div>
 
-      {/* Reasons: editorial list beside a photograph, back on the bright page */}
-      <div className="mx-auto grid max-w-[88rem] gap-14 px-5 py-24 sm:px-8 lg:grid-cols-12 lg:gap-8 lg:px-12 lg:py-32">
-        <div className="lg:col-span-5">
-          <motion.div
-            ref={photoRef}
-            initial={reduce ? false : { clipPath: "inset(0% 0% 100% 0%)" }}
-            whileInView={{ clipPath: "inset(0% 0% 0% 0%)" }}
-            viewport={{ once: true, margin: "-15%" }}
-            transition={{ duration: 1.4, ease }}
-            className="relative aspect-[4/5] overflow-hidden rounded-panel bg-mist lg:sticky lg:top-28"
-          >
-            <motion.div style={{ y: photoY }} className="absolute inset-x-0 -inset-y-[12%]">
-              <Image
-                src="/images/team-discussion.jpg"
-                alt="Two colleagues discussing a report on a laptop"
-                fill
-                sizes="(min-width: 1024px) 38vw, 100vw"
-                className="object-cover"
-              />
-            </motion.div>
-          </motion.div>
-        </div>
-
-        <div className="lg:col-span-6 lg:col-start-7">
-          <p className="font-display text-[clamp(1.8rem,3vw,2.6rem)] leading-tight tracking-tight">
+      {/* Reasons: an even ledger of six, back on the bright page */}
+      <div className="mx-auto max-w-[88rem] px-5 py-24 sm:px-8 lg:px-12 lg:py-32">
+        <div className="grid gap-6 lg:grid-cols-12 lg:items-end">
+          <p className="font-display text-[clamp(1.9rem,3.4vw,3rem)] leading-[1.05] tracking-tight lg:col-span-6">
             Six reasons clients stay with us.
           </p>
-          <ol className="mt-10 border-t border-navy/15">
-            {reasons.map((r, i) => (
-              <motion.li
-                key={r.title}
-                initial={reduce ? false : { opacity: 0, y: 18 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-8%" }}
-                transition={{ duration: 0.8, ease, delay: (i % 2) * 0.06 }}
-                className="group relative grid grid-cols-[3rem_1fr] border-b border-navy/15 py-7 sm:grid-cols-[4rem_1fr_1.2fr] sm:items-baseline sm:gap-6"
-              >
-                <span className="absolute bottom-[-1px] left-0 h-px w-full origin-left scale-x-0 bg-royal transition-transform duration-700 group-hover:scale-x-100" />
-                <span className="font-mono text-[11px] text-royal">{String(i + 1).padStart(2, "0")}</span>
-                <h3 className="font-display text-[1.6rem] leading-tight tracking-tight transition-colors duration-500 group-hover:text-royal">
-                  {r.title}
-                </h3>
-                <p className="col-start-2 mt-2 text-[15px] leading-relaxed text-navy/75 sm:col-start-3 sm:mt-0">{r.body}</p>
-              </motion.li>
-            ))}
-          </ol>
         </div>
+
+        <ol className="mt-12 grid border-t border-navy/15 sm:grid-cols-2 lg:mt-16 lg:grid-cols-3">
+          {reasons.map((r, i) => (
+            <motion.li
+              key={r.title}
+              initial={reduce ? false : { opacity: 0, y: 18 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-8%" }}
+              transition={{ duration: 0.8, ease, delay: (i % 3) * 0.08 }}
+              className="group relative border-b border-navy/15 py-8 sm:odd:pr-8 sm:even:border-l sm:even:pl-8 lg:border-l lg:px-8 lg:[&:nth-child(3n+1)]:border-l-0 lg:[&:nth-child(3n+1)]:pl-0"
+            >
+              {/* Royal rule draws along the top on hover */}
+              <span
+                aria-hidden
+                className="absolute top-[-1px] left-0 h-px w-full origin-left scale-x-0 bg-royal transition-transform duration-700 group-hover:scale-x-100"
+              />
+              <div className="flex items-start justify-between">
+                <LineIcon name={r.icon} className="h-12 w-12" />
+                <span className="font-mono text-[11px] text-navy/40">{String(i + 1).padStart(2, "0")}</span>
+              </div>
+              <h3 className="mt-6 font-display text-[1.6rem] leading-tight tracking-tight transition-colors duration-500 group-hover:text-royal">
+                {r.title}
+              </h3>
+              <p className="mt-3 max-w-sm text-[15px] leading-relaxed text-navy/75">{r.body}</p>
+            </motion.li>
+          ))}
+        </ol>
       </div>
     </section>
   );

@@ -18,6 +18,21 @@ const [, , MAP_W, MAP_H] = MAP_VIEWBOX.split(" ").map(Number);
 // Extra room on the right for the London callout, which sits past the coast.
 const VIEW_W = MAP_W + 150;
 
+// A shallow arc from London out to a point in each other nation: the work
+// reaches them from the one office, rather than implying offices there.
+const REACH = {
+  scotland: [390, 420],
+  "northern-ireland": [240, 660],
+  wales: [410, 880],
+};
+function arc([x, y]) {
+  const dx = x - LONDON.x;
+  const dy = y - LONDON.y;
+  const mx = (LONDON.x + x) / 2 + dy * 0.18;
+  const my = (LONDON.y + y) / 2 - dx * 0.18;
+  return `M${LONDON.x} ${LONDON.y} Q${mx.toFixed(1)} ${my.toFixed(1)} ${x} ${y}`;
+}
+
 function regionFill(id, active) {
   if (id === "ireland") return "fill-navy/[0.07]";
   if (id === "england") return active === id ? "fill-royal-soft" : "fill-royal";
@@ -102,6 +117,13 @@ export default function Coverage() {
                   Map of the United Kingdom. England is highlighted, with a pin marking the head office in London.
                 </title>
 
+                {/* Range rings from London, visible only over the sea */}
+                <g aria-hidden className="fill-none stroke-navy/[0.09]" strokeWidth={1.5} strokeDasharray="2 8">
+                  {[170, 340, 510, 680].map((r) => (
+                    <circle key={r} cx={LONDON.x} cy={LONDON.y} r={r} />
+                  ))}
+                </g>
+
                 {Object.entries(REGION_PATHS).map(([id, d], i) => (
                   <motion.path
                     key={id}
@@ -133,6 +155,32 @@ export default function Coverage() {
                       ))}
                   </text>
                 ))}
+
+                {/* Reach: dashed arcs drawing out from London */}
+                <g aria-hidden>
+                  {Object.entries(REACH).map(([id, to], i) => (
+                    <g key={id}>
+                      <motion.path
+                        d={arc(to)}
+                        className={`fill-none transition-colors duration-500 ${active === id ? "stroke-paper" : "stroke-paper/55"}`}
+                        strokeWidth={2}
+                        strokeLinecap="round"
+                        strokeDasharray="1 7"
+                        initial={reduce ? false : { opacity: 0 }}
+                        whileInView={{ opacity: 1 }}
+                        viewport={{ once: true, margin: "-15%" }}
+                        transition={{ duration: 1.2, ease, delay: 1 + i * 0.2 }}
+                      />
+                      <motion.circle
+                        cx={to[0]}
+                        cy={to[1]}
+                        r={4.5}
+                        className="fill-paper"
+                        {...inView(2 + i * 0.2)}
+                      />
+                    </g>
+                  ))}
+                </g>
 
                 {/* London: pulse, pin and callout */}
                 <g transform={`translate(${LONDON.x} ${LONDON.y})`}>

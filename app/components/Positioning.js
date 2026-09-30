@@ -103,7 +103,7 @@ export default function Positioning() {
         <section id="approach" aria-labelledby="approach-title" className="relative scroll-mt-20 bg-paper text-ink">
             <div className="mx-auto max-w-[88rem] px-5 pt-28 sm:px-8 lg:px-12 lg:pt-36">
                 <div className="flex items-center justify-between border-t border-navy/10 pt-5 font-mono text-[10px] tracking-[0.2em] text-navy/50 uppercase">
-                    <span>03 — Our approach</span>
+                    <span>02 — Our approach</span>
                     <span className="hidden sm:inline">Complexity → structure → clarity</span>
                 </div>
                 <h2 id="approach-title" className="sr-only">

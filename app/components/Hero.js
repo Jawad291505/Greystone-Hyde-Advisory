@@ -152,6 +152,33 @@ function Headline({ twin = false, reduce }) {
   );
 }
 
+// The one primary action on the page, as a solid pill. `twin` is the
+// paper-white copy over the open photograph (not focusable; the ink one is).
+function PrimaryCta({ twin = false }) {
+  return (
+    <a
+      href="#contact"
+      tabIndex={twin ? -1 : undefined}
+      className={`group inline-flex items-center gap-4 rounded-full py-2 pr-2 pl-7 text-sm font-medium tracking-wide transition-colors duration-500 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-royal ${
+        twin
+          ? "bg-paper text-navy hover:bg-sky"
+          : "bg-navy text-white shadow-[0_18px_40px_-18px_rgba(20,42,92,0.6)] hover:bg-royal"
+      }`}
+    >
+      Book a consultation
+      <span
+        className={`grid h-10 w-10 place-items-center rounded-full text-white transition-transform duration-500 group-hover:translate-x-1 ${
+          twin ? "bg-navy" : "bg-white/15"
+        }`}
+      >
+        <svg viewBox="0 0 16 16" className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden>
+          <path d="M3 8h10M9 4l4 4-4 4" />
+        </svg>
+      </span>
+    </a>
+  );
+}
+
 export default function Hero() {
   const section = useRef(null);
   const reduce = useReducedMotion();
@@ -236,31 +263,25 @@ export default function Hero() {
 
             <motion.div
               {...fadeIn(reduce, ready, T.copy + 0.12)}
-              className="mt-9 flex flex-wrap items-baseline gap-x-10 gap-y-5 lg:mt-11"
+              className="mt-9 flex flex-wrap items-center gap-x-8 gap-y-5 lg:mt-11"
             >
-              <a
-                href="#contact"
-                className="group inline-flex items-baseline gap-3 font-editorial text-[1.65rem] italic text-ink [font-variation-settings:'opsz'_36] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-royal"
-              >
-                <span className="relative">
-                  Book a consultation
-                  <span className="absolute -bottom-0.5 left-0 h-px w-full bg-ink/25" />
-                  <span className="absolute -bottom-0.5 left-0 h-px w-full origin-left scale-x-0 bg-royal transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-x-100" />
-                </span>
-                <span
-                  aria-hidden
-                  className="not-italic text-royal transition-transform duration-500 group-hover:translate-x-1.5"
-                >
-                  →
-                </span>
-              </a>
+              <PrimaryCta />
               <a
                 href="#services"
-                className="text-[13px] tracking-wide text-navy/65 underline decoration-navy/20 underline-offset-[6px] transition-colors duration-300 hover:text-royal hover:decoration-royal focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-royal"
+                className="text-sm tracking-wide text-navy/70 underline decoration-navy/25 underline-offset-[6px] transition-colors duration-300 hover:text-royal hover:decoration-royal focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-royal"
               >
                 Our services
               </a>
             </motion.div>
+
+            {/* Trust note: the reply commitment made in the contact section */}
+            <motion.p
+              {...fadeIn(reduce, ready, T.copy + 0.22)}
+              className="mt-6 flex items-center gap-3 text-[13px] text-navy/60"
+            >
+              <span aria-hidden className="h-1.5 w-1.5 shrink-0 rounded-full bg-royal" />
+              A qualified accountant replies within one working day.
+            </motion.p>
           </motion.div>
         </div>
 
@@ -335,26 +356,13 @@ export default function Hero() {
 
             <motion.div
               style={{ opacity: openOpacity, y: openY, pointerEvents: openPointer }}
-              className="mt-11 flex flex-wrap items-baseline gap-x-10 gap-y-5"
+              className="mt-11 flex flex-wrap items-center gap-x-8 gap-y-5"
             >
-              <a
-                href="#contact"
-                tabIndex={-1}
-                className="group inline-flex items-baseline gap-3 font-editorial text-[1.65rem] italic text-paper [font-variation-settings:'opsz'_36]"
-              >
-                <span className="relative">
-                  Book a consultation
-                  <span className="absolute -bottom-0.5 left-0 h-px w-full bg-paper/30" />
-                  <span className="absolute -bottom-0.5 left-0 h-px w-full origin-left scale-x-0 bg-sky transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-x-100" />
-                </span>
-                <span className="not-italic text-sky transition-transform duration-500 group-hover:translate-x-1.5">
-                  →
-                </span>
-              </a>
+              <PrimaryCta twin />
               <a
                 href="#services"
                 tabIndex={-1}
-                className="text-[13px] tracking-wide text-paper/70 underline decoration-paper/25 underline-offset-[6px] transition-colors duration-300 hover:text-paper hover:decoration-sky"
+                className="text-sm tracking-wide text-paper/75 underline decoration-paper/30 underline-offset-[6px] transition-colors duration-300 hover:text-paper hover:decoration-sky"
               >
                 Our services
               </a>
@@ -373,10 +381,10 @@ export default function Hero() {
                     key={s.label}
                     className="flex flex-col-reverse justify-end border-l border-paper/15 pt-5 pr-4 pl-5 first:border-l-0 first:pl-0"
                   >
-                    <dt className="mt-3 font-mono text-[10px] tracking-[0.18em] text-paper/60 uppercase">
+                    <dt className="mt-2.5 font-mono text-[10px] tracking-[0.18em] text-paper/70 uppercase">
                       {s.label}
                     </dt>
-                    <dd className="font-editorial text-[clamp(2rem,3.4vw,3.5rem)] leading-none font-[350] tracking-[-0.02em] text-paper [font-variation-settings:'opsz'_72]">
+                    <dd className="font-editorial text-[clamp(2rem,3vw,3rem)] leading-none font-[350] tracking-[-0.02em] text-paper [font-variation-settings:'opsz'_72]">
                       {s.value}
                     </dd>
                   </div>
@@ -429,6 +437,26 @@ export default function Hero() {
             Client review
           </motion.figcaption>
         </motion.figure>
+      </div>
+
+      {/* Below desktop the figures can't ride the photograph open, so they sit
+          under it as a quiet ledger instead */}
+      <div className={`${CONTAINER} pt-8 pb-4 sm:pt-10 lg:hidden`}>
+        <dl className="grid grid-cols-2 border-t border-navy/10 sm:grid-cols-4">
+          {STATS.map((s, i) => (
+            <div
+              key={s.label}
+              className={`flex flex-col-reverse justify-end border-navy/10 py-5 max-sm:[&:nth-child(-n+2)]:border-b sm:border-l sm:px-5 sm:first:border-l-0 sm:first:pl-0 ${
+                i % 2 ? "border-l pl-5" : "pr-5"
+              }`}
+            >
+              <dt className="mt-2 font-mono text-[10px] tracking-[0.16em] text-navy/55 uppercase">{s.label}</dt>
+              <dd className="font-editorial text-[2rem] leading-none font-[350] tracking-[-0.02em] text-ink [font-variation-settings:'opsz'_72]">
+                {s.value}
+              </dd>
+            </div>
+          ))}
+        </dl>
       </div>
     </section>
   );
