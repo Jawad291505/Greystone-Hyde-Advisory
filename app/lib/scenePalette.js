@@ -31,7 +31,7 @@ const NAVY = {
 const CHARCOAL = {
   brand: "#dcc7a3",
   brandRgb: "220, 199, 163",
-  deepRgb: "150, 121, 63",
+  deepRgb: "150, 150, 154",
   muted: "rgba(176, 170, 160, 0.9)",
   gold: "#c9a868",
   sheet: ["#3b3b3f", "#161618"],
