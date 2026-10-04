@@ -114,7 +114,7 @@ export default function People() {
                             className="object-cover object-[55%_50%] [filter:saturate(0.45)_contrast(1.08)_brightness(0.97)]"
                         />
                         {/* House grade: navy-tinted, deepest where the caption sits */}
-                        <div className="absolute inset-0 bg-[linear-gradient(200deg,rgba(36,82,181,0.25)_0%,rgba(20,42,92,0.45)_55%,rgba(11,26,56,0.85)_100%)] mix-blend-multiply" />
+                        <div className="absolute inset-0 bg-[linear-gradient(200deg,color-mix(in_srgb,var(--royal)_25%,transparent)_0%,color-mix(in_srgb,var(--navy)_45%,transparent)_55%,color-mix(in_srgb,var(--ink)_85%,transparent)_100%)] mix-blend-multiply" />
                         <div className="hero-grain absolute inset-0 opacity-[0.14]" />
                         </motion.div>
                         <figcaption className="absolute inset-x-0 bottom-0 p-7">
@@ -142,7 +142,7 @@ export default function People() {
                             <motion.li
                                 key={r.role}
                                 variants={cardIn}
-                                className="group relative flex items-start gap-5 overflow-hidden rounded-card border border-navy/10 bg-white/60 p-6 transition-[background-color,border-color,box-shadow] duration-500 hover:border-royal/20 hover:bg-white hover:shadow-[0_30px_60px_-44px_rgba(11,26,56,0.4)]"
+                                className="group relative flex items-start gap-5 overflow-hidden rounded-card border border-navy/10 bg-white/60 p-6 transition-[background-color,border-color,box-shadow] duration-500 hover:border-royal/20 hover:bg-white hover:shadow-[0_30px_60px_-44px_color-mix(in_srgb,var(--ink)_40%,transparent)]"
                             >
                                 {/* Royal rule draws across the top on hover */}
                                 <span

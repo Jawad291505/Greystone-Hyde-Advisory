@@ -1,5 +1,5 @@
 import Image from "next/image";
-import Link from "next/link";
+import Link from "./ThemeLink";
 
 const ADDRESS = "4–6 Greatorex St, London E1 5NF";
 const ADDRESS_QUERY = encodeURIComponent("4-6 Greatorex St, London E1 5NF, United Kingdom");
@@ -61,7 +61,7 @@ export default function Footer() {
     return (
         <div className="bg-paper">
             <footer className="relative overflow-hidden rounded-t-panel bg-[linear-gradient(165deg,var(--navy)_0%,var(--ink)_75%)] text-white">
-                <div aria-hidden className="pointer-events-none absolute -top-1/2 right-[-10%] h-full w-1/2 bg-[radial-gradient(closest-side,rgba(36,82,181,0.4),transparent)]" />
+                <div aria-hidden className="pointer-events-none absolute -top-1/2 right-[-10%] h-full w-1/2 bg-[radial-gradient(closest-side,color-mix(in_srgb,var(--royal)_40%,transparent),transparent)]" />
 
                 <div className="relative mx-auto max-w-[88rem] px-5 pt-12 pb-8 sm:px-8 lg:px-12 lg:pt-16">
                     <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-12 lg:gap-8">
@@ -74,7 +74,7 @@ export default function Footer() {
                             <p className="mt-6 font-display text-[clamp(1.8rem,2.6vw,2.4rem)] leading-[1.05] tracking-[-0.01em]">
                                 Clear numbers.
                                 <br />
-                                <em className="text-[#8fb4ff]">Considered advice.</em>
+                                <em className="text-glint">Considered advice.</em>
                             </p>
                             <p className="mt-4 max-w-xs text-sm leading-relaxed text-white/60">
                                 London accounting and financial advisory that turns financial
@@ -115,7 +115,7 @@ export default function Footer() {
                                         href={DIRECTIONS}
                                         target="_blank"
                                         rel="noopener noreferrer"
-                                        className="group mt-1 inline-flex items-center gap-1.5 text-[13px] text-[#8fb4ff] transition-colors hover:text-white"
+                                        className="group mt-1 inline-flex items-center gap-1.5 text-[13px] text-glint transition-colors hover:text-white"
                                     >
                                         Get directions
                                         <span aria-hidden className="transition-transform duration-300 group-hover:translate-x-0.5">

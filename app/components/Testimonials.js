@@ -77,7 +77,7 @@ function Stars() {
 // client's words, then who said them beside a monogram in place of a portrait.
 function Card({ q }) {
   return (
-    <li className="flex w-[19rem] shrink-0 flex-col rounded-card border border-navy/10 bg-white p-7 shadow-[0_30px_60px_-48px_rgba(11,26,56,0.45)] sm:w-[26rem] sm:p-8">
+    <li className="flex w-[19rem] shrink-0 flex-col rounded-card border border-navy/10 bg-white p-7 shadow-[0_30px_60px_-48px_color-mix(in_srgb,var(--ink)_45%,transparent)] sm:w-[26rem] sm:p-8">
       <div className="flex items-start justify-between">
         <span aria-hidden className="font-display text-[4.5rem] leading-[0.7] text-royal">
           &ldquo;
@@ -92,7 +92,7 @@ function Card({ q }) {
           <span className="flex items-center gap-4 border-t border-navy/10 pt-5">
             <span
               aria-hidden
-              className="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-[linear-gradient(155deg,var(--navy)_0%,var(--royal)_100%)] font-mono text-[11px] tracking-[0.08em] text-white"
+              className="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-[linear-gradient(155deg,var(--navy)_0%,var(--panel-end)_100%)] font-mono text-[11px] tracking-[0.08em] text-white"
             >
               {initials(q.role)}
             </span>

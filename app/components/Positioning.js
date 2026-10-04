@@ -35,9 +35,10 @@ const DISCIPLINES = ["Accounts", "Tax", "VAT", "Payroll", "Compliance", "Reporti
 
 function Word({ progress, i, total, children }) {
     const start = (i / total) * 0.75;
-    const color = useTransform(progress, [start, start + 0.18], ["rgba(20,42,92,0.18)", "rgba(11,26,56,1)"]);
+    // Ink at 18% → 100%, as opacity so the colour itself stays a theme token
+    const opacity = useTransform(progress, [start, start + 0.18], [0.18, 1]);
     return (
-        <motion.span style={{ color }} className="inline">
+        <motion.span style={{ opacity }} className="inline text-ink">
             {children}{" "}
         </motion.span>
     );
@@ -201,7 +202,7 @@ export default function Positioning() {
                 <div ref={cubeCol} aria-hidden className="relative h-[200svh] lg:col-span-6 lg:h-auto">
                     <div className="sticky top-0 h-svh overflow-hidden">
                         <div className="absolute inset-[6%] bg-[radial-gradient(closest-side,var(--mist),transparent)]" />
-                        <div className="absolute inset-[22%] bg-[radial-gradient(closest-side,rgba(36,82,181,0.14),transparent)]" />
+                        <div className="absolute inset-[22%] bg-[radial-gradient(closest-side,color-mix(in_srgb,var(--royal)_14%,transparent),transparent)]" />
 
                         <CubeCssStage progress={cubeProgress} offsetX={0} offsetYMobile={0} spread={0.55} />
 

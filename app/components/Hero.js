@@ -164,7 +164,7 @@ function PrimaryCta({ twin = false }) {
       className={`group inline-flex items-center gap-4 rounded-full py-2 pr-2 pl-7 text-sm font-medium tracking-wide transition-colors duration-500 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-royal ${
         twin
           ? "bg-paper text-navy hover:bg-sky"
-          : "bg-navy text-white shadow-[0_18px_40px_-18px_rgba(20,42,92,0.6)] hover:bg-royal"
+          : "bg-navy text-white shadow-[0_18px_40px_-18px_color-mix(in_srgb,var(--navy)_60%,transparent)] hover:bg-royal"
       }`}
     >
       Book a consultation
@@ -312,7 +312,7 @@ export default function Hero() {
             scroll; the white headline twin lives inside the same clip. */}
         <motion.figure
           style={{ clipPath }}
-          className="relative m-0 aspect-[4/5] overflow-hidden bg-[linear-gradient(155deg,var(--navy)_0%,var(--royal)_100%)] sm:aspect-[5/4] lg:absolute lg:inset-0 lg:aspect-auto"
+          className="relative m-0 aspect-[4/5] overflow-hidden bg-[linear-gradient(155deg,var(--navy)_0%,var(--panel-end)_100%)] sm:aspect-[5/4] lg:absolute lg:inset-0 lg:aspect-auto"
         >
           <motion.div
             initial={reduce ? false : { filter: "blur(28px)", scale: 1.14 }}
@@ -331,7 +331,7 @@ export default function Hero() {
               />
             </motion.div>
             {/* House grade: navy-tinted shadows, deepest where the type crosses */}
-            <div className="absolute inset-0 bg-[linear-gradient(100deg,rgba(11,26,56,0.8)_0%,rgba(20,42,92,0.55)_45%,rgba(36,82,181,0.3)_100%)] mix-blend-multiply" />
+            <div className="absolute inset-0 bg-[linear-gradient(100deg,color-mix(in_srgb,var(--ink)_80%,transparent)_0%,color-mix(in_srgb,var(--navy)_55%,transparent)_45%,color-mix(in_srgb,var(--royal)_30%,transparent)_100%)] mix-blend-multiply" />
             <div className="hero-grain absolute inset-0 opacity-[0.16]" />
           </motion.div>
 
@@ -414,7 +414,7 @@ export default function Hero() {
             initial={reduce ? false : { clipPath: "inset(100% 0% 0% 0%)" }}
             animate={ready ? { clipPath: "inset(0% 0% 0% 0%)" } : undefined}
             transition={{ duration: 1.2, ease, delay: T.detail }}
-            className="relative aspect-[4/3] overflow-hidden rounded-inner bg-navy shadow-[0_30px_60px_-30px_rgba(11,26,56,0.55)]"
+            className="relative aspect-[4/3] overflow-hidden rounded-inner bg-navy shadow-[0_30px_60px_-30px_color-mix(in_srgb,var(--ink)_55%,transparent)]"
           >
             {/* Oversized and offset so the frame shows only the hands and papers */}
             <div className="absolute top-[-140%] left-[-65%] h-[270%] w-[294%]">
@@ -427,7 +427,7 @@ export default function Hero() {
                 className="object-cover [filter:saturate(0.5)_contrast(1.08)_brightness(0.97)]"
               />
             </div>
-            <div className="absolute inset-0 bg-[linear-gradient(100deg,rgba(20,42,92,0.45),rgba(36,82,181,0.25))] mix-blend-multiply" />
+            <div className="absolute inset-0 bg-[linear-gradient(100deg,color-mix(in_srgb,var(--navy)_45%,transparent),color-mix(in_srgb,var(--royal)_25%,transparent))] mix-blend-multiply" />
             <div className="hero-grain absolute inset-0 opacity-[0.16]" />
           </motion.div>
           <motion.figcaption

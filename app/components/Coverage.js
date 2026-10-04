@@ -105,7 +105,7 @@ export default function Coverage() {
             <div className="relative overflow-hidden rounded-panel bg-sky px-4 py-8 sm:px-10 sm:py-12">
               <div
                 aria-hidden
-                className="pointer-events-none absolute inset-0 bg-[radial-gradient(60%_50%_at_70%_70%,rgba(36,82,181,0.08),transparent)]"
+                className="pointer-events-none absolute inset-0 bg-[radial-gradient(60%_50%_at_70%_70%,color-mix(in_srgb,var(--royal)_8%,transparent),transparent)]"
               />
               <svg
                 viewBox={`0 0 ${VIEW_W} ${MAP_H}`}

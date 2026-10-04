@@ -16,11 +16,11 @@ const BOTTOM = H - PAD.b;
 const INNER_W = W - PAD.l - PAD.r;
 
 const C = {
-    line: "#8fb4ff",
+    line: "var(--glint)",
     faint: "rgba(255,255,255,0.3)",
     grid: "rgba(255,255,255,0.08)",
     label: "rgba(255,255,255,0.42)",
-    bar: "rgba(143,180,255,0.3)",
+    bar: "color-mix(in srgb, var(--glint) 30%, transparent)",
 };
 
 const k = (v) => `£${Math.round(v / 1000)}k`;
@@ -376,13 +376,13 @@ export default function ServicePanel({ slug }) {
             className="relative overflow-hidden bg-[linear-gradient(160deg,var(--navy)_0%,var(--ink)_100%)] p-6 text-white sm:p-7"
         >
             {/* Soft royal light, top right */}
-            <div aria-hidden className="pointer-events-none absolute -top-1/3 -right-1/4 h-[80%] w-[70%] bg-[radial-gradient(closest-side,rgba(36,82,181,0.55),transparent)]" />
+            <div aria-hidden className="pointer-events-none absolute -top-1/3 -right-1/4 h-[80%] w-[70%] bg-[radial-gradient(closest-side,color-mix(in_srgb,var(--royal)_55%,transparent),transparent)]" />
 
             <div className="relative">
                 <div className="flex items-center justify-between gap-3 font-mono text-[10px] tracking-[0.18em] uppercase">
                     <span className="truncate text-white/55">{p.title}</span>
-                    <span className="flex shrink-0 items-center gap-1.5 text-[#8fb4ff]">
-                        <span className="h-1.5 w-1.5 rounded-full bg-[#8fb4ff]" />
+                    <span className="flex shrink-0 items-center gap-1.5 text-glint">
+                        <span className="h-1.5 w-1.5 rounded-full bg-glint" />
                         {p.tag}
                     </span>
                 </div>
@@ -398,14 +398,14 @@ export default function ServicePanel({ slug }) {
                         <ul className="mb-1 hidden shrink-0 space-y-1 font-mono text-[9px] text-white/50 sm:block">
                             {p.chart.legend.map((l, i) => (
                                 <li key={l} className="flex items-center gap-1.5">
-                                    <span className={`h-px w-3 ${i === 0 ? "bg-[#8fb4ff]" : "bg-white/40"}`} />
+                                    <span className={`h-px w-3 ${i === 0 ? "bg-glint" : "bg-white/40"}`} />
                                     {l}
                                 </li>
                             ))}
                         </ul>
                     )}
                 </div>
-                <p className="mt-2 text-xs text-[#8fb4ff]">{p.kpi.delta}</p>
+                <p className="mt-2 text-xs text-glint">{p.kpi.delta}</p>
 
                 <div className="mt-5">
                     <Chart chart={p.chart} gid={gid} />

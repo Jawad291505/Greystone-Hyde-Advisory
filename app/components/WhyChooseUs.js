@@ -46,12 +46,12 @@ function Figure({ f, i }) {
         whileInView={{ scaleX: 1 }}
         viewport={{ once: true, margin: "-10%" }}
         transition={{ duration: 1.8, ease, delay: 0.2 + i * 0.12 }}
-        className={`absolute top-[-1px] h-px w-10 origin-left bg-[#8fb4ff] ${i === 0 ? "left-0" : i === 2 ? "left-0 lg:left-8" : "left-6 lg:left-8"}`}
+        className={`absolute top-[-1px] h-px w-10 origin-left bg-glint ${i === 0 ? "left-0" : i === 2 ? "left-0 lg:left-8" : "left-6 lg:left-8"}`}
       />
       <p className="font-display text-[clamp(3rem,5.5vw,4.75rem)] leading-[0.9] tracking-[-0.02em] whitespace-nowrap text-white">
         {f.to > 10 ? <CountUp to={f.to} suffix={f.suffix} delay={0.2 + i * 0.12} duration={2.2} /> : `${f.to}${f.suffix ?? ""}`}
       </p>
-      <p className="mt-3 font-mono text-[11px] tracking-[0.18em] text-[#8fb4ff] uppercase">{f.label}</p>
+      <p className="mt-3 font-mono text-[11px] tracking-[0.18em] text-glint uppercase">{f.label}</p>
       <p className="mt-3 max-w-[16rem] text-sm leading-relaxed text-white/65">{f.body}</p>
     </motion.li>
   );
@@ -65,8 +65,8 @@ export default function WhyChooseUs() {
       {/* Navy band: the one deep-colour moment between bright sections, inset
           from the page edges as a rounded panel */}
       <div className="relative mx-3 overflow-hidden rounded-panel bg-[linear-gradient(165deg,var(--navy)_0%,var(--ink)_70%)] text-white">
-        <div aria-hidden className="pointer-events-none absolute -top-1/4 right-[-10%] h-[90%] w-[60%] bg-[radial-gradient(closest-side,rgba(36,82,181,0.5),transparent)]" />
-        <div aria-hidden className="pointer-events-none absolute bottom-[-30%] left-[-10%] h-[70%] w-[50%] bg-[radial-gradient(closest-side,rgba(91,130,214,0.18),transparent)]" />
+        <div aria-hidden className="pointer-events-none absolute -top-1/4 right-[-10%] h-[90%] w-[60%] bg-[radial-gradient(closest-side,color-mix(in_srgb,var(--royal)_50%,transparent),transparent)]" />
+        <div aria-hidden className="pointer-events-none absolute bottom-[-30%] left-[-10%] h-[70%] w-[50%] bg-[radial-gradient(closest-side,color-mix(in_srgb,var(--royal-soft)_18%,transparent),transparent)]" />
 
         <div className="relative mx-auto max-w-[88rem] px-5 pt-12 pb-4 sm:px-8 lg:px-12 lg:pt-16 lg:pb-8">
           <div className="flex items-center justify-between border-t border-white/15 pt-5 font-mono text-[10px] tracking-[0.2em] text-white/50 uppercase">
@@ -81,7 +81,7 @@ export default function WhyChooseUs() {
             >
               The rigour of a large firm.
               <br />
-              <em className="text-[#8fb4ff]">The attention of a small one.</em>
+              <em className="text-glint">The attention of a small one.</em>
             </h2>
             <p className="max-w-sm text-base leading-relaxed text-white/70 lg:col-span-4">
               What you get is a small, consistent team with clear commitments,

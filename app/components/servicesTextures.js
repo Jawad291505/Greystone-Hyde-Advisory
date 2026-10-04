@@ -1,4 +1,5 @@
 import * as THREE from "three";
+import { scenePalette } from "../lib/scenePalette";
 
 // Canvas-drawn textures for the /services scene. Everything is painted at
 // runtime (no image downloads) and repainted once the page's web fonts are
@@ -8,9 +9,6 @@ import * as THREE from "three";
 
 const FG = "rgba(244, 243, 238, 0.92)";
 const FG_SOFT = "rgba(244, 243, 238, 0.62)";
-const MUTED = "rgba(154, 163, 173, 0.9)";
-const BRAND = "#6ba0d6";
-const GOLD = "#b99a5f";
 
 function fonts() {
   const s = getComputedStyle(document.documentElement);
@@ -58,15 +56,15 @@ function makeTexture(w, h, draw, maxAnisotropy = 4) {
 
 // `light`: on the light theme the panel is painted fully opaque in a deeper,
 // more saturated navy — the dark-theme greys read as faded against a pale page.
-function sheetBase(ctx, W, H, light) {
+function sheetBase(ctx, W, H, light, pal) {
   rr(ctx, 3, 3, W - 6, H - 6, 18);
   const g = ctx.createLinearGradient(0, 0, W, H);
-  g.addColorStop(0, light ? "#1f3f72" : "rgba(36, 55, 88, 0.97)");
-  g.addColorStop(1, light ? "#0c1a36" : "rgba(17, 28, 47, 0.97)");
+  g.addColorStop(0, light ? pal.sheet[0] : "rgba(36, 55, 88, 0.97)");
+  g.addColorStop(1, light ? pal.sheet[1] : "rgba(17, 28, 47, 0.97)");
   ctx.fillStyle = g;
   ctx.fill();
   ctx.lineWidth = 2;
-  ctx.strokeStyle = "rgba(107, 160, 214, 0.42)";
+  ctx.strokeStyle = `rgba(${pal.brandRgb}, 0.42)`;
   ctx.stroke();
 }
 
@@ -98,9 +96,10 @@ const LEDGER_ROWS = [
   ["31 Jul", "Sales invoices batch", "", "2,210.00"],
 ];
 
-export function makeLedgerTexture(light = false) {
+export function makeLedgerTexture(light = false, pal = scenePalette()) {
+  const { brand: BRAND, muted: MUTED } = pal;
   return makeTexture(512, 724, (ctx, W, H, f) => {
-    sheetBase(ctx, W, H, light);
+    sheetBase(ctx, W, H, light, pal);
     const L = 34;
     const R = W - 34;
 
@@ -129,7 +128,7 @@ export function makeLedgerTexture(light = false) {
     ctx.fillText("CREDIT", R, y);
     ctx.textAlign = "left";
     tracked(ctx, 0);
-    ctx.fillStyle = "rgba(107, 160, 214, 0.3)";
+    ctx.fillStyle = `rgba(${pal.brandRgb}, 0.3)`;
     ctx.fillRect(L, y + 12, R - L, 1.5);
 
     const rowH = 38;
@@ -137,7 +136,7 @@ export function makeLedgerTexture(light = false) {
     LEDGER_ROWS.forEach((row, i) => {
       const top = y + i * rowH;
       if (i === 3) {
-        ctx.fillStyle = "rgba(49, 106, 162, 0.28)";
+        ctx.fillStyle = `rgba(${pal.deepRgb}, 0.28)`;
         rr(ctx, L - 8, top + 3, R - L + 16, rowH - 6, 6);
         ctx.fill();
       } else if (i % 2) {
@@ -160,7 +159,7 @@ export function makeLedgerTexture(light = false) {
     });
 
     y += LEDGER_ROWS.length * rowH + 22;
-    ctx.fillStyle = "rgba(107, 160, 214, 0.3)";
+    ctx.fillStyle = `rgba(${pal.brandRgb}, 0.3)`;
     ctx.fillRect(L, y - 18, R - L, 1.5);
     ctx.font = `400 15px ${f.sans}`;
     ctx.fillStyle = FG_SOFT;
@@ -194,9 +193,10 @@ const VAT_ROWS = [
   ["9", "Goods acquired (NI)", "0.00"],
 ];
 
-export function makeTaxTexture(light = false) {
+export function makeTaxTexture(light = false, pal = scenePalette()) {
+  const { brand: BRAND, muted: MUTED, gold: GOLD } = pal;
   return makeTexture(512, 724, (ctx, W, H, f) => {
-    sheetBase(ctx, W, H, light);
+    sheetBase(ctx, W, H, light, pal);
     const L = 34;
     const R = W - 34;
 
@@ -219,16 +219,16 @@ export function makeTaxTexture(light = false) {
     VAT_ROWS.forEach((row, i) => {
       const top = y0 + i * rowH;
       if (i === 4) {
-        ctx.fillStyle = "rgba(49, 106, 162, 0.28)";
+        ctx.fillStyle = `rgba(${pal.deepRgb}, 0.28)`;
         rr(ctx, L - 8, top + 4, R - L + 16, rowH - 8, 6);
         ctx.fill();
       }
-      ctx.fillStyle = "rgba(107, 160, 214, 0.16)";
+      ctx.fillStyle = `rgba(${pal.brandRgb}, 0.16)`;
       ctx.fillRect(L, top + rowH - 1, R - L, 1);
 
       const base = top + rowH / 2 + 5;
       rr(ctx, L, top + 13, 24, 24, 5);
-      ctx.strokeStyle = "rgba(107, 160, 214, 0.55)";
+      ctx.strokeStyle = `rgba(${pal.brandRgb}, 0.55)`;
       ctx.lineWidth = 1.4;
       ctx.stroke();
       ctx.font = `600 12px ${f.mono}`;
@@ -245,7 +245,7 @@ export function makeTaxTexture(light = false) {
       ctx.textAlign = "right";
       ctx.fillText(`£${row[2]}`, R - 30, base);
       ctx.textAlign = "left";
-      tick(ctx, R - 9, base - 5, 8, i === 4 ? GOLD : "rgba(107, 160, 214, 0.8)");
+      tick(ctx, R - 9, base - 5, 8, i === 4 ? GOLD : `rgba(${pal.brandRgb}, 0.8)`);
     });
 
     const py = H - 90;
@@ -292,15 +292,15 @@ function getLogo(onLoad) {
 }
 
 // 1024×646 ≈ the ID-1 card ratio (85.6 × 54mm)
-export function makeCardFaceTexture(maxAnisotropy) {
+export function makeCardFaceTexture(maxAnisotropy, pal = scenePalette()) {
   const result = makeTexture(
     1024,
     646,
     (ctx, W, H, f) => {
       const g = ctx.createLinearGradient(0, 0, W, H);
-      g.addColorStop(0, "#0c1629");
-      g.addColorStop(0.55, "#1b305c");
-      g.addColorStop(1, "#2c5d93");
+      g.addColorStop(0, pal.cardFace[0]);
+      g.addColorStop(0.55, pal.cardFace[1]);
+      g.addColorStop(1, pal.cardFace[2]);
       ctx.fillStyle = g;
       ctx.fillRect(0, 0, W, H);
 
@@ -310,7 +310,7 @@ export function makeCardFaceTexture(maxAnisotropy) {
       ctx.fillStyle = glow;
       ctx.fillRect(0, 0, W, H);
 
-      drawGuilloche(ctx, W, H, "rgba(150, 190, 232, 0.07)", 22, 46, H * 0.5);
+      drawGuilloche(ctx, W, H, `rgba(${pal.guillocheRgb}, 0.07)`, 22, 46, H * 0.5);
 
       // Logo on a white plate, as in the site header
       ctx.fillStyle = "#ffffff";
@@ -319,7 +319,11 @@ export function makeCardFaceTexture(maxAnisotropy) {
       ctx.fill();
       // Deferred: `result` doesn't exist yet during the first synchronous paint
       const logo = getLogo(() => result.paint());
-      if (logo.complete && logo.naturalWidth !== 0) ctx.drawImage(logo, 80, 72, 48, 48);
+      if (logo.complete && logo.naturalWidth !== 0) {
+        ctx.filter = pal.logoFilter;
+        ctx.drawImage(logo, 80, 72, 48, 48);
+        ctx.filter = "none";
+      }
 
       ctx.font = `400 46px ${f.display}`;
       ctx.fillStyle = "#f4f3ee";
@@ -360,7 +364,7 @@ export function makeCardFaceTexture(maxAnisotropy) {
       tracked(ctx, 0);
 
       ctx.font = `italic 400 48px ${f.display}`;
-      ctx.fillStyle = GOLD;
+      ctx.fillStyle = pal.gold;
       ctx.textAlign = "right";
       ctx.fillText("Debit", W - 70, 566);
       ctx.textAlign = "left";
@@ -370,25 +374,25 @@ export function makeCardFaceTexture(maxAnisotropy) {
   return result;
 }
 
-export function makeCardBackTexture(maxAnisotropy) {
+export function makeCardBackTexture(maxAnisotropy, pal = scenePalette()) {
   return makeTexture(
     1024,
     646,
     (ctx, W, H, f) => {
       const g = ctx.createLinearGradient(W, 0, 0, H);
-      g.addColorStop(0, "#0c1629");
-      g.addColorStop(1, "#203a68");
+      g.addColorStop(0, pal.cardBack[0]);
+      g.addColorStop(1, pal.cardBack[1]);
       ctx.fillStyle = g;
       ctx.fillRect(0, 0, W, H);
-      drawGuilloche(ctx, W, H, "rgba(150, 190, 232, 0.05)", 16, 30, H * 0.72);
+      drawGuilloche(ctx, W, H, `rgba(${pal.guillocheRgb}, 0.05)`, 16, 30, H * 0.72);
 
-      ctx.fillStyle = "#070b14";
+      ctx.fillStyle = pal.magstripe;
       ctx.fillRect(0, 70, W, 104);
 
       rr(ctx, 70, 232, 600, 70, 8);
       ctx.fillStyle = "rgba(244, 243, 238, 0.88)";
       ctx.fill();
-      ctx.strokeStyle = "rgba(49, 106, 162, 0.25)";
+      ctx.strokeStyle = `rgba(${pal.deepRgb}, 0.25)`;
       ctx.lineWidth = 2;
       for (let x = 80; x < 660; x += 14) {
         ctx.beginPath();
@@ -397,7 +401,7 @@ export function makeCardBackTexture(maxAnisotropy) {
         ctx.stroke();
       }
       ctx.font = `italic 500 26px ${f.mono}`;
-      ctx.fillStyle = "#16233a";
+      ctx.fillStyle = pal.cvv;
       ctx.fillText("•••", 700, 278);
 
       ctx.font = `400 19px ${f.sans}`;

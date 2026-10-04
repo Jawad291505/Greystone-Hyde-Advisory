@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import Link from "./ThemeLink";
 import { useEffect, useId, useRef, useState, useSyncExternalStore } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import ServiceIllustration from "./ServiceIllustrations";
@@ -256,7 +256,7 @@ export default function ServicesGrid() {
                                         onFocusCapture={() => setOpen(i)}
                                         aria-labelledby={`${uid}-t-${i}`}
                                         className={`relative h-full overflow-hidden rounded-card border transition-[background-color,border-color,box-shadow] duration-700 ${on
-                                                ? "border-navy/10 bg-white shadow-[0_30px_60px_-40px_rgba(11,26,56,0.4)]"
+                                                ? "border-navy/10 bg-white shadow-[0_30px_60px_-40px_color-mix(in_srgb,var(--ink)_40%,transparent)]"
                                                 : "border-navy/10 bg-white/55 hover:border-royal/25"
                                             }`}
                                     >
@@ -326,7 +326,7 @@ export default function ServicesGrid() {
                                 ref={(el) => {
                                     items.current[i] = el;
                                 }}
-                                className={`scroll-mt-24 overflow-hidden rounded-card border transition-[background-color,box-shadow] duration-700 ${on ? "border-navy/10 bg-white shadow-[0_30px_60px_-44px_rgba(11,26,56,0.4)]" : "border-navy/10 bg-white/55"
+                                className={`scroll-mt-24 overflow-hidden rounded-card border transition-[background-color,box-shadow] duration-700 ${on ? "border-navy/10 bg-white shadow-[0_30px_60px_-44px_color-mix(in_srgb,var(--ink)_40%,transparent)]" : "border-navy/10 bg-white/55"
                                     }`}
                             >
                                 <h3>

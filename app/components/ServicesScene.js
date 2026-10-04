@@ -15,6 +15,7 @@ import {
   makeLedgerTexture,
   makeTaxTexture,
 } from "./servicesTextures";
+import { scenePalette } from "../lib/scenePalette";
 
 // One continuous 3D environment for the /services page. Scroll drives a
 // single "stage" value (0 intro → 1 ledger → 2 tax → 3 advisory → 4 card),
@@ -230,7 +231,7 @@ function buildField(count) {
   return geometry;
 }
 
-function DataField({ journey, reduce, count, light }) {
+function DataField({ journey, reduce, count, light, pal }) {
   const geometry = useDisposable(() => buildField(count));
   const material = useDisposable(
     () =>
@@ -247,8 +248,8 @@ function DataField({ journey, reduce, count, light }) {
           uTime: { value: 0 },
           uSize: { value: 40 },
           uOpacity: { value: 1 },
-          uBlue: { value: new THREE.Color(light ? "#316aa2" : "#6ba0d6") },
-          uGold: { value: new THREE.Color(light ? "#a8843f" : "#b99a5f") },
+          uBlue: { value: new THREE.Color(light ? pal.field : "#6ba0d6") },
+          uGold: { value: new THREE.Color(light ? pal.fieldGold : "#b99a5f") },
         },
       }),
   );
@@ -286,9 +287,9 @@ const sheetFrames = Array.from({ length: SHEETS }, (_, i) => {
   ];
 });
 
-function Sheets({ journey, maxAnisotropy, light }) {
-  const ledger = useDisposable(() => makeLedgerTexture(light).tex);
-  const tax = useDisposable(() => makeTaxTexture(light).tex);
+function Sheets({ journey, maxAnisotropy, light, pal }) {
+  const ledger = useDisposable(() => makeLedgerTexture(light, pal).tex);
+  const tax = useDisposable(() => makeTaxTexture(light, pal).tex);
   const geometry = useDisposable(() => new THREE.PlaneGeometry(1.9, 2.69));
   const materials = useDisposable(() =>
     Array.from({ length: SHEETS }, () =>
@@ -353,7 +354,7 @@ const sealFrames = [
   { p: [0.9, 2.8, -2.5], r: [0.5, -0.6, 0.4], s: 0 },
 ];
 
-function Seal({ journey }) {
+function Seal({ journey, pal }) {
   const [ring, disc, check] = useDisposable(() => {
     const path = new THREE.CurvePath();
     path.add(new THREE.LineCurve3(new THREE.Vector3(-0.14, 0.0, 0.03), new THREE.Vector3(-0.035, -0.1, 0.03)));
@@ -366,7 +367,7 @@ function Seal({ journey }) {
   });
   const [gold, navy] = useDisposable(() => [
     new THREE.MeshStandardMaterial({ color: "#d4b57a", metalness: 1, roughness: 0.26 }),
-    new THREE.MeshPhysicalMaterial({ color: "#1b3157", metalness: 0.4, roughness: 0.35, clearcoat: 1 }),
+    new THREE.MeshPhysicalMaterial({ color: pal.seal, metalness: 0.4, roughness: 0.35, clearcoat: 1 }),
   ]);
   const ref = useRef(null);
 
@@ -395,7 +396,7 @@ const ACTUALS = 8;
 const BASE_Y = -1.3;
 const barX = (i) => (i - (HEIGHTS.length - 1) / 2) * 0.36;
 
-function Chart({ journey }) {
+function Chart({ journey, pal }) {
   const group = useRef(null);
   const actual = useRef(null);
   const forecast = useRef(null);
@@ -413,13 +414,13 @@ function Chart({ journey }) {
     ];
   });
   const [barMat, forecastMat, goldMat, grid] = useDisposable(() => {
-    const g = new THREE.GridHelper(5.2, 13, "#6ba0d6", "#6ba0d6");
+    const g = new THREE.GridHelper(5.2, 13, pal.grid, pal.grid);
     g.material.transparent = true;
     g.material.depthWrite = false;
     return [
-      new THREE.MeshPhysicalMaterial({ color: "#316aa2", metalness: 0.35, roughness: 0.32, clearcoat: 0.8 }),
+      new THREE.MeshPhysicalMaterial({ color: pal.bar, metalness: 0.35, roughness: 0.32, clearcoat: 0.8 }),
       new THREE.MeshPhysicalMaterial({
-        color: "#6ba0d6",
+        color: pal.forecast,
         metalness: 0.1,
         roughness: 0.2,
         transparent: true,
@@ -527,7 +528,7 @@ const cardFrames = [
   { p: [-0.45, 0.1, 0.4], r: [-0.12, -0.42, 0.06], s: 0.8 },
 ];
 
-function Card({ journey, mouse, reduce, maxAnisotropy }) {
+function Card({ journey, mouse, reduce, maxAnisotropy, pal }) {
   const rig = useRef(null);
   const tilt = useRef(null);
   const faceZ = CARD_D / 2 + BEVEL + 0.0006;
@@ -548,8 +549,8 @@ function Card({ journey, mouse, reduce, maxAnisotropy }) {
     ];
   });
   const [faceTex, backTex] = useDisposable(() => [
-    makeCardFaceTexture(maxAnisotropy).tex,
-    makeCardBackTexture(maxAnisotropy).tex,
+    makeCardFaceTexture(maxAnisotropy, pal).tex,
+    makeCardBackTexture(maxAnisotropy, pal).tex,
   ]);
   const [edgeMat, faceMat, backMat, chipMat] = useDisposable(() => {
     const surface = (map) =>
@@ -561,7 +562,7 @@ function Card({ journey, mouse, reduce, maxAnisotropy }) {
         clearcoatRoughness: 0.08,
       });
     return [
-      new THREE.MeshPhysicalMaterial({ color: "#9fb6d3", metalness: 0.9, roughness: 0.28 }),
+      new THREE.MeshPhysicalMaterial({ color: pal.cardEdge, metalness: 0.9, roughness: 0.28 }),
       surface(faceTex),
       surface(backTex),
       new THREE.MeshStandardMaterial({ color: "#e2c78f", metalness: 1, roughness: 0.2 }),
@@ -653,6 +654,8 @@ function Rig({ journey, mouse, reduce, root, keyLight }) {
 }
 
 function Scene({ journey, reduce, mobile, light }) {
+  // Mounted client-side only, so the page's theme class is already in the DOM
+  const pal = useMemo(() => scenePalette(), []);
   const root = useRef(null);
   const keyLight = useRef(null);
   const mouse = useRef({ x: 0, y: 0, sx: 0, sy: 0 });
@@ -674,14 +677,14 @@ function Scene({ journey, reduce, mobile, light }) {
       <SceneEnvironment />
       <ambientLight intensity={0.3} />
       <directionalLight ref={keyLight} position={[3, 4, 6]} intensity={1.3} />
-      <directionalLight position={[-4, 2, -3]} intensity={0.7} color="#8fb6e0" />
+      <directionalLight position={[-4, 2, -3]} intensity={0.7} color={pal.rim} />
       <Rig journey={journey} mouse={mouse} reduce={reduce} root={root} keyLight={keyLight} />
       <group ref={root}>
-        <DataField journey={journey} reduce={reduce} count={mobile ? 650 : 1400} light={light} />
-        <Sheets journey={journey} maxAnisotropy={maxAnisotropy} light={light} />
-        <Seal journey={journey} />
-        <Chart journey={journey} />
-        <Card journey={journey} mouse={mouse} reduce={reduce} maxAnisotropy={maxAnisotropy} />
+        <DataField journey={journey} reduce={reduce} count={mobile ? 650 : 1400} light={light} pal={pal} />
+        <Sheets journey={journey} maxAnisotropy={maxAnisotropy} light={light} pal={pal} />
+        <Seal journey={journey} pal={pal} />
+        <Chart journey={journey} pal={pal} />
+        <Card journey={journey} mouse={mouse} reduce={reduce} maxAnisotropy={maxAnisotropy} pal={pal} />
       </group>
     </>
   );

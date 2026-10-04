@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import Link from "next/link";
+import Link from "./ThemeLink";
 import { MotionConfig, motion } from "framer-motion";
 import ServicesSceneSmart from "./ServicesSceneSmart";
 import MagneticButton from "./MagneticButton";
@@ -92,14 +92,14 @@ function CardFallback() {
   return (
     <div
       aria-hidden
-      className="mb-8 aspect-[1.585] w-full max-w-sm rounded-2xl border border-white/15 bg-[linear-gradient(135deg,var(--ink),var(--navy)_55%,var(--royal))] p-6 shadow-[0_30px_60px_-24px_rgba(11,26,56,0.55)]"
+      className="mb-8 aspect-[1.585] w-full max-w-sm rounded-2xl border border-white/15 bg-[linear-gradient(135deg,var(--ink),var(--navy)_55%,var(--panel-end))] p-6 shadow-[0_30px_60px_-24px_color-mix(in_srgb,var(--ink)_55%,transparent)]"
     >
       <div className="flex h-full flex-col justify-between">
         <span className="font-display text-xl text-white">Greystone Hyde</span>
         <span className="font-mono text-lg tracking-[0.2em] text-white/90">•••• •••• •••• 0427</span>
         <span className="flex items-end justify-between text-[10px] tracking-[0.2em] text-white/55 uppercase">
           Client payments
-          <span className="font-display text-2xl tracking-normal text-[#8fb4ff] normal-case italic">Debit</span>
+          <span className="font-display text-2xl tracking-normal text-glint normal-case italic">Debit</span>
         </span>
       </div>
     </div>
@@ -114,7 +114,7 @@ function PaymentActions() {
         target="_blank"
         rel="noopener noreferrer"
         aria-label="Pay securely with Stripe (opens in a new tab)"
-        className="rounded-full bg-navy px-8 py-3.5 text-sm font-medium tracking-wide text-white shadow-[0_12px_40px_-12px_rgba(20,42,92,0.45)] transition-colors duration-300 hover:bg-royal focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-royal"
+        className="rounded-full bg-navy px-8 py-3.5 text-sm font-medium tracking-wide text-white shadow-[0_12px_40px_-12px_color-mix(in_srgb,var(--navy)_45%,transparent)] transition-colors duration-300 hover:bg-royal focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-royal"
       >
         <span className="flex items-center gap-2.5">
           <LockIcon />
@@ -302,7 +302,7 @@ export default function ServicesJourney() {
         <div className="sticky top-0 -mb-[100svh] h-svh overflow-hidden bg-paper">
           <div
             aria-hidden
-            className="absolute inset-0 bg-[radial-gradient(ellipse_60%_55%_at_68%_45%,rgba(36,82,181,0.12),transparent)] max-lg:bg-[radial-gradient(ellipse_80%_45%_at_50%_30%,rgba(36,82,181,0.12),transparent)]"
+            className="absolute inset-0 bg-[radial-gradient(ellipse_60%_55%_at_68%_45%,color-mix(in_srgb,var(--royal)_12%,transparent),transparent)] max-lg:bg-[radial-gradient(ellipse_80%_45%_at_50%_30%,color-mix(in_srgb,var(--royal)_12%,transparent),transparent)]"
           />
           <ServicesSceneSmart journey={journey} reduce={reduce} onUnavailable={onUnavailable} />
           {/* Legibility scrims: copy sits left on desktop, bottom on mobile */}

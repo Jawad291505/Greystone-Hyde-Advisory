@@ -32,6 +32,12 @@
   --cube-inner-a: #182437;
   --cube-inner-b: #0e1622;
   --cube-tile-text: rgba(244, 243, 238, 0.94);
+  /* Accent tiles: the lit, logo-blue pieces */
+  --cube-accent-a: #7bb0e0;
+  --cube-accent-b: #3f7ab8;
+  --cube-accent-c: #1f3a5c;
+  --cube-accent-border: rgba(220, 236, 255, 0.6);
+  --cube-accent-glow: rgba(49, 106, 162, 0.55);
 
   /* Redesign palette: navy → royal → white → light blue */
   --ink: #0b1a38;
@@ -41,6 +47,11 @@
   --sky: #eef3fb;
   --mist: #dde7f5;
   --paper: #fbfcfe;
+  /* Far end of the navy photo/CTA planes, and the light accent used for
+     emphasis on dark panels — tokens so a theme can re-skin them. */
+  --panel-end: #2452b5;
+  --glint: #8fb4ff;
+  --glint-soft: #bcd0ff;
 }
 
 @theme inline {
@@ -64,6 +75,8 @@
   --color-sky: var(--sky);
   --color-mist: var(--mist);
   --color-paper: var(--paper);
+  --color-glint: var(--glint);
+  --color-glint-soft: var(--glint-soft);
   /* Corner radii: soft, consistent rounding across the site.
      panel → large bands and photographs, card → cards and illustration
      panels, inner → small crops and nested boxes. */
@@ -107,6 +120,63 @@ html {
   /* Cube intentionally keeps the same navy-metal palette as the dark
      theme (no --cube-* overrides here) — it reads as a deliberate dark
      accent object against the light page rather than a themed surface. */
+}
+
+/*
+  Beige + charcoal re-skin of the whole site, previewed under /beigetheme.
+  The route's layout renders a .theme-beige wrapper; `body:has()` lifts the
+  tokens onto body so the Header, Footer and Preloader (root-layout siblings
+  of the page) pick them up too, with no script and no flash of navy.
+*/
+body:has(.theme-beige) {
+  /* Redesign palette: charcoal → bronze → cream → beige */
+  --ink: #1b1b1d;
+  --navy: #2b2b2e;
+  --royal: #7a5c33;
+  --royal-soft: #a98e63;
+  --sky: #f4efe6;
+  --mist: #ece6da;
+  --paper: #faf8f3;
+  --panel-end: #4b4845;
+  --glint: #dcc7a3;
+  --glint-soft: #e8dac0;
+  /* Cards and type that are "white" on the navy site become warm cream */
+  --color-white: #fffdf9;
+
+  /* Legacy tokens (About page and the older sections) */
+  --background: #faf8f3;
+  --surface: #fdfbf7;
+  --surface-2: #f4efe6;
+  --line: #e8e2d6;
+  --foreground: #1b1b1d;
+  --muted: #6a645b;
+  --brand: #7a5c33;
+  --logo-blue: #3a3a3d;
+  --brand-soft: #f0eadf;
+  --gold: #96793f;
+  --card: #fffdf9;
+  --card-inset: #f8f5ee;
+  --card-line: #e8e2d6;
+  --card-shadow: 0 18px 40px -26px rgba(27, 27, 29, 0.28);
+
+  /* Cube: charcoal metal with bronze accent tiles */
+  --cube-a: #5e5e62;
+  --cube-b: #303034;
+  --cube-c: #121214;
+  --cube-border: rgba(214, 208, 198, 0.4);
+  --cube-inner-a: #232326;
+  --cube-inner-b: #141416;
+  --cube-accent-a: #dfc08a;
+  --cube-accent-b: #a5814a;
+  --cube-accent-c: #4f3b1c;
+  --cube-accent-border: rgba(255, 240, 214, 0.6);
+  --cube-accent-glow: rgba(150, 121, 63, 0.5);
+}
+
+/* The logo is drawn in the brand blues; under the beige theme it goes charcoal.
+   Logos already knocked out to white (photo lockup, footer) are left alone. */
+body:has(.theme-beige) img[src$="logo.svg"]:not(.invert) {
+  filter: grayscale(1) brightness(0.62) contrast(1.15);
 }
 
 body {
@@ -468,14 +538,14 @@ body {
   background-image:
     radial-gradient(130% 85% at 20% 14%, rgba(255, 255, 255, 0.55), transparent 52%),
     radial-gradient(90% 70% at 88% 92%, rgba(0, 0, 0, 0.3), transparent 60%),
-    linear-gradient(150deg, #7bb0e0 0%, #3f7ab8 48%, #1f3a5c 100%);
-  border: 1px solid rgba(220, 236, 255, 0.6);
+    linear-gradient(150deg, var(--cube-accent-a) 0%, var(--cube-accent-b) 48%, var(--cube-accent-c) 100%);
+  border: 1px solid var(--cube-accent-border);
   box-shadow:
     inset 0 2px 0 rgba(240, 248, 255, 0.65),
     inset 0 -2px 0 rgba(0, 0, 0, 0.5),
     inset 2px 0 0 rgba(240, 248, 255, 0.24),
     inset -2px 0 0 rgba(0, 0, 0, 0.4),
-    0 0 calc(var(--u) * 0.35) rgba(49, 106, 162, 0.55),
+    0 0 calc(var(--u) * 0.35) var(--cube-accent-glow),
     0 calc(var(--u) * 0.06) calc(var(--u) * 0.16) rgba(0, 0, 0, 0.5);
 }
 

@@ -27,7 +27,7 @@ function L({ i = 0, ...p }) {
 function Dot({ i = 0, ...p }) {
     return <motion.circle variants={fade(i)} style={{ transformBox: "fill-box", transformOrigin: "center" }} stroke="none" {...p} />;
 }
-const ACCENT = "rgba(36,82,181,0.14)";
+const ACCENT = "color-mix(in srgb, var(--royal) 14%, transparent)";
 
 const ICONS = {
     // Open ledger with a reconciled tick: accounts kept and balanced

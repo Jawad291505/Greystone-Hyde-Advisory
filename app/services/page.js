@@ -1,4 +1,4 @@
-import Link from "next/link";
+import Link from "../components/ThemeLink";
 import ServicesJourney from "../components/ServicesJourney";
 
 export const metadata = {
@@ -13,7 +13,7 @@ export default function ServicesPage() {
       <ServicesJourney />
 
       {/* Closing CTA: the same navy → royal plane used behind the hero photographs */}
-      <section className="relative mx-3 mb-3 overflow-hidden rounded-panel bg-[linear-gradient(155deg,var(--navy)_0%,var(--royal)_100%)] text-white">
+      <section className="relative mx-3 mb-3 overflow-hidden rounded-panel bg-[linear-gradient(155deg,var(--navy)_0%,var(--panel-end)_100%)] text-white">
         <div aria-hidden className="pointer-events-none absolute -top-1/3 right-[-10%] h-[120%] w-[55%] bg-[radial-gradient(closest-side,rgba(255,255,255,0.12),transparent)]" />
         <div className="relative mx-auto grid max-w-[88rem] gap-10 px-5 py-24 sm:px-8 lg:grid-cols-12 lg:items-end lg:px-12 lg:py-32">
           <div className="lg:col-span-7">
@@ -24,7 +24,7 @@ export default function ServicesPage() {
             <h2 className="mt-8 font-display text-[clamp(2.4rem,5.4vw,4.8rem)] leading-[1] tracking-[-0.015em]">
               Tell us where you are.
               <br />
-              <em className="text-[#bcd0ff]">We&apos;ll map the rest.</em>
+              <em className="text-glint-soft">We&apos;ll map the rest.</em>
             </h2>
           </div>
           <div className="lg:col-span-4 lg:col-start-9">

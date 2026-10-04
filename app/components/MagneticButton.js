@@ -1,12 +1,14 @@
 "use client";
 
 import { useRef } from "react";
+import { useThemeHref } from "../lib/themeBase";
 
 // Subtle magnetic pull toward the cursor, snapping back on release with a
 // spring-like ease. Skipped entirely on touch/coarse pointers via CSS
 // (see the pointer-fine check below) — there's no cursor there to react to.
 export default function MagneticButton({ href, children, className = "", ...rest }) {
   const ref = useRef(null);
+  const themed = useThemeHref();
 
   const onMove = (e) => {
     const el = ref.current;
@@ -29,7 +31,7 @@ export default function MagneticButton({ href, children, className = "", ...rest
     <a
       {...rest}
       ref={ref}
-      href={href}
+      href={themed(href)}
       onMouseMove={onMove}
       onMouseLeave={onLeave}
       className={`inline-block will-change-transform ${className}`}

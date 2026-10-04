@@ -16,7 +16,7 @@ const details = [
 const ease = [0.22, 1, 0.36, 1];
 
 const inputClass =
-  "mt-2 w-full rounded-xl border border-navy/15 bg-white px-4 py-3 text-[15px] text-ink placeholder:text-navy/35 transition-[border-color,box-shadow] duration-300 outline-none focus:border-royal focus:shadow-[0_0_0_3px_rgba(36,82,181,0.12)] aria-[invalid=true]:border-red-600/70";
+  "mt-2 w-full rounded-xl border border-navy/15 bg-white px-4 py-3 text-[15px] text-ink placeholder:text-navy/35 transition-[border-color,box-shadow] duration-300 outline-none focus:border-royal focus:shadow-[0_0_0_3px_color-mix(in_srgb,var(--royal)_12%,transparent)] aria-[invalid=true]:border-red-600/70";
 
 function Field({ label, name, error, children }) {
   return (
@@ -156,7 +156,7 @@ export default function ContactSection() {
                   <button
                     type="submit"
                     disabled={pending}
-                    className="shrink-0 rounded-full bg-navy px-8 py-3.5 text-sm font-medium tracking-wide text-white shadow-[0_18px_40px_-18px_rgba(20,42,92,0.6)] transition-[background-color,opacity] duration-500 hover:bg-royal focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-royal disabled:opacity-60"
+                    className="shrink-0 rounded-full bg-navy px-8 py-3.5 text-sm font-medium tracking-wide text-white shadow-[0_18px_40px_-18px_color-mix(in_srgb,var(--navy)_60%,transparent)] transition-[background-color,opacity] duration-500 hover:bg-royal focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-royal disabled:opacity-60"
                   >
                     {pending ? "Sending…" : "Send enquiry"}
                   </button>

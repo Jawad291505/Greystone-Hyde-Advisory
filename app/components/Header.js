@@ -1,10 +1,11 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
+import Link from "./ThemeLink";
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import MagneticButton from "./MagneticButton";
+import { useThemeHref } from "../lib/themeBase";
 
 const links = [
   { href: "/services", label: "Services" },
@@ -31,6 +32,7 @@ const itemVariants = {
 export default function Header() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
+  const themed = useThemeHref();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 40);
@@ -137,7 +139,7 @@ export default function Header() {
             </ul>
             <motion.a
               variants={itemVariants}
-              href="/#contact"
+              href={themed("/#contact")}
               onClick={() => setOpen(false)}
               className="mt-8 block rounded-full bg-navy py-4 text-center text-sm font-medium tracking-wide text-white"
             >
