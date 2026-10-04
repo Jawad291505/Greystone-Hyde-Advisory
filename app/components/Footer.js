@@ -63,7 +63,7 @@ export default function Footer() {
             <footer className="relative overflow-hidden rounded-t-panel bg-[linear-gradient(165deg,var(--navy)_0%,var(--ink)_75%)] text-white">
                 <div aria-hidden className="pointer-events-none absolute -top-1/2 right-[-10%] h-full w-1/2 bg-[radial-gradient(closest-side,rgba(36,82,181,0.4),transparent)]" />
 
-                <div className="relative mx-auto max-w-[88rem] px-5 pt-16 pb-8 sm:px-8 lg:px-12 lg:pt-20">
+                <div className="relative mx-auto max-w-[88rem] px-5 pt-12 pb-8 sm:px-8 lg:px-12 lg:pt-16">
                     <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-12 lg:gap-8">
                         {/* Brand */}
                         <div className="lg:col-span-4">

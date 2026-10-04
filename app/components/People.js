@@ -49,7 +49,7 @@ export default function People() {
 
     return (
         <section id="people" aria-labelledby="people-title" className="relative scroll-mt-20 bg-paper text-ink">
-            <div className="mx-auto max-w-[88rem] px-5 py-24 sm:px-8 lg:px-12 lg:py-28">
+            <div className="mx-auto max-w-[88rem] px-5 py-12 sm:px-8 lg:px-12 lg:py-16">
                 <div className="flex items-center justify-between border-t border-navy/10 pt-5 font-mono text-[10px] tracking-[0.2em] text-navy/50 uppercase">
                     <span>04 — Expertise</span>
                     <span className="hidden sm:inline">Who you&apos;ll work with</span>
@@ -61,7 +61,7 @@ export default function People() {
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true, margin: "-10%" }}
                     transition={{ duration: 0.9, ease }}
-                    className="mt-10 grid gap-6 lg:mt-14 lg:grid-cols-12 lg:items-end lg:gap-8"
+                    className="mt-10 grid gap-6 lg:mt-12 lg:grid-cols-12 lg:items-end lg:gap-8"
                 >
                         <h2
                             id="people-title"
@@ -88,7 +88,7 @@ export default function People() {
                         </div>
                 </motion.div>
 
-                <div className="mt-12 grid gap-4 lg:mt-16 lg:grid-cols-12 lg:gap-5">
+                <div className="mt-10 grid gap-4 lg:mt-14 lg:grid-cols-12 lg:gap-5">
                     {/* The work itself: a report under review, not a team photo.
                         Photo: Towfiqu barbhuiya, Unsplash (Unsplash License) */}
                     {/* The frame is watched for visibility and the clip is animated on an
@@ -142,20 +142,23 @@ export default function People() {
                             <motion.li
                                 key={r.role}
                                 variants={cardIn}
-                                className="group relative overflow-hidden rounded-card border border-navy/10 bg-white/60 p-7 transition-[background-color,border-color,box-shadow] duration-500 hover:border-royal/20 hover:bg-white hover:shadow-[0_30px_60px_-44px_rgba(11,26,56,0.4)]"
+                                className="group relative flex items-start gap-5 overflow-hidden rounded-card border border-navy/10 bg-white/60 p-6 transition-[background-color,border-color,box-shadow] duration-500 hover:border-royal/20 hover:bg-white hover:shadow-[0_30px_60px_-44px_rgba(11,26,56,0.4)]"
                             >
                                 {/* Royal rule draws across the top on hover */}
                                 <span
                                     aria-hidden
                                     className="absolute top-0 left-0 h-0.5 w-full origin-left scale-x-0 bg-royal transition-transform duration-700 group-hover:scale-x-100"
                                 />
-                                <div className="flex items-start justify-between">
-                                    <LineIcon name={r.icon} className="h-11 w-11" />
-                                    <span className="font-mono text-[11px] text-navy/40">{String(i + 1).padStart(2, "0")}</span>
+                                {/* Icon beside the copy rather than above it, to keep the cards short */}
+                                <LineIcon name={r.icon} className="h-10 w-10 shrink-0" />
+                                <div className="min-w-0 flex-1">
+                                    <div className="flex items-baseline justify-between gap-3">
+                                        <h3 className="font-display text-[1.5rem] leading-tight tracking-tight">{r.role}</h3>
+                                        <span className="font-mono text-[11px] text-navy/40">{String(i + 1).padStart(2, "0")}</span>
+                                    </div>
+                                    <p className="mt-1 font-mono text-[10px] tracking-[0.16em] text-royal uppercase">{r.focus}</p>
+                                    <p className="mt-3 text-[15px] leading-relaxed text-navy/75">{r.body}</p>
                                 </div>
-                                <h3 className="mt-6 font-display text-[1.65rem] leading-tight tracking-tight">{r.role}</h3>
-                                <p className="mt-1 font-mono text-[10px] tracking-[0.16em] text-royal uppercase">{r.focus}</p>
-                                <p className="mt-4 text-[15px] leading-relaxed text-navy/75">{r.body}</p>
                             </motion.li>
                         ))}
                     </motion.ol>

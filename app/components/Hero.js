@@ -120,7 +120,9 @@ function Headline({ twin = false, reduce }) {
     <Tag
       id={twin ? undefined : "hero-title"}
       aria-hidden={twin || undefined}
-      className={`font-editorial text-[clamp(3.25rem,8.2vw,9.5rem)] leading-[0.92] font-[350] tracking-[-0.03em] [font-kerning:normal] [font-variation-settings:'opsz'_72] ${
+      // On desktop the size is derived from the left column (the longer line
+      // is ~7.3em wide), so the headline stops short of the photograph's edge.
+      className={`font-editorial text-[clamp(3.25rem,8.2vw,9.5rem)] lg:text-[length:min((50vw_-_4.5rem)_/_7.45,5.3rem)] leading-[0.92] font-[350] tracking-[-0.03em] [font-kerning:normal] [font-variation-settings:'opsz'_72] ${
         twin ? "text-paper" : "text-ink"
       }`}
     >

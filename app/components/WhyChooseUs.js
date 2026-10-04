@@ -68,13 +68,13 @@ export default function WhyChooseUs() {
         <div aria-hidden className="pointer-events-none absolute -top-1/4 right-[-10%] h-[90%] w-[60%] bg-[radial-gradient(closest-side,rgba(36,82,181,0.5),transparent)]" />
         <div aria-hidden className="pointer-events-none absolute bottom-[-30%] left-[-10%] h-[70%] w-[50%] bg-[radial-gradient(closest-side,rgba(91,130,214,0.18),transparent)]" />
 
-        <div className="relative mx-auto max-w-[88rem] px-5 pt-28 pb-16 sm:px-8 lg:px-12 lg:pt-36 lg:pb-24">
+        <div className="relative mx-auto max-w-[88rem] px-5 pt-12 pb-4 sm:px-8 lg:px-12 lg:pt-16 lg:pb-8">
           <div className="flex items-center justify-between border-t border-white/15 pt-5 font-mono text-[10px] tracking-[0.2em] text-white/50 uppercase">
             <span>03 — Why choose us</span>
             <span className="hidden sm:inline">Our value, your advantage</span>
           </div>
 
-          <div className="mt-14 grid gap-10 lg:mt-20 lg:grid-cols-12 lg:items-end lg:gap-8">
+          <div className="mt-10 grid gap-8 lg:mt-12 lg:grid-cols-12 lg:items-end lg:gap-8">
             <h2
               id="why-title"
               className="font-display text-[clamp(2.6rem,6vw,5.6rem)] leading-[0.98] tracking-[-0.02em] lg:col-span-8"
@@ -89,7 +89,7 @@ export default function WhyChooseUs() {
             </p>
           </div>
 
-          <ul className="mt-16 grid grid-cols-2 border-t border-white/10 lg:mt-24 lg:grid-cols-4">
+          <ul className="mt-10 grid grid-cols-2 border-t border-white/10 lg:mt-14 lg:grid-cols-4">
             {figures.map((f, i) => (
               <Figure key={f.label} f={f} i={i} />
             ))}
@@ -98,14 +98,14 @@ export default function WhyChooseUs() {
       </div>
 
       {/* Reasons: an even ledger of six, back on the bright page */}
-      <div className="mx-auto max-w-[88rem] px-5 py-24 sm:px-8 lg:px-12 lg:py-32">
+      <div className="mx-auto max-w-[88rem] px-5 py-12 sm:px-8 lg:px-12 lg:py-16">
         <div className="grid gap-6 lg:grid-cols-12 lg:items-end">
           <p className="font-display text-[clamp(1.9rem,3.4vw,3rem)] leading-[1.05] tracking-tight lg:col-span-6">
             Six reasons clients stay with us.
           </p>
         </div>
 
-        <ol className="mt-12 grid border-t border-navy/15 sm:grid-cols-2 lg:mt-16 lg:grid-cols-3">
+        <ol className="mt-10 grid border-t border-navy/15 sm:grid-cols-2 lg:mt-14 lg:grid-cols-3">
           {reasons.map((r, i) => (
             <motion.li
               key={r.title}

@@ -101,7 +101,7 @@ export default function Positioning() {
 
     return (
         <section id="approach" aria-labelledby="approach-title" className="relative scroll-mt-20 bg-paper text-ink">
-            <div className="mx-auto max-w-[88rem] px-5 pt-28 sm:px-8 lg:px-12 lg:pt-36">
+            <div className="mx-auto max-w-[88rem] px-5 pt-12 sm:px-8 lg:px-12 lg:pt-16">
                 <div className="flex items-center justify-between border-t border-navy/10 pt-5 font-mono text-[10px] tracking-[0.2em] text-navy/50 uppercase">
                     <span>02 — Our approach</span>
                     <span className="hidden sm:inline">Complexity → structure → clarity</span>
@@ -113,10 +113,10 @@ export default function Positioning() {
 
             <div className="mx-auto grid max-w-[88rem] px-5 sm:px-8 lg:grid-cols-12 lg:gap-8 lg:px-12">
                 {/* Copy column */}
-                <div className="pb-20 lg:col-span-6 lg:pb-40">
+                <div className="pb-12 lg:col-span-6 lg:pb-32">
                     <p
                         ref={statementRef}
-                        className="mt-14 font-display text-[clamp(2rem,3.6vw,3.4rem)] leading-[1.1] tracking-[-0.015em] lg:mt-20"
+                        className="mt-10 font-display text-[clamp(2rem,3.6vw,3.4rem)] leading-[1.1] tracking-[-0.015em] lg:mt-12"
                     >
                         {reduce
                             ? STATEMENT
@@ -132,7 +132,7 @@ export default function Positioning() {
                         whileInView={{ clipPath: "inset(0% 0% 0% 0%)" }}
                         viewport={{ once: true, margin: "-15%" }}
                         transition={{ duration: 1.4, ease }}
-                        className="mt-20 lg:mt-28"
+                        className="mt-12 lg:mt-14"
                     >
                         <div ref={imageRef} className="relative aspect-[4/3] overflow-hidden rounded-panel bg-mist">
                             <motion.div style={{ y: imageY }} className="absolute -inset-y-[10%] inset-x-0">
@@ -151,7 +151,7 @@ export default function Positioning() {
                         </figcaption>
                     </motion.figure>
 
-                    <p className="mt-16 max-w-md text-base leading-relaxed text-navy/75">
+                    <p className="mt-12 max-w-md text-base leading-relaxed text-navy/75">
                         Good accounting is less about software and more about judgement. We
                         keep the process organised so the conversation can focus on your
                         business.
@@ -179,7 +179,7 @@ export default function Positioning() {
                     </ol>
 
                     {/* The cube's payoff: lands as the cube locks into place */}
-                    <div className="mt-24 lg:mt-36">
+                    <div className="mt-14 lg:mt-20">
                         <p className="max-w-md text-lg leading-relaxed text-navy/80">
                             Accounts, tax, payroll, compliance, reporting, advice. Each one
                             moves on its own schedule, and each one affects the others.

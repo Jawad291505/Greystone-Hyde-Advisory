@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useId, useRef, useState } from "react";
+import { useEffect, useId, useRef, useState, useSyncExternalStore } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import ServiceIllustration from "./ServiceIllustrations";
 import LineIcon from "./LineIcons";
@@ -27,6 +27,13 @@ const ROWS = [
     [3, 4, 5],
 ];
 const num = (i) => String(i + 1).padStart(2, "0");
+
+const PHONE = "(max-width: 639px)";
+function subscribePhone(cb) {
+    const mq = window.matchMedia(PHONE);
+    mq.addEventListener("change", cb);
+    return () => mq.removeEventListener("change", cb);
+}
 
 // Only one card is open at a time. Its row is four tracks wide (open card
 // 2fr, the others 1fr) and the other row splits evenly into thirds. The
@@ -132,14 +139,21 @@ function Panel({ slug, reduce }) {
 // Six cards in two rows of three, every card the same height. One card is
 // open at a time (the first, to begin with), twice the width with its report
 // panel beside the copy; pointing at any other card opens it and closes the
-// last. Below desktop the cards stack, the first open, each opened by a tap.
+// last. Below desktop the cards stack, each opened by a tap; closed cards
+// fold down to their title so the stack stays short. On tablets the first
+// starts open; on phones they all start closed, about one screen tall.
 export default function ServicesGrid() {
     const [open, setOpen] = useState(0);
+    // The stacked layout keeps its own open card: null until the first tap.
+    const [tapped, setTapped] = useState(null);
+    const phone = useSyncExternalStore(subscribePhone, () => window.matchMedia(PHONE).matches, () => true);
+    const stacked = tapped ?? (phone ? -1 : 0);
     const [subs, setSubs] = useState({});
     const reduce = useReducedMotion();
     const uid = useId();
     const timer = useRef();
     const settle = useRef();
+    const items = useRef([]);
 
     const activeRow = ROWS.findIndex((row) => row.includes(open));
     // Which rows lay their copy out one track wide. A row that gains the open
@@ -171,15 +185,33 @@ export default function ServicesGrid() {
     };
     const cancel = () => clearTimeout(timer.current);
 
+    // Stacked cards: the card above folds away as this one opens, which can
+    // carry its heading off the top of the screen, so bring it back into view.
+    const toggle = (i) => {
+        const next = i === stacked ? -1 : i;
+        setTapped(next);
+        clearTimeout(timer.current);
+        if (next < 0) return;
+        timer.current = setTimeout(
+            () => {
+                const el = items.current[next];
+                if (el && el.getBoundingClientRect().top < 88) {
+                    el.scrollIntoView({ block: "start", behavior: reduce ? "auto" : "smooth" });
+                }
+            },
+            reduce ? 0 : 850,
+        );
+    };
+
     return (
         <section id="services" aria-labelledby="services-title" className="relative scroll-mt-20 bg-paper text-ink">
-            <div className="mx-auto max-w-[88rem] px-5 py-24 sm:px-8 lg:px-12 lg:py-32">
+            <div className="mx-auto max-w-[88rem] px-5 py-12 sm:px-8 lg:px-12 lg:py-16">
                 <div className="flex items-center justify-between border-t border-navy/10 pt-5 font-mono text-[10px] tracking-[0.2em] text-navy/50 uppercase">
                     <span>01 — Services</span>
                     <span className="hidden sm:inline"> practice areas</span>
                 </div>
 
-                <div className="mt-10 grid gap-6 lg:grid-cols-12 lg:items-end">
+                <div className="mt-10 grid gap-6 lg:mt-12 lg:grid-cols-12 lg:items-end">
                     <h2
                         id="services-title"
                         className="font-display text-[clamp(2.4rem,5vw,4.2rem)] leading-[1.02] tracking-[-0.015em] lg:col-span-7"
@@ -198,7 +230,7 @@ export default function ServicesGrid() {
                     initial={reduce ? false : "hidden"}
                     whileInView="show"
                     viewport={{ once: true, margin: "-10%" }}
-                    className="@container mt-16 hidden flex-col xl:flex"
+                    className="@container mt-14 hidden flex-col xl:flex"
                     style={{ gap: GAP }}
                 >
                     {ROWS.map((row, r) => (
@@ -282,16 +314,19 @@ export default function ServicesGrid() {
                     initial={reduce ? false : "hidden"}
                     whileInView="show"
                     viewport={{ once: true, margin: "-10%" }}
-                    className="mt-12 space-y-3 xl:hidden"
+                    className="mt-10 space-y-3 xl:hidden"
                 >
                     {GROUPS.map((g, i) => {
-                        const on = i === open;
+                        const on = i === stacked;
                         const s = bySlug[subOf(i)];
                         return (
                             <motion.li
                                 key={g.name}
                                 variants={cardIn}
-                                className={`overflow-hidden rounded-card border transition-[background-color,box-shadow] duration-700 ${on ? "border-navy/10 bg-white shadow-[0_30px_60px_-44px_rgba(11,26,56,0.4)]" : "border-navy/10 bg-white/55"
+                                ref={(el) => {
+                                    items.current[i] = el;
+                                }}
+                                className={`scroll-mt-24 overflow-hidden rounded-card border transition-[background-color,box-shadow] duration-700 ${on ? "border-navy/10 bg-white shadow-[0_30px_60px_-44px_rgba(11,26,56,0.4)]" : "border-navy/10 bg-white/55"
                                     }`}
                             >
                                 <h3>
@@ -299,7 +334,7 @@ export default function ServicesGrid() {
                                         type="button"
                                         aria-expanded={on}
                                         aria-controls={`${uid}-acc-${i}`}
-                                        onClick={() => setOpen(on ? -1 : i)}
+                                        onClick={() => toggle(i)}
                                         className="flex w-full items-start gap-4 p-5 text-left focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-royal sm:gap-5 sm:p-6"
                                     >
                                         <LineIcon name={g.icon} className="h-10 w-10" />
@@ -308,7 +343,14 @@ export default function ServicesGrid() {
                                             <span className="mt-1 block font-display text-[1.45rem] leading-tight tracking-tight text-ink sm:text-[1.65rem]">
                                                 {g.name}
                                             </span>
-                                            <span className="mt-2 block text-[15px] leading-relaxed text-navy/75">{s.desc}</span>
+                                            {/* Folded away while the card is closed */}
+                                            <span
+                                                className={`grid transition-[grid-template-rows,opacity] duration-[800ms] ease-[cubic-bezier(0.65,0,0.35,1)] motion-reduce:transition-none ${on ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"}`}
+                                            >
+                                                <span className="overflow-hidden">
+                                                    <span className="block pt-2 text-[15px] leading-relaxed text-navy/75">{s.desc}</span>
+                                                </span>
+                                            </span>
                                         </span>
                                         <span
                                             aria-hidden
@@ -348,7 +390,7 @@ export default function ServicesGrid() {
                     })}
                 </motion.ul>
 
-                <p className="mt-10 flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-navy/70 lg:mt-12">
+                <p className="mt-8 flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-navy/70">
                     Not sure where to start?
                     <a
                         href="#contact"

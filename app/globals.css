@@ -172,6 +172,28 @@ body {
   transition: transform 0.1s linear;
 }
 
+/* Testimonials carousel: drifts one copy of the list, then loops unseen */
+@keyframes testimonial-drift {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.testimonial-track {
+  animation: testimonial-drift 60s linear infinite;
+}
+
+.testimonial-marquee:hover .testimonial-track,
+.testimonial-marquee:focus-within .testimonial-track {
+  animation-play-state: paused;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .testimonial-track {
+    animation: none;
+  }
+}
+
 /* Preloader: never under reduced motion */
 @media (prefers-reduced-motion: reduce) {
   #preloader {
