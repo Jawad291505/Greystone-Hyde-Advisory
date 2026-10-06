@@ -21,8 +21,9 @@ const SOCIAL = [
 const LINKS = [
     { label: "Services", href: "/services" },
     { label: "Why us", href: "/#why-us" },
-    { label: "Expertise", href: "/#people" },
+    { label: "Pricing", href: "/#pricing" },
     { label: "About", href: "/about" },
+    { label: "FAQs", href: "/faqs" },
     { label: "Contact", href: "/#contact" },
     { label: "Pay an invoice", href: "/services#payments" },
 ];

@@ -44,9 +44,9 @@
   --navy: #142a5c;
   --royal: #2452b5;
   --royal-soft: #5b82d6;
-  --sky: #eef3fb;
-  --mist: #dde7f5;
-  --paper: #fbfcfe;
+  --sky: #f5f8fd;
+  --mist: #e6edf8;
+  --paper: #fdfdfe;
   /* Far end of the navy photo/CTA planes, and the light accent used for
      emphasis on dark panels — tokens so a theme can re-skin them. */
   --panel-end: #2452b5;
@@ -760,4 +760,43 @@ body {
   border-radius: 0.75rem;
   border: 1px solid var(--card-line);
   background: var(--card-inset);
+}
+/* A very slow rotation for decorative dashed rings: transform only, so it
+   stays on the compositor. Stilled for visitors who ask for less motion. */
+@keyframes slow-turn {
+  to {
+    rotate: 360deg;
+  }
+}
+
+.slow-turn {
+  animation: slow-turn 90s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .slow-turn {
+    animation: none;
+  }
+}
+
+/* FAQ page: the oversized question mark drifts a little, very slowly.
+   Transform only; stilled for visitors who ask for less motion. */
+@keyframes faq-float {
+  from {
+    transform: translate3d(0, 0, 0) rotate(-4deg);
+  }
+
+  to {
+    transform: translate3d(0, -28px, 0) rotate(3deg);
+  }
+}
+
+.faq-float {
+  animation: faq-float 14s ease-in-out infinite alternate;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .faq-float {
+    animation: none;
+  }
 }

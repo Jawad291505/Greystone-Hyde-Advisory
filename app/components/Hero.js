@@ -1,15 +1,8 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useRef, useSyncExternalStore } from "react";
-import {
-  animate,
-  motion,
-  useMotionValue,
-  useReducedMotion,
-  useScroll,
-  useTransform,
-} from "framer-motion";
+import { useEffect, useSyncExternalStore } from "react";
+import { animate, motion, useMotionValue, useReducedMotion, useTransform } from "framer-motion";
 import { useIntroReady } from "../lib/intro";
 
 const ease = [0.22, 1, 0.36, 1];
@@ -34,10 +27,15 @@ const T = {
 // Shared by the ink headline and its paper-white twin inside the photo frame,
 // so the two lay out identically and the colour flips exactly at the frame edge.
 const CONTAINER = "mx-auto max-w-[88rem] px-5 sm:px-8 lg:px-12";
-const TOP = "pt-32 sm:pt-36 lg:pt-[clamp(8rem,21svh,13rem)]";
+const TOP = "pt-32 sm:pt-36 lg:pt-[clamp(8rem,18svh,13rem)]";
 
 // Left edge of a column on the container's 12-column grid, as a length in the
 // full-width stage's own box.
+// The container's side gutter, as a length in the full-width stage's own box:
+// the photograph stops here on the right, level with the header and the copy,
+// so all four of its rounded corners are in view.
+const GUTTER = "calc(max(0px, (100% - 88rem) / 2) + 3rem)";
+
 const col = (fraction) =>
   `calc(max(0px, (100% - 88rem) / 2) + 3rem + (min(100%, 88rem) - 6rem) * ${fraction})`;
 
@@ -58,15 +56,6 @@ function subscribeClock(cb) {
   const id = setInterval(cb, 15000);
   return () => clearInterval(id);
 }
-
-// Shown over the full-bleed photograph once the hero has been scrolled open.
-// PLACEHOLDER FIGURES — replace with the practice's real numbers before launch.
-const STATS = [
-  { value: "£1.2bn", label: "Client turnover advised" },
-  { value: "420+", label: "Businesses on the books" },
-  { value: "96%", label: "Client retention" },
-  { value: "18 yrs", label: "In practice" },
-];
 
 const fadeIn = (reduce, ready, delay) => ({
   initial: reduce ? false : { opacity: 0, y: 14 },
@@ -112,7 +101,8 @@ function Line({ children, delay, reduce }) {
 }
 
 // Rendered twice: once in ink on the page, once in paper-white inside the
-// photograph's clip. `twin` is the decorative copy.
+// photograph's clip, which covers the page while the intro plays. `twin` is
+// the decorative copy.
 function Headline({ twin = false, reduce }) {
   const ready = useIntroReady();
   const Tag = twin ? "p" : "h1";
@@ -154,25 +144,15 @@ function Headline({ twin = false, reduce }) {
   );
 }
 
-// The one primary action on the page, as a solid pill. `twin` is the
-// paper-white copy over the open photograph (not focusable; the ink one is).
-function PrimaryCta({ twin = false }) {
+// The one primary action on the page, as a solid pill.
+function PrimaryCta() {
   return (
     <a
       href="#contact"
-      tabIndex={twin ? -1 : undefined}
-      className={`group inline-flex items-center gap-4 rounded-full py-2 pr-2 pl-7 text-sm font-medium tracking-wide transition-colors duration-500 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-royal ${
-        twin
-          ? "bg-paper text-navy hover:bg-sky"
-          : "bg-navy text-white shadow-[0_18px_40px_-18px_color-mix(in_srgb,var(--navy)_60%,transparent)] hover:bg-royal"
-      }`}
+      className="group inline-flex items-center gap-4 rounded-full bg-navy py-2 pr-2 pl-7 text-[15px] font-medium tracking-wide text-white shadow-[0_18px_40px_-18px_color-mix(in_srgb,var(--navy)_60%,transparent)] transition-colors duration-500 hover:bg-royal focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-royal"
     >
       Book a consultation
-      <span
-        className={`grid h-10 w-10 place-items-center rounded-full text-white transition-transform duration-500 group-hover:translate-x-1 ${
-          twin ? "bg-navy" : "bg-white/15"
-        }`}
-      >
+      <span className="grid h-10 w-10 place-items-center rounded-full bg-white/15 text-white transition-transform duration-500 group-hover:translate-x-1">
         <svg viewBox="0 0 16 16" className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden>
           <path d="M3 8h10M9 4l4 4-4 4" />
         </svg>
@@ -182,7 +162,6 @@ function PrimaryCta({ twin = false }) {
 }
 
 export default function Hero() {
-  const section = useRef(null);
   const reduce = useReducedMotion();
   const ready = useIntroReady();
   const desktop = useSyncExternalStore(subscribeDesktop, () => window.matchMedia(DESKTOP).matches, () => false);
@@ -190,8 +169,6 @@ export default function Hero() {
 
   // intro: 0 = photograph fills the stage, 1 = frame at rest.
   const intro = useMotionValue(0);
-  // gate: the scroll choreography only runs on desktop with motion allowed.
-  const gate = useMotionValue(0);
   const wide = useMotionValue(0);
 
   useEffect(() => {
@@ -205,47 +182,29 @@ export default function Hero() {
   }, [intro, reduce, ready]);
 
   useEffect(() => {
-    gate.set(desktop && !reduce ? 1 : 0);
     wide.set(desktop ? 1 : 0);
-  }, [gate, wide, desktop, reduce]);
+  }, [wide, desktop]);
 
-  // On desktop the section is taller than the screen; while its stage is
-  // pinned, scrolling hands off to the next section by opening the photograph
-  // back out to full bleed under the white headline.
-  const { scrollYProgress } = useScroll({ target: section, offset: ["start start", "end end"] });
-  const expand = useTransform(
-    () => gate.get() * Math.min(1, Math.max(0, (scrollYProgress.get() - 0.06) / 0.72)),
-  );
-
-  const p = useTransform(() => intro.get() * (1 - expand.get()));
+  // Once the intro has settled the frame stays put: scrolling moves the page,
+  // never the photograph.
   const clipPath = useTransform(
-    p,
-    // Corners round with the frame, and square off again as it opens to full bleed.
+    intro,
+    // Corners round with the frame as it retracts.
     (v) =>
       `inset(calc(var(--t) * ${v}) calc(var(--r) * ${v}) calc(var(--b) * ${v}) calc(var(--l) * ${v}) round calc(var(--radius-panel) * ${v}))`,
   );
   // At rest the frame shows the stage's right half; shifting the photo right
-  // with the clip keeps the pencil hand centred in it, and at full bleed the
-  // whole picture is back in view.
-  const imageX = useTransform(() => `${20 * p.get() * wide.get()}%`);
-  const imageScale = useTransform(() => 1 + 0.07 * gate.get() * scrollYProgress.get());
-  const copyOpacity = useTransform(expand, [0, 0.3], [1, 0]);
-  const copyY = useTransform(expand, [0, 0.4], [0, -48]);
-  const detailY = useTransform(expand, [0, 0.5], [0, 90]);
-  // The paper copy's full-bleed counterpart: arrives once the photo is open.
-  const openOpacity = useTransform(expand, [0.55, 0.9], [0, 1]);
-  const openY = useTransform(expand, [0.55, 1], [28, 0]);
-  const openPointer = useTransform(openOpacity, (v) => (v > 0.5 ? "auto" : "none"));
+  // with the clip keeps the pencil hand centred in it.
+  const imageX = useTransform(() => `${20 * intro.get() * wide.get()}%`);
 
   return (
     <section
-      ref={section}
       aria-labelledby="hero-title"
-      className="relative bg-paper bg-[radial-gradient(70%_60%_at_18%_32%,var(--sky),transparent_72%)] text-ink lg:h-[190svh] motion-reduce:lg:h-auto"
+      className="relative bg-paper bg-[radial-gradient(70%_60%_at_18%_32%,var(--sky),transparent_72%)] text-ink"
     >
       <div
-        style={desktop ? { "--l": col(0.5) } : undefined}
-        className="relative isolate [--b:0%] [--l:1.25rem] [--r:1.25rem] [--t:0%] sm:[--l:2rem] sm:[--r:2rem] lg:[--r:0%] lg:sticky lg:top-0 lg:h-svh lg:overflow-hidden lg:[--b:10%] lg:[--t:15%]"
+        style={desktop ? { "--l": col(0.5), "--r": GUTTER } : undefined}
+        className="relative isolate [--b:0%] [--l:1.25rem] [--r:1.25rem] [--t:0%] sm:[--l:2rem] sm:[--r:2rem] lg:[--r:0%] lg:h-svh lg:overflow-hidden lg:[--b:10%] lg:[--t:15%]"
       >
         <LedgerRules reduce={reduce} />
 
@@ -253,10 +212,10 @@ export default function Hero() {
         <div className={`${CONTAINER} ${TOP} relative pb-14 lg:pb-0`}>
           <Headline reduce={reduce} />
 
-          <motion.div style={{ opacity: copyOpacity, y: copyY }}>
+          <div>
             <motion.p
               {...fadeIn(reduce, ready, T.copy)}
-              className="mt-9 max-w-[26rem] text-base leading-relaxed text-navy/75 sm:text-[17px] lg:mt-11"
+              className="mt-9 max-w-[28rem] text-[17px] leading-[1.65] text-navy/90 sm:text-lg lg:mt-[clamp(1.5rem,4.2svh,2.75rem)]"
             >
               Greystone Hyde is a London accounting and advisory practice. We
               work directly with owners and finance teams, on the books, the
@@ -265,12 +224,12 @@ export default function Hero() {
 
             <motion.div
               {...fadeIn(reduce, ready, T.copy + 0.12)}
-              className="mt-9 flex flex-wrap items-center gap-x-8 gap-y-5 lg:mt-11"
+              className="mt-9 flex flex-wrap items-center gap-x-8 gap-y-5 lg:mt-[clamp(1.5rem,4.2svh,2.75rem)]"
             >
               <PrimaryCta />
               <a
                 href="#services"
-                className="text-sm tracking-wide text-navy/70 underline decoration-navy/25 underline-offset-[6px] transition-colors duration-300 hover:text-royal hover:decoration-royal focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-royal"
+                className="text-[15px] font-medium tracking-wide text-navy/85 underline decoration-navy/40 underline-offset-[6px] transition-colors duration-300 hover:text-royal hover:decoration-royal focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-royal"
               >
                 Our services
               </a>
@@ -279,18 +238,18 @@ export default function Hero() {
             {/* Trust note: the reply commitment made in the contact section */}
             <motion.p
               {...fadeIn(reduce, ready, T.copy + 0.22)}
-              className="mt-6 flex items-center gap-3 text-[13px] text-navy/60"
+              className="mt-6 flex items-center gap-3 text-sm text-navy/80 lg:mt-5"
             >
               <span aria-hidden className="h-1.5 w-1.5 shrink-0 rounded-full bg-royal" />
               A qualified accountant replies within one working day.
             </motion.p>
-          </motion.div>
+          </div>
         </div>
 
         {/* Metadata: facts about where the practice is, no claims */}
-        <motion.div style={{ opacity: copyOpacity }} className="absolute inset-x-0 bottom-0 hidden lg:block">
+        <div className="absolute inset-x-0 bottom-0 hidden lg:block">
           <motion.div {...fadeIn(reduce, ready, T.copy + 0.3)} className={`${CONTAINER} pb-[4svh]`}>
-            <dl className="flex w-[min(30rem,32%)] gap-10 border-t border-navy/10 pt-4 font-mono text-[10px] tracking-[0.18em] text-navy/55 uppercase">
+            <dl className="flex w-[min(30rem,32%)] gap-10 border-t border-navy/15 pt-4 font-mono text-[11px] tracking-[0.16em] text-navy/70 uppercase">
               <div>
                 <dt className="sr-only">Practice</dt>
                 <dd>London</dd>
@@ -305,11 +264,11 @@ export default function Hero() {
               </div>
             </dl>
           </motion.div>
-        </motion.div>
+        </div>
 
         {/* The photograph. On desktop it spans the whole stage and is clipped to
-            its resting rectangle, so it can open to full screen on load and on
-            scroll; the white headline twin lives inside the same clip. */}
+            its resting rectangle, so it can fill the screen on load and retract;
+            the white headline twin lives inside the same clip. */}
         <motion.figure
           style={{ clipPath }}
           className="relative m-0 aspect-[4/5] overflow-hidden bg-[linear-gradient(155deg,var(--navy)_0%,var(--panel-end)_100%)] sm:aspect-[5/4] lg:absolute lg:inset-0 lg:aspect-auto"
@@ -320,7 +279,7 @@ export default function Hero() {
             transition={{ duration: 2.1, ease, delay: T.focus }}
             className="absolute inset-0"
           >
-            <motion.div style={{ x: imageX, scale: imageScale }} className="absolute inset-0">
+            <motion.div style={{ x: imageX }} className="absolute inset-0">
               <Image
                 src="/images/desk-documents.jpg"
                 alt="Two advisers working through figures on printed working papers at a desk"
@@ -335,69 +294,13 @@ export default function Hero() {
             <div className="hero-grain absolute inset-0 opacity-[0.16]" />
           </motion.div>
 
-          {/* Brand lockup, above the white headline once the photo is open.
-              Offset up from the headline's own top padding so the headline
-              itself stays aligned with its ink twin. */}
-          <motion.div
-            aria-hidden
-            style={{ opacity: openOpacity, y: openY }}
-            className="absolute inset-x-0 top-[calc(clamp(8rem,21svh,13rem)-3.5rem)] hidden lg:block"
-          >
-            <div className={`${CONTAINER} flex items-center gap-4`}>
-              <Image src="/logo.svg" alt="" width={28} height={28} className="brightness-0 invert" />
-              <span className="font-display text-xl tracking-tight text-paper">Greystone Hyde</span>
-              <span className="h-px w-8 bg-paper/35" />
-              <span className="font-mono text-[10px] tracking-[0.18em] text-paper/60 uppercase">
-                Accounting &amp; Advisory · London
-              </span>
-            </div>
-          </motion.div>
-
           <div aria-hidden className={`${CONTAINER} ${TOP} relative hidden lg:block`}>
             <Headline twin reduce={reduce} />
-
-            <motion.div
-              style={{ opacity: openOpacity, y: openY, pointerEvents: openPointer }}
-              className="mt-11 flex flex-wrap items-center gap-x-8 gap-y-5"
-            >
-              <PrimaryCta twin />
-              <a
-                href="#services"
-                tabIndex={-1}
-                className="text-sm tracking-wide text-paper/75 underline decoration-paper/30 underline-offset-[6px] transition-colors duration-300 hover:text-paper hover:decoration-sky"
-              >
-                Our services
-              </a>
-            </motion.div>
           </div>
-
-          {/* Performance figures, over the open photograph */}
-          <motion.div
-            style={{ opacity: openOpacity, y: openY }}
-            className="absolute inset-x-0 bottom-0 hidden lg:block"
-          >
-            <div className={`${CONTAINER} pb-[6svh]`}>
-              <dl className="grid w-[min(60rem,68%)] grid-cols-4 border-t border-paper/20">
-                {STATS.map((s) => (
-                  <div
-                    key={s.label}
-                    className="flex flex-col-reverse justify-end border-l border-paper/15 pt-5 pr-4 pl-5 first:border-l-0 first:pl-0"
-                  >
-                    <dt className="mt-2.5 font-mono text-[10px] tracking-[0.18em] text-paper/70 uppercase">
-                      {s.label}
-                    </dt>
-                    <dd className="font-editorial text-[clamp(2rem,3vw,3rem)] leading-none font-[350] tracking-[-0.02em] text-paper [font-variation-settings:'opsz'_72]">
-                      {s.value}
-                    </dd>
-                  </div>
-                ))}
-              </dl>
-            </div>
-          </motion.div>
 
           <motion.figcaption
             {...fadeIn(reduce, ready, T.copy + 0.2)}
-            className="absolute right-5 bottom-4 flex items-center gap-2 font-mono text-[10px] tracking-[0.18em] text-paper/75 uppercase sm:right-8 lg:right-12 lg:bottom-[calc(10%+1.1rem)]"
+            className="absolute right-5 bottom-4 flex items-center gap-2 font-mono text-[10px] tracking-[0.18em] text-paper/75 uppercase sm:right-8 lg:right-[calc(var(--r)_+_1.75rem)] lg:bottom-[calc(10%+1.1rem)]"
           >
             <span className="text-paper/45">Fig. 01</span>
             <span className="h-px w-4 bg-paper/40" />
@@ -407,7 +310,7 @@ export default function Hero() {
 
         {/* One detail crop, overlapping the main frame's edge (desktop only) */}
         <motion.figure
-          style={{ left: col(0.4), opacity: copyOpacity, y: detailY }}
+          style={{ left: col(0.4) }}
           className="absolute bottom-[6%] m-0 hidden w-[clamp(12rem,16vw,18rem)] lg:block"
         >
           <motion.div
@@ -432,33 +335,13 @@ export default function Hero() {
           </motion.div>
           <motion.figcaption
             {...fadeIn(reduce, ready, T.detail + 0.6)}
-            className="mt-2.5 flex items-center gap-2 font-mono text-[10px] tracking-[0.18em] text-navy/55 uppercase"
+            className="mt-2.5 flex items-center gap-2 font-mono text-[11px] tracking-[0.16em] text-navy/70 uppercase"
           >
-            <span className="text-navy/35">Fig. 02</span>
+            <span className="text-navy/50">Fig. 02</span>
             <span className="h-px w-4 bg-royal/50" />
             Client review
           </motion.figcaption>
         </motion.figure>
-      </div>
-
-      {/* Below desktop the figures can't ride the photograph open, so they sit
-          under it as a quiet ledger instead */}
-      <div className={`${CONTAINER} pt-8 pb-4 sm:pt-10 lg:hidden`}>
-        <dl className="grid grid-cols-2 border-t border-navy/10 sm:grid-cols-4">
-          {STATS.map((s, i) => (
-            <div
-              key={s.label}
-              className={`flex flex-col-reverse justify-end border-navy/10 py-5 max-sm:[&:nth-child(-n+2)]:border-b sm:border-l sm:px-5 sm:first:border-l-0 sm:first:pl-0 ${
-                i % 2 ? "border-l pl-5" : "pr-5"
-              }`}
-            >
-              <dt className="mt-2 font-mono text-[10px] tracking-[0.16em] text-navy/55 uppercase">{s.label}</dt>
-              <dd className="font-editorial text-[2rem] leading-none font-[350] tracking-[-0.02em] text-ink [font-variation-settings:'opsz'_72]">
-                {s.value}
-              </dd>
-            </div>
-          ))}
-        </dl>
       </div>
     </section>
   );

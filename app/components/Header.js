@@ -11,8 +11,9 @@ const links = [
   { href: "/services", label: "Services" },
   { href: "/#why-us", label: "Why us" },
   { href: "/#approach", label: "Approach" },
-  { href: "/#people", label: "Expertise" },
+  { href: "/#pricing", label: "Pricing" },
   { href: "/about", label: "About" },
+  { href: "/faqs", label: "FAQs" },
 ];
 
 const menuVariants = {
@@ -49,27 +50,33 @@ export default function Header() {
     };
   }, [open]);
 
-  const solid = scrolled || open;
-
+  // The header is a bar of its own, floating clear of the page: a white
+  // capsule with a hairline border and a soft shadow, so it reads as separate
+  // from whatever passes beneath it, at the top of the page as much as
+  // mid-scroll. Scrolling only firms it up (more opaque, deeper shadow).
+  //
+  // The header element itself takes no pointer events and no filter: the gaps
+  // either side of the bar stay clickable, and the full-screen mobile nav (a
+  // fixed child) is not trapped inside a filtered ancestor.
   return (
-    <header
-      className={`fixed inset-x-0 top-0 z-50 border-b text-ink transition-[background,border-color,backdrop-filter] duration-500 ${solid
-        ? "border-navy/[0.08] bg-paper/90 backdrop-blur-xl"
-        : "border-transparent bg-transparent"
-        }`}
-    >
+    <header className="pointer-events-none fixed inset-x-0 top-0 z-50 px-3 pt-3 text-ink sm:px-5 sm:pt-4">
       <div
-        className={`mx-auto flex max-w-[88rem] items-center justify-between px-5 transition-[padding] duration-500 sm:px-8 lg:px-12 ${scrolled ? "py-3.5" : "py-5 sm:py-7"
-          }`}
+        className={`pointer-events-auto mx-auto flex max-w-[88rem] items-center justify-between rounded-full border py-2 pr-2 pl-5 transition-[background-color,border-color,box-shadow] duration-500 sm:py-2.5 sm:pr-2.5 sm:pl-7 ${
+          open
+            ? "border-navy/10 bg-white shadow-none"
+            : scrolled
+              ? "border-navy/15 bg-white/95 shadow-[0_22px_44px_-22px_color-mix(in_srgb,var(--ink)_55%,transparent)] backdrop-blur-md"
+              : "border-navy/10 bg-white/85 shadow-[0_16px_36px_-24px_color-mix(in_srgb,var(--ink)_40%,transparent)] backdrop-blur-md"
+        }`}
       >
         <Link href="/" className="flex items-center gap-3">
-          <Image src="/logo.svg" alt="" width={30} height={30} preload />
+          <Image src="/logo.svg" alt="" width={28} height={28} preload />
           <span className="font-display text-xl tracking-tight text-ink">
             Greystone Hyde
           </span>
         </Link>
 
-        <nav className="hidden items-center gap-10 md:flex">
+        <nav className="hidden items-center gap-6 md:flex lg:gap-9">
           {links.map((l) => (
             <Link
               key={l.href}
@@ -93,7 +100,7 @@ export default function Header() {
             aria-label={open ? "Close menu" : "Open menu"}
             aria-expanded={open}
             onClick={() => setOpen((o) => !o)}
-            className="relative z-10 grid h-10 w-10 place-items-center rounded-full border border-navy/20 md:hidden"
+            className="relative z-10 grid h-10 w-10 place-items-center rounded-full border border-navy/20 bg-white md:hidden"
           >
             <span className="relative block h-3 w-4">
               <span
@@ -118,7 +125,7 @@ export default function Header() {
             animate="visible"
             exit="exit"
             variants={menuVariants}
-            className="fixed inset-0 -z-10 flex flex-col justify-center bg-paper px-6 md:hidden"
+            className="pointer-events-auto fixed inset-0 -z-10 flex flex-col justify-center bg-paper px-6 md:hidden"
           >
             <ul>
               {links.map((l) => (

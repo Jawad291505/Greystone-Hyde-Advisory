@@ -48,7 +48,7 @@ export default function ContactSection() {
     <section id="contact" aria-labelledby="contact-title" className="relative scroll-mt-20 bg-paper text-ink">
       <div className="mx-auto max-w-[88rem] px-5 py-12 sm:px-8 lg:px-12 lg:py-16">
         <div className="flex items-center justify-between border-t border-navy/10 pt-5 font-mono text-[10px] tracking-[0.2em] text-navy/50 uppercase">
-          <span>07 — Contact us</span>
+          <span>08 — Contact us</span>
           <span className="hidden sm:inline">Book a consultation</span>
         </div>
 

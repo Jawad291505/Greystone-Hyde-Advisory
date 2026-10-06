@@ -14,13 +14,45 @@ const bySlug = Object.fromEntries(SERVICES.map((s) => [s.slug, s]));
 
 // The nine practice areas, gathered into six disciplines so the section
 // reads as six cards. Every service keeps its own copy and report panel.
+// `lead` is the specialist who handles the discipline: responsibilities
+// only, no names, credentials or tenure until the firm supplies team details.
 const GROUPS = [
-    { name: "Accounting & Bookkeeping", icon: "ledger", slugs: ["accounting", "bookkeeping"] },
-    { name: "Tax & VAT", icon: "tax", slugs: ["tax", "vat"] },
-    { name: "Payroll", icon: "payroll", slugs: ["payroll"] },
-    { name: "Reporting & Management Accounts", icon: "chart", slugs: ["financial-reporting", "management-accounts"] },
-    { name: "Tax Planning", icon: "planning", slugs: ["tax-planning"] },
-    { name: "Business Advisory", icon: "compass", slugs: ["business-advisory"] },
+    {
+        name: "Accounting & Bookkeeping",
+        icon: "ledger",
+        slugs: ["accounting", "bookkeeping"],
+        lead: { role: "Client accountant", note: "Owns your books, deadlines and day-to-day questions." },
+    },
+    {
+        name: "Tax & VAT",
+        icon: "tax",
+        slugs: ["tax", "vat"],
+        lead: { role: "Tax specialist", note: "Prepares each return and reviews reliefs before it is filed." },
+    },
+    {
+        name: "Payroll",
+        icon: "payroll",
+        slugs: ["payroll"],
+        lead: { role: "Payroll specialist", note: "Runs each pay cycle on the same date every month." },
+    },
+    {
+        name: "Reporting & Management Accounts",
+        icon: "chart",
+        slugs: ["financial-reporting", "management-accounts"],
+        lead: { role: "Client accountant", note: "Knows the history behind every number in the pack." },
+    },
+    {
+        name: "Tax Planning",
+        icon: "planning",
+        slugs: ["tax-planning"],
+        lead: { role: "Tax specialist", note: "Plans ahead of year end, not after it." },
+    },
+    {
+        name: "Business Advisory",
+        icon: "compass",
+        slugs: ["business-advisory"],
+        lead: { role: "Advisory partner", note: "Joins for the bigger questions: funding, structure and change." },
+    },
 ];
 const ROWS = [
     [0, 1, 2],
@@ -48,7 +80,7 @@ const SWAP_MS = 1100;
 // the row holding the open card grows to reveal points, links and the panel.
 // Only one row is ever open, so the section's overall height never changes.
 const ROW_CLOSED = "15rem";
-const ROW_OPEN = "31rem";
+const ROW_OPEN = "35rem";
 
 const list = { show: { transition: { staggerChildren: 0.1 } } };
 const cardIn = {
@@ -92,6 +124,20 @@ function Points({ s }) {
                 </li>
             ))}
         </ul>
+    );
+}
+
+// Who handles the discipline, so the work and the person read together.
+function Lead({ g }) {
+    return (
+        <p className="mt-4 text-[13px] leading-snug text-navy/80">
+            <span className="mb-1.5 flex items-center gap-2 font-mono text-[10px] tracking-[0.16em] text-navy/60 uppercase">
+                Handled by
+                <span className="h-px w-3 bg-royal/50" />
+                <span className="text-royal">{g.lead.role}</span>
+            </span>
+            {g.lead.note}
+        </p>
     );
 }
 
@@ -219,8 +265,9 @@ export default function ServicesGrid() {
                         What we do, <em className="text-royal">in detail.</em>
                     </h2>
                     <p className="max-w-md text-base leading-relaxed text-navy/75 lg:col-span-4 lg:col-start-9">
-                        Each engagement is handled by the same team, so your accounts,
-                        tax and payroll are always read together.
+                        Each engagement is handled by the same small team of
+                        accountants and advisers, who work directly with you, so your
+                        accounts, tax and payroll are always read together.
                     </p>
                 </div>
 
@@ -283,6 +330,7 @@ export default function ServicesGrid() {
                                                     className={`mt-auto pt-5 transition-opacity ${r === activeRow ? "opacity-100 delay-500 duration-700" : "opacity-0 duration-300"}`}
                                                 >
                                                     <Points s={s} />
+                                                    <Lead g={g} />
                                                     <div className="mt-5">
                                                         <Actions g={g} s={s} />
                                                     </div>
@@ -376,6 +424,7 @@ export default function ServicesGrid() {
                                                         <SubTabs g={g} sub={s.slug} setSub={setSubOf(i)} />
                                                     </div>
                                                     <Points s={s} />
+                                                    <Lead g={g} />
                                                     <div className="mt-5">
                                                         <Actions g={g} s={s} />
                                                     </div>
