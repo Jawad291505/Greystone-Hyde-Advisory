@@ -6,13 +6,11 @@ import { useIntroReady } from "../../lib/intro";
 
 const ease = [0.22, 1, 0.36, 1];
 
-// Nothing plays until the preloader hands over (useIntroReady): until then
-// every element holds its `initial` state.
-const rise = (reduce, ready, delay) => ({
-  initial: reduce ? false : { opacity: 0, y: 20 },
-  animate: ready ? { opacity: 1, y: 0 } : undefined,
-  transition: { duration: 1, ease, delay },
-});
+// The copy rises in CSS as the preloader's curtain lifts (data-intro), so it
+// is in the first paint and never waits for this script. Only the mark, which
+// answers the pointer, is animated from here, once the curtain has lifted
+// (useIntroReady).
+const rise = (delay) => ({ "data-intro": "", style: { "--d": `${delay}s`, "--rise": "20px" } });
 
 // The three pieces of the mark (public/logo.svg), inlined so each can settle
 // into place in turn. Fills are the theme tokens, so the beige preview
@@ -48,40 +46,40 @@ export default function AboutIntro() {
   const [entered, setEntered] = useState(false);
 
   return (
-    <section aria-labelledby="about-title" className="relative bg-paper text-ink">
+    <section aria-labelledby="about-title" className="relative overflow-x-clip bg-paper text-ink">
       <div className="mx-auto grid max-w-[88rem] gap-12 px-5 pt-32 pb-16 sm:px-8 sm:pt-36 lg:grid-cols-12 lg:items-center lg:gap-8 lg:px-12 lg:pt-44 lg:pb-20">
         {/* Who we are */}
         <div className="lg:col-span-6">
-          <motion.p
-            {...rise(reduce, ready, 0)}
+          <p
+            {...rise(0)}
             className="flex items-center gap-3 font-mono text-[11px] tracking-[0.2em] text-navy/70 uppercase"
           >
             <span className="h-px w-8 bg-royal" />
             About us
-          </motion.p>
+          </p>
 
-          <motion.h1
-            {...rise(reduce, ready, 0.1)}
+          <h1
+            {...rise(0.1)}
             id="about-title"
             className="mt-7 font-display text-[clamp(2.6rem,5vw,4.4rem)] leading-[1.02] tracking-[-0.015em] text-balance"
           >
             Greystone Hyde is a London accounting and <em className="text-royal">advisory practice.</em>
-          </motion.h1>
+          </h1>
 
-          <motion.p {...rise(reduce, ready, 0.22)} className="mt-8 max-w-[34rem] text-[17px] leading-[1.7] text-navy/90 sm:text-lg">
+          <p {...rise(0.22)} className="mt-8 max-w-[34rem] text-[17px] leading-[1.7] text-navy/90 sm:text-lg">
             We work directly with owners and finance teams, on the books, the
             tax, the payroll and the decisions that follow.
-          </motion.p>
-          <motion.p {...rise(reduce, ready, 0.3)} className="mt-5 max-w-[34rem] text-[17px] leading-[1.7] text-navy/80">
+          </p>
+          <p {...rise(0.3)} className="mt-5 max-w-[34rem] text-[17px] leading-[1.7] text-navy/80">
             Most businesses don&apos;t struggle because of bad decisions. They
             struggle because their numbers are unclear. We take everything that
             makes up a business&apos;s financial life and organise it into
             something you can actually read and act on.
-          </motion.p>
-          <motion.p {...rise(reduce, ready, 0.38)} className="mt-5 max-w-[34rem] text-[17px] leading-[1.7] text-navy/80">
+          </p>
+          <p {...rise(0.38)} className="mt-5 max-w-[34rem] text-[17px] leading-[1.7] text-navy/80">
             And we do it as a single accountable team, not a rotating cast of
             contacts, because trust is built through continuity.
-          </motion.p>
+          </p>
         </div>
 
         {/* The mark */}
@@ -149,12 +147,12 @@ export default function AboutIntro() {
                 />
               ))}
             </motion.svg>
-            <motion.p {...rise(reduce, ready, 1)} className="mt-[7%] font-display text-[clamp(1.7rem,2.6vw,2.4rem)] leading-none tracking-tight">
+            <p {...rise(1)} className="mt-[7%] font-display text-[clamp(1.7rem,2.6vw,2.4rem)] leading-none tracking-tight">
               Greystone Hyde
-            </motion.p>
-            <motion.p {...rise(reduce, ready, 1.1)} className="mt-3 font-mono text-[10px] tracking-[0.22em] text-navy/65 uppercase">
+            </p>
+            <p {...rise(1.1)} className="mt-3 font-mono text-[10px] tracking-[0.22em] text-navy/65 uppercase">
               Accounting &amp; Advisory · London
-            </motion.p>
+            </p>
           </div>
         </motion.div>
       </div>

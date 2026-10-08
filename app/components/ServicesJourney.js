@@ -236,21 +236,28 @@ export default function ServicesJourney() {
     // Stage = which chapter's centre is at the viewport centre, interpolated
     // between chapters (0 intro … 4 payments, running a little past 4 while
     // the last chapter scrolls out so the card keeps turning).
+    // Geometry is measured here and again only when the page resizes, so a
+    // frame reads nothing but `scrollY`.
     let centers = [];
     let lastH = 1;
+    let top = 0;
+    let vh = window.innerHeight;
     const measure = () => {
-      const top = el.getBoundingClientRect().top;
+      const rect = el.getBoundingClientRect();
+      top = rect.top + window.scrollY;
+      vh = window.innerHeight;
       centers = chapters.map((c) => {
         const r = c.getBoundingClientRect();
-        return r.top - top + r.height / 2;
+        return r.top - rect.top + r.height / 2;
       });
       lastH = chapters[n - 1].offsetHeight;
     };
     measure();
     const ro = new ResizeObserver(measure);
     ro.observe(el);
+    ro.observe(document.body);
 
-    let raf;
+    let raf = 0;
     let smooth = -1;
     let prev = 0;
     let last = performance.now();
@@ -260,10 +267,9 @@ export default function ServicesJourney() {
       const now = performance.now();
       const dt = Math.min((now - last) / 1000, 0.1);
       last = now;
-      const rect = el.getBoundingClientRect();
-      if (rect.bottom < 0 || rect.top > window.innerHeight) return;
+      const offset = window.scrollY - top;
 
-      const y = -rect.top + window.innerHeight / 2;
+      const y = offset + vh / 2;
       let raw;
       if (y <= centers[0]) raw = 0;
       else if (y >= centers[n - 1]) raw = n - 1 + Math.min(0.6, (y - centers[n - 1]) / lastH);
@@ -288,9 +294,19 @@ export default function ServicesJourney() {
         setActive(idx);
       }
     };
-    raf = requestAnimationFrame(loop);
+    // The loop only runs while the journey is on screen
+    const io = new IntersectionObserver(([entry]) => {
+      cancelAnimationFrame(raf);
+      raf = 0;
+      if (entry.isIntersecting) {
+        last = performance.now();
+        raf = requestAnimationFrame(loop);
+      }
+    });
+    io.observe(el);
     return () => {
       cancelAnimationFrame(raf);
+      io.disconnect();
       ro.disconnect();
     };
   }, []);
@@ -355,7 +371,7 @@ export default function ServicesJourney() {
                       <li key={c.href}>
                         <a
                           href={`#${c.href}`}
-                          className={`inline-flex items-center gap-2 rounded-full border px-3.5 py-1.5 text-[13px] tracking-wide transition-colors duration-300 hover:border-royal/60 hover:text-royal ${c.n ? "border-navy/15 text-ink/80" : "border-royal/40 text-royal"
+                          className={`inline-flex min-h-11 items-center gap-2 rounded-full border px-3.5 py-1.5 text-[13px] lg:min-h-0 tracking-wide transition-colors duration-300 hover:border-royal/60 hover:text-royal ${c.n ? "border-navy/15 text-ink/80" : "border-royal/40 text-royal"
                             }`}
                         >
                           {c.n ? (

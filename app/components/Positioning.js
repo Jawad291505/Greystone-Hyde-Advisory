@@ -1,12 +1,12 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { motion, useReducedMotion, useScroll, useSpring, useTransform } from "framer-motion";
 import CubeCssStage from "./CubeCssStage";
+import { useScrollProgress } from "../lib/useScrollProgress";
 
 const ease = [0.22, 1, 0.36, 1];
-const clamp = (v) => Math.min(1, Math.max(0, v));
 
 const STATEMENT =
     "Most businesses don't need more figures. They need someone who reads them properly, and tells them what they mean.";
@@ -48,38 +48,10 @@ function Word({ progress, i, total, children }) {
 // column spans the whole copy column, so the cube assembles as you read;
 // on mobile the column is its own short scroll runway.
 function useCubeProgress(ref) {
-    const progress = useRef(0);
     const [stage, setStage] = useState(0);
-
-    useEffect(() => {
-        const el = ref.current;
-        const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-        let raf;
-        let smooth = -1;
-        let last = performance.now();
-        let lastStage = -1;
-
-        const loop = () => {
-            const rect = el.getBoundingClientRect();
-            const now = performance.now();
-            const dt = Math.min((now - last) / 1000, 0.25);
-            last = now;
-            const range = Math.max(1, rect.height - window.innerHeight);
-            const raw = reduce ? 1 : clamp(-rect.top / range);
-            smooth = smooth < 0 || reduce ? raw : smooth + (raw - smooth) * (1 - Math.exp(-dt * 2.8));
-            progress.current = smooth;
-
-            const s = smooth < 0.4 ? 0 : smooth < 0.8 ? 1 : 2;
-            if (s !== lastStage) {
-                lastStage = s;
-                setStage(s);
-            }
-            raf = requestAnimationFrame(loop);
-        };
-        raf = requestAnimationFrame(loop);
-        return () => cancelAnimationFrame(raf);
-    }, [ref]);
-
+    // Setting the same stage again is a no-op for React, so this only
+    // re-renders on the two frames where the stage actually changes
+    const progress = useScrollProgress(ref, (p) => setStage(p < 0.4 ? 0 : p < 0.8 ? 1 : 2));
     return { progress, stage };
 }
 
@@ -131,7 +103,7 @@ export default function Positioning() {
                     <motion.figure
                         initial={reduce ? false : { clipPath: "inset(0% 0% 100% 0%)" }}
                         whileInView={{ clipPath: "inset(0% 0% 0% 0%)" }}
-                        viewport={{ once: true, margin: "-15%" }}
+                        viewport={{ once: true, margin: "-8%" }}
                         transition={{ duration: 1.4, ease }}
                         className="mt-12 lg:mt-14"
                     >
@@ -160,12 +132,10 @@ export default function Positioning() {
 
                     <ol className="mt-10 max-w-lg border-t border-navy/10">
                         {principles.map((p, i) => (
-                            <motion.li
+                            <li
                                 key={p.n}
-                                initial={reduce ? false : { opacity: 0, y: 18 }}
-                                whileInView={{ opacity: 1, y: 0 }}
-                                viewport={{ once: true, margin: "-10%" }}
-                                transition={{ duration: 0.9, ease, delay: i * 0.1 }}
+                                data-rise=""
+                                style={{ "--d": `${i * 0.1}s` }}
                                 className="group grid grid-cols-[2.5rem_1fr] border-b border-navy/10 py-6"
                             >
                                 <span className="pt-1 font-mono text-[11px] text-royal">{p.n}</span>
@@ -175,7 +145,7 @@ export default function Positioning() {
                                     </h3>
                                     <p className="mt-2 text-sm leading-relaxed text-navy/70">{p.body}</p>
                                 </div>
-                            </motion.li>
+                            </li>
                         ))}
                     </ol>
 
@@ -199,7 +169,7 @@ export default function Positioning() {
                 </div>
 
                 {/* Cube column: stretches to the copy's height on desktop, pinned inside */}
-                <div ref={cubeCol} aria-hidden className="relative h-[200svh] lg:col-span-6 lg:h-auto">
+                <div ref={cubeCol} aria-hidden className="relative h-[170svh] lg:col-span-6 lg:h-auto">
                     <div className="sticky top-0 h-svh overflow-hidden">
                         <div className="absolute inset-[6%] bg-[radial-gradient(closest-side,var(--mist),transparent)]" />
                         <div className="absolute inset-[22%] bg-[radial-gradient(closest-side,color-mix(in_srgb,var(--royal)_14%,transparent),transparent)]" />

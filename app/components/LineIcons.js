@@ -1,31 +1,18 @@
-"use client";
-
-import { motion, useReducedMotion } from "framer-motion";
-
 // A small family of hairline icons, drawn on a 48-unit grid with one stroke
 // weight so they read as a set. Each one draws itself in once, the first
 // time it scrolls into view; a single soft royal accent carries the message.
-
-const ease = [0.22, 1, 0.36, 1];
-const draw = (i) => ({
-    hidden: { pathLength: 0, opacity: 0 },
-    show: {
-        pathLength: 1,
-        opacity: 1,
-        transition: { pathLength: { duration: 1.1, ease, delay: 0.1 + i * 0.09 }, opacity: { duration: 0.2, delay: 0.1 + i * 0.09 } },
-    },
-});
-const fade = (i) => ({
-    hidden: { opacity: 0, scale: 0.6 },
-    show: { opacity: 1, scale: 1, transition: { duration: 0.6, ease, delay: 0.5 + i * 0.09 } },
-});
+//
+// The drawing is CSS ("Line icons" under Entrances in globals.css), started
+// by the page's one shared observer, so an icon is plain markup with no
+// script of its own: `--i` staggers the strokes, `pathLength` normalises
+// each path so one dash can draw any of them.
 
 // Line: a stroked path that draws in. Dot: a filled accent that settles in.
 function L({ i = 0, ...p }) {
-    return <motion.path variants={draw(i)} {...p} />;
+    return <path pathLength={1} className="ln" style={{ "--i": i }} {...p} />;
 }
 function Dot({ i = 0, ...p }) {
-    return <motion.circle variants={fade(i)} style={{ transformBox: "fill-box", transformOrigin: "center" }} stroke="none" {...p} />;
+    return <circle className="dt" style={{ "--i": i }} stroke="none" {...p} />;
 }
 const ACCENT = "color-mix(in srgb, var(--royal) 14%, transparent)";
 
@@ -191,10 +178,11 @@ const ICONS = {
     ),
 };
 
-export default function LineIcon({ name, className = "h-10 w-10" }) {
-    const reduce = useReducedMotion();
+// `still` skips the entrance, for icons mounted after the page has loaded
+// (inside a panel that swaps its content, say), which nothing would start.
+export default function LineIcon({ name, className = "h-10 w-10", still = false }) {
     return (
-        <motion.svg
+        <svg
             viewBox="0 0 48 48"
             fill="none"
             stroke="currentColor"
@@ -202,12 +190,10 @@ export default function LineIcon({ name, className = "h-10 w-10" }) {
             strokeLinecap="round"
             strokeLinejoin="round"
             aria-hidden
-            initial={reduce ? false : "hidden"}
-            whileInView="show"
-            viewport={{ once: true, margin: "-5%" }}
+            data-draw={still ? undefined : ""}
             className={`shrink-0 text-royal ${className}`}
         >
             {ICONS[name]}
-        </motion.svg>
+        </svg>
     );
 }

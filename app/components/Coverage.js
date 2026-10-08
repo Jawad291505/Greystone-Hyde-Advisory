@@ -1,10 +1,8 @@
 "use client";
 
-import { useState } from "react";
-import { motion, useReducedMotion } from "framer-motion";
+import { useRef, useState } from "react";
+import { useOnScreen } from "../lib/useOnScreen";
 import { LONDON, MAP_VIEWBOX, REGION_LABELS, REGION_PATHS } from "../lib/ukMap";
-
-const ease = [0.22, 1, 0.36, 1];
 
 // Where the practice works. Confirm the notes with the firm before launch.
 const REGIONS = [
@@ -40,15 +38,15 @@ function regionFill(id, active) {
 }
 
 export default function Coverage() {
-  const reduce = useReducedMotion();
   const [active, setActive] = useState(null);
+  // London's pulse only beats while the map can be seen
+  const map = useRef(null);
+  const onScreen = useOnScreen(map);
 
-  const inView = (delay, from = { opacity: 0 }) => ({
-    initial: reduce ? false : from,
-    whileInView: { opacity: 1, y: 0, scale: 1 },
-    viewport: { once: true, margin: "-15%" },
-    transition: { duration: 0.9, ease, delay },
-  });
+  // The map draws in CSS once it scrolls into view: the wrapper carries
+  // data-draw, and each part marked `rc` fades in after its own delay,
+  // rising by `y` (see Entrances in globals.css).
+  const part = (delay, y = 0) => ({ className: "rc", style: { "--d": `${delay}s`, "--rise": `${y}px` } });
 
   return (
     <section id="coverage" aria-labelledby="coverage-title" className="relative scroll-mt-20 bg-paper text-ink">
@@ -76,9 +74,10 @@ export default function Coverage() {
 
             <ul className="mt-10 border-t border-navy/10">
               {REGIONS.map((r, i) => (
-                <motion.li
+                <li
                   key={r.id}
-                  {...inView(0.1 + i * 0.08, { opacity: 0, y: 14 })}
+                  data-rise=""
+                  style={{ "--d": `${0.1 + i * 0.08}s`, "--rise": "14px" }}
                   onMouseEnter={() => setActive(r.id)}
                   onMouseLeave={() => setActive(null)}
                   className="group grid grid-cols-[1.5rem_1fr] items-baseline border-b border-navy/10 py-5 sm:grid-cols-[1.5rem_11rem_1fr] sm:gap-4"
@@ -95,14 +94,14 @@ export default function Coverage() {
                   <p className="col-start-2 mt-1 text-sm leading-relaxed text-navy/70 sm:col-start-3 sm:mt-0">
                     {r.note}
                   </p>
-                </motion.li>
+                </li>
               ))}
             </ul>
           </div>
 
           {/* The map: flat navy nations, England picked out in royal */}
           <div className="lg:col-span-7">
-            <div className="relative overflow-hidden rounded-panel bg-sky px-4 py-8 sm:px-10 sm:py-12">
+            <div ref={map} data-draw="" className="relative overflow-hidden rounded-panel bg-sky px-4 py-8 sm:px-10 sm:py-12">
               <div
                 aria-hidden
                 className="pointer-events-none absolute inset-0 bg-[radial-gradient(60%_50%_at_70%_70%,color-mix(in_srgb,var(--royal)_8%,transparent),transparent)]"
@@ -125,13 +124,13 @@ export default function Coverage() {
                 </g>
 
                 {Object.entries(REGION_PATHS).map(([id, d], i) => (
-                  <motion.path
+                  <path
                     key={id}
                     d={d}
-                    {...inView(i * 0.08)}
+                    style={{ "--d": `${i * 0.08}s`, "--rise": "0px" }}
                     onMouseEnter={id === "ireland" ? undefined : () => setActive(id)}
                     onMouseLeave={id === "ireland" ? undefined : () => setActive(null)}
-                    className={`stroke-sky transition-colors duration-500 ${regionFill(id, active)}`}
+                    className={`rc stroke-sky transition-colors duration-500 ${regionFill(id, active)}`}
                     strokeWidth={2}
                     strokeLinejoin="round"
                   />
@@ -160,52 +159,41 @@ export default function Coverage() {
                 <g aria-hidden>
                   {Object.entries(REACH).map(([id, to], i) => (
                     <g key={id}>
-                      <motion.path
+                      <path
                         d={arc(to)}
-                        className={`fill-none transition-colors duration-500 ${active === id ? "stroke-paper" : "stroke-paper/55"}`}
+                        style={{ "--d": `${1 + i * 0.2}s`, "--rise": "0px" }}
+                        className={`rc fill-none transition-colors duration-500 ${active === id ? "stroke-paper" : "stroke-paper/55"}`}
                         strokeWidth={2}
                         strokeLinecap="round"
                         strokeDasharray="1 7"
-                        initial={reduce ? false : { opacity: 0 }}
-                        whileInView={{ opacity: 1 }}
-                        viewport={{ once: true, margin: "-15%" }}
-                        transition={{ duration: 1.2, ease, delay: 1 + i * 0.2 }}
                       />
-                      <motion.circle
-                        cx={to[0]}
-                        cy={to[1]}
-                        r={4.5}
-                        className="fill-paper"
-                        {...inView(2 + i * 0.2)}
-                      />
+                      <g {...part(2 + i * 0.2)}>
+                        <circle cx={to[0]} cy={to[1]} r={4.5} className="fill-paper" />
+                      </g>
                     </g>
                   ))}
                 </g>
 
                 {/* London: pulse, pin and callout */}
                 <g transform={`translate(${LONDON.x} ${LONDON.y})`}>
-                  {!reduce && (
-                    <motion.circle
-                      r={10}
-                      className="fill-none stroke-paper"
-                      strokeWidth={2}
-                      initial={{ scale: 1, opacity: 0 }}
-                      animate={{ scale: [1, 4], opacity: [0.8, 0] }}
-                      transition={{ duration: 2.4, ease: "easeOut", repeat: Infinity, delay: 1.2 }}
-                    />
-                  )}
+                  <circle
+                    r={10}
+                    className="map-pulse fill-none stroke-paper"
+                    strokeWidth={2}
+                    style={onScreen ? undefined : { animationPlayState: "paused" }}
+                  />
                   <circle r={6} className="fill-paper" />
 
-                  <motion.g {...inView(0.6, { opacity: 0, y: -40 })}>
+                  <g {...part(0.6, -40)}>
                     <path
                       d="M0 -4c-7-10-17-18-17-30a17 17 0 1 1 34 0c0 12-10 20-17 30z"
                       className="fill-paper stroke-ink"
                       strokeWidth={2.5}
                     />
                     <circle cy={-34} r={7} className="fill-royal" />
-                  </motion.g>
+                  </g>
 
-                  <motion.g {...inView(0.9, { opacity: 0 })}>
+                  <g {...part(0.9)}>
                     {/* Leader line out past the Essex coast, so the label sits on sea */}
                     <line x1={22} y1={-34} x2={118} y2={-34} className="stroke-ink/40" strokeWidth={1.5} />
                     <text x={126} y={-38} className="fill-ink font-display text-[30px]">
@@ -214,7 +202,7 @@ export default function Coverage() {
                     <text x={126} y={-14} className="fill-navy/60 font-mono text-[12px] tracking-[0.18em] uppercase">
                       Head office
                     </text>
-                  </motion.g>
+                  </g>
                 </g>
               </svg>
 

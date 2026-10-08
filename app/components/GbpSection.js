@@ -1,38 +1,16 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
+import { useScrollProgress } from "../lib/useScrollProgress";
 import GbpCoinsSmart from "./GbpCoinsSmart";
 
-const clamp = (v) => Math.min(1, Math.max(0, v));
 
 // Value → movement → growth → financial control. Calmer and shorter than
 // the cube section: this is the payoff, not the reveal.
 export default function GbpSection() {
   const section = useRef(null);
-  const progress = useRef(0);
-
-  useEffect(() => {
-    const el = section.current;
-    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
-    let raf;
-    let smooth = -1;
-    let last = performance.now();
-    const loop = () => {
-      const rect = el.getBoundingClientRect();
-      const now = performance.now();
-      const dt = Math.min((now - last) / 1000, 0.25);
-      last = now;
-      const range = rect.height - window.innerHeight;
-      const raw = reduce ? 1 : clamp(-rect.top / range);
-      smooth = smooth < 0 || reduce ? raw : smooth + (raw - smooth) * (1 - Math.exp(-dt * 2.8));
-      progress.current = smooth;
-      el.style.setProperty("--p", smooth.toFixed(4));
-      raf = requestAnimationFrame(loop);
-    };
-    raf = requestAnimationFrame(loop);
-    return () => cancelAnimationFrame(raf);
-  }, []);
+  // Runs only while the section is on screen and the scroll is still moving
+  const progress = useScrollProgress(section, (p) => section.current?.style.setProperty("--p", p.toFixed(4)));
 
   return (
     <section id="value" ref={section} className="gbp-section relative h-[320vh]" style={{ "--p": 0 }}>

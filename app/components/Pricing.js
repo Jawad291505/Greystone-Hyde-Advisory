@@ -1,9 +1,3 @@
-"use client";
-
-import { motion, useReducedMotion } from "framer-motion";
-
-const ease = [0.22, 1, 0.36, 1];
-
 // PLACEHOLDER PLANS — the names, prices and inclusions below are illustrative
 // and must be replaced with the practice's real fee structure before launch.
 const plans = [
@@ -48,12 +42,6 @@ const plans = [
   },
 ];
 
-const list = { show: { transition: { staggerChildren: 0.1 } } };
-const cardIn = {
-  hidden: { opacity: 0, y: 28 },
-  show: { opacity: 1, y: 0, transition: { duration: 1, ease } },
-};
-
 function Tick({ featured }) {
   return (
     <svg viewBox="0 0 16 16" fill="none" aria-hidden className={`mt-[3px] h-4 w-4 shrink-0 ${featured ? "text-glint" : "text-royal"}`}>
@@ -67,8 +55,6 @@ function Tick({ featured }) {
 // card, the others on white. Every figure is a starting point, in keeping
 // with the site's promise that fees are fixed and agreed in writing.
 export default function Pricing() {
-  const reduce = useReducedMotion();
-
   return (
     <section id="pricing" aria-labelledby="pricing-title" className="relative scroll-mt-20 bg-paper text-ink">
       <div className="mx-auto max-w-[88rem] px-5 py-12 sm:px-8 lg:px-12 lg:py-16">
@@ -77,11 +63,8 @@ export default function Pricing() {
           <span className="hidden sm:inline">Fixed fees, agreed in writing</span>
         </div>
 
-        <motion.div
-          initial={reduce ? false : { opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-10%" }}
-          transition={{ duration: 0.9, ease }}
+        <div
+          data-rise=""
           className="mt-10 grid gap-6 lg:mt-12 lg:grid-cols-12 lg:items-end lg:gap-8"
         >
           <h2
@@ -94,21 +77,17 @@ export default function Pricing() {
             Each plan is a starting point. We confirm your fee in writing before
             any work begins, and it stays fixed for the year.
           </p>
-        </motion.div>
+        </div>
 
-        <motion.ol
-          variants={list}
-          initial={reduce ? false : "hidden"}
-          whileInView="show"
-          viewport={{ once: true, margin: "-10%" }}
-          className="mt-10 grid gap-5 lg:mt-14 lg:grid-cols-3 lg:items-stretch"
+        <ol className="mt-10 grid gap-5 lg:mt-14 lg:grid-cols-3 lg:items-stretch"
         >
           {plans.map((p, i) => {
             const f = p.featured;
             return (
-              <motion.li
+              <li
                 key={p.name}
-                variants={cardIn}
+                data-rise=""
+                style={{ "--d": `${i * 0.1}s`, "--rise": "28px" }}
                 className={`group relative flex flex-col overflow-hidden rounded-card border p-7 transition-[translate,box-shadow,border-color] duration-500 hover:-translate-y-1 sm:p-8 ${
                   f
                     ? "border-transparent bg-[linear-gradient(160deg,var(--navy)_0%,var(--ink)_100%)] text-white shadow-[0_40px_80px_-45px_color-mix(in_srgb,var(--ink)_80%,transparent)]"
@@ -169,10 +148,10 @@ export default function Pricing() {
                     </span>
                   </a>
                 </div>
-              </motion.li>
+              </li>
             );
           })}
-        </motion.ol>
+        </ol>
 
         <p className="mt-8 flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-navy/70">
           <span aria-hidden className="h-1.5 w-1.5 rounded-full bg-royal" />

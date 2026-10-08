@@ -1,25 +1,11 @@
-"use client";
-
-import { motion, useReducedMotion } from "framer-motion";
-
-const ease = [0.22, 1, 0.36, 1];
-
 // The About page's entrance, played once as the element scrolls into view: a
-// short rise out of transparency. Opacity and transform only, so it stays
-// off the main thread's layout work.
-export function Reveal({ as = "div", delay = 0, y = 22, className, children, ...rest }) {
-  const reduce = useReducedMotion();
-  const M = motion[as];
+// short rise out of transparency. Plain markup: the motion is CSS (data-rise
+// in globals.css), started by the page's one shared observer, so the About
+// page stays server-rendered with no animation script of its own.
+export function Reveal({ as: Tag = "div", delay = 0, y = 22, className, style, children, ...rest }) {
   return (
-    <M
-      initial={reduce ? false : { opacity: 0, y }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-10%" }}
-      transition={{ duration: 0.9, ease, delay }}
-      className={className}
-      {...rest}
-    >
+    <Tag data-rise="" style={{ "--d": `${delay}s`, "--rise": `${y}px`, ...style }} className={className} {...rest}>
       {children}
-    </M>
+    </Tag>
   );
 }

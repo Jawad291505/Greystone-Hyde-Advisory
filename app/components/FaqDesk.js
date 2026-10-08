@@ -1,21 +1,15 @@
 "use client";
 
 import { useEffect, useId, useMemo, useState } from "react";
-import { motion, useReducedMotion } from "framer-motion";
+import { useReducedMotion } from "framer-motion";
 import Link from "./ThemeLink";
 import { FAQ_GROUPS, FAQS } from "../lib/faqs";
-import { useIntroReady } from "../lib/intro";
 
-const ease = [0.22, 1, 0.36, 1];
 const num = (i) => String(i + 1).padStart(2, "0");
 
-// Nothing plays until the preloader hands over (useIntroReady): until then
-// every element holds its `initial` state.
-const rise = (reduce, ready, delay) => ({
-  initial: reduce ? false : { opacity: 0, y: 20 },
-  animate: ready ? { opacity: 1, y: 0 } : undefined,
-  transition: { duration: 1, ease, delay },
-});
+// The page's entrance is CSS (data-intro): each block rises as the
+// preloader's curtain lifts, without waiting for this script.
+const rise = (delay) => ({ "data-intro": "", style: { "--d": `${delay}s`, "--rise": "20px" } });
 
 // Questions the search box "types" to itself while it is empty and unfocused
 const HINTS = ["How do I switch accountants?", "How are your fees set?", "Who will I deal with?", "Which software do you use?"];
@@ -66,8 +60,6 @@ function TypedHint({ paused }) {
 // filtering narrow the sheet as you type. Answers open with a CSS grid
 // transition, so nothing here animates on the main thread except the hint.
 export default function FaqDesk() {
-  const reduce = useReducedMotion();
-  const ready = useIntroReady();
   const uid = useId();
   const [query, setQuery] = useState("");
   const [focused, setFocused] = useState(false);
@@ -97,28 +89,28 @@ export default function FaqDesk() {
       <div className="relative mx-auto grid max-w-[88rem] gap-12 px-5 pt-32 pb-16 sm:px-8 sm:pt-36 lg:grid-cols-12 lg:gap-8 lg:px-12 lg:pt-44 lg:pb-24">
         {/* Stays beside the sheet while it scrolls, on screens tall enough to hold it */}
         <div className="lg:col-span-5 lg:self-start lg:[@media(min-height:800px)]:sticky lg:[@media(min-height:800px)]:top-24">
-          <motion.p {...rise(reduce, ready, 0)} className="flex items-center gap-3 font-mono text-[11px] tracking-[0.2em] text-navy/70 uppercase">
+          <p {...rise(0)} className="flex items-center gap-3 font-mono text-[11px] tracking-[0.2em] text-navy/70 uppercase">
             <span className="h-px w-8 bg-royal" />
             Frequently asked questions
-          </motion.p>
+          </p>
 
-          <motion.h1
-            {...rise(reduce, ready, 0.1)}
+          <h1
+            {...rise(0.1)}
             id="faq-title"
             className="mt-7 font-editorial text-[clamp(3.4rem,7.4vw,6.8rem)] leading-[0.92] font-[350] tracking-[-0.035em] [font-variation-settings:'opsz'_72]"
           >
             Ask us
             <br />
             <em className="text-royal">anything.</em>
-          </motion.h1>
+          </h1>
 
-          <motion.p {...rise(reduce, ready, 0.2)} className="mt-7 max-w-md text-[17px] leading-[1.65] text-navy/85 sm:text-lg">
+          <p {...rise(0.2)} className="mt-7 max-w-md text-[17px] leading-[1.65] text-navy/85 sm:text-lg">
             Plain answers to the questions owners and finance teams ask us most,
             before they start and once they have.
-          </motion.p>
+          </p>
 
           {/* Search */}
-          <motion.div {...rise(reduce, ready, 0.3)} className="relative mt-9 max-w-md">
+          <div {...rise(0.3)} className="relative mt-9 max-w-md">
             <label htmlFor={`${uid}-search`} className="sr-only">
               Search the questions
             </label>
@@ -140,10 +132,10 @@ export default function FaqDesk() {
               className="h-16 w-full rounded-full border border-navy/15 bg-white pr-6 pl-14 text-[17px] text-ink shadow-[0_24px_50px_-30px_color-mix(in_srgb,var(--ink)_45%,transparent)] transition-[border-color,box-shadow] duration-300 outline-none focus:border-royal focus:shadow-[0_24px_50px_-26px_color-mix(in_srgb,var(--royal)_55%,transparent)] [&::-webkit-search-cancel-button]:hidden"
             />
             <TypedHint paused={focused || query !== ""} />
-          </motion.div>
+          </div>
 
           {/* Subject filters */}
-          <motion.div {...rise(reduce, ready, 0.4)} className="mt-6 flex max-w-md flex-wrap gap-2" role="group" aria-label="Filter by subject">
+          <div {...rise(0.4)} className="mt-6 flex max-w-md flex-wrap gap-2" role="group" aria-label="Filter by subject">
             {[{ id: "all", name: "All" }, ...FAQ_GROUPS].map((g) => {
               const on = g.id === group;
               return (
@@ -155,7 +147,7 @@ export default function FaqDesk() {
                     setGroup(g.id);
                     setOpen(-1);
                   }}
-                  className={`flex items-center gap-2 rounded-full border px-4 py-2 text-[13px] tracking-wide transition-colors duration-300 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-royal ${
+                  className={`flex min-h-11 items-center gap-2 rounded-full border px-4 py-2 text-[13px] tracking-wide transition-colors duration-300 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-royal ${
                     on ? "border-navy bg-navy text-white" : "border-navy/15 bg-white/60 text-navy/80 hover:border-royal/50 hover:text-royal"
                   }`}
                 >
@@ -164,9 +156,9 @@ export default function FaqDesk() {
                 </button>
               );
             })}
-          </motion.div>
+          </div>
 
-          <motion.p {...rise(reduce, ready, 0.5)} className="mt-9 flex items-center gap-3 text-sm text-navy/75">
+          <p {...rise(0.5)} className="mt-9 flex items-center gap-3 text-sm text-navy/75">
             <span aria-hidden className="h-1.5 w-1.5 shrink-0 rounded-full bg-royal" />
             Can&apos;t see yours?
             <Link
@@ -175,12 +167,12 @@ export default function FaqDesk() {
             >
               Ask us directly
             </Link>
-          </motion.p>
+          </p>
         </div>
 
         {/* The answer sheet */}
-        <motion.div
-          {...rise(reduce, ready, 0.25)}
+        <div
+          {...rise(0.25)}
           className="relative overflow-hidden rounded-panel bg-[linear-gradient(160deg,var(--navy)_0%,var(--ink)_80%)] text-white shadow-[0_60px_100px_-60px_color-mix(in_srgb,var(--ink)_80%,transparent)] lg:col-span-7"
         >
           <div aria-hidden className="pointer-events-none absolute -top-1/4 right-[-15%] h-[70%] w-[70%] bg-[radial-gradient(closest-side,color-mix(in_srgb,var(--royal)_55%,transparent),transparent)]" />
@@ -270,7 +262,7 @@ export default function FaqDesk() {
               </div>
             )}
           </div>
-        </motion.div>
+        </div>
       </div>
     </section>
   );

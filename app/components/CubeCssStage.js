@@ -59,11 +59,18 @@ export default function CubeCssStage({ progress, offsetX = 0.24, offsetYMobile =
 
   useEffect(() => {
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    let raf;
+    let raf = 0;
     let u = 90;
+    let vw = window.innerWidth;
+    let vh = window.innerHeight;
+    // What was last written to each piece, so a frame that changes nothing
+    // (the solved cube at rest) touches no styles at all
+    const written = [];
+    let groupWritten = "";
 
     const size = () => {
-      const w = window.innerWidth;
+      const w = (vw = window.innerWidth);
+      vh = window.innerHeight;
       u = w < 480 ? 58 : w < 768 ? 70 : w < 1280 ? 84 : 98;
       scene.current?.style.setProperty("--u", `${u}px`);
     };
@@ -107,34 +114,47 @@ export default function CubeCssStage({ progress, offsetX = 0.24, offsetYMobile =
         const tx = c.scatter[0] * u + (gx * step - c.scatter[0] * u) * local + fx;
         const ty = c.scatter[1] * u + (-gy * step - c.scatter[1] * u) * local + fy;
         const tz = c.scatter[2] * u + (gz * step - c.scatter[2] * u) * local + fz;
-        el.style.transform = `translate3d(${tx.toFixed(1)}px,${ty.toFixed(1)}px,${tz.toFixed(1)}px) rotateX(${(c.spin[0] * inv + frx).toFixed(1)}deg) rotateY(${(c.spin[1] * inv + ry * local + fry).toFixed(1)}deg) rotateZ(${(c.spin[2] * inv).toFixed(1)}deg)`;
+        const transform = `translate3d(${tx.toFixed(1)}px,${ty.toFixed(1)}px,${tz.toFixed(1)}px) rotateX(${(c.spin[0] * inv + frx).toFixed(1)}deg) rotateY(${(c.spin[1] * inv + ry * local + fry).toFixed(1)}deg) rotateZ(${(c.spin[2] * inv).toFixed(1)}deg)`;
+        if (transform !== written[i]) el.style.transform = written[i] = transform;
       });
 
       const g = group.current;
       if (g) {
-        const wide = window.innerWidth >= 1024;
+        const wide = vw >= 1024;
         // Only pull the group rightward as it settles into the solved cube —
         // applying the full offset throughout also drags the scatter phase's
         // pieces off the left side, collapsing the "all over the screen"
         // spread onto the right half.
-        const x = wide ? window.innerWidth * offsetX * settle : 0;
-        const y = wide ? 0 : window.innerHeight * offsetYMobile;
+        const x = wide ? vw * offsetX * settle : 0;
+        const y = wide ? 0 : vh * offsetYMobile;
         const ry = 36 + inv(settle) * 200;
         const rx = -(24 - inv(settle) * 14);
-        g.style.transform = `translate3d(${x.toFixed(0)}px,${y.toFixed(0)}px,0) rotateX(${rx.toFixed(1)}deg) rotateY(${ry.toFixed(1)}deg)`;
+        const transform = `translate3d(${x.toFixed(0)}px,${y.toFixed(0)}px,0) rotateX(${rx.toFixed(1)}deg) rotateY(${ry.toFixed(1)}deg)`;
+        if (transform !== groupWritten) g.style.transform = groupWritten = transform;
       }
       raf = requestAnimationFrame(loop);
     };
     const inv = (v) => 1 - v;
-    raf = requestAnimationFrame(loop);
+
+    // Runs only while the cube is on screen. Off screen the loop stops and
+    // the tiles' glare animations are paused (.c3d-paused), so 27 pieces in
+    // 3D cost nothing while the visitor is reading something else.
+    const el = scene.current;
+    const io = new IntersectionObserver(([entry]) => {
+      el.classList.toggle("c3d-paused", !entry.isIntersecting);
+      cancelAnimationFrame(raf);
+      raf = entry.isIntersecting ? requestAnimationFrame(loop) : 0;
+    });
+    io.observe(el);
     return () => {
+      io.disconnect();
       cancelAnimationFrame(raf);
       window.removeEventListener("resize", size);
     };
   }, [pieces, progress, offsetX, offsetYMobile]);
 
   return (
-    <div ref={scene} className="c3d-scene absolute inset-0" aria-hidden>
+    <div ref={scene} className="c3d-scene c3d-paused absolute inset-0" aria-hidden>
       <div ref={group} className="c3d-group">
         {pieces.map((c, i) => (
           <div

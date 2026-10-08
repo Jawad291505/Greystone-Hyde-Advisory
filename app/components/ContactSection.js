@@ -1,7 +1,6 @@
 "use client";
 
 import { useActionState } from "react";
-import { motion } from "framer-motion";
 import { sendEnquiry } from "../actions/contact";
 import { SERVICES } from "../lib/services";
 
@@ -13,10 +12,8 @@ const details = [
   { label: "Hours", value: "Mon – Fri, 9:00 – 17:30" },
 ];
 
-const ease = [0.22, 1, 0.36, 1];
-
 const inputClass =
-  "mt-2 w-full rounded-xl border border-navy/15 bg-white px-4 py-3 text-[15px] text-ink placeholder:text-navy/35 transition-[border-color,box-shadow] duration-300 outline-none focus:border-royal focus:shadow-[0_0_0_3px_color-mix(in_srgb,var(--royal)_12%,transparent)] aria-[invalid=true]:border-red-600/70";
+  "mt-2 w-full rounded-xl border border-navy/15 bg-white px-4 py-3 text-base text-ink placeholder:text-navy/35 transition-[border-color,box-shadow] duration-300 outline-none focus:border-royal focus:shadow-[0_0_0_3px_color-mix(in_srgb,var(--royal)_12%,transparent)] aria-[invalid=true]:border-red-600/70";
 
 function Field({ label, name, error, children }) {
   return (
@@ -84,11 +81,8 @@ export default function ContactSection() {
             </dl>
           </div>
 
-          <motion.div
-            initial={{ opacity: 0, y: 24 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-80px" }}
-            transition={{ duration: 0.9, ease }}
+          <div
+            data-rise=""
             className="rounded-panel border border-navy/10 bg-white/60 p-6 sm:p-10 lg:col-span-7"
           >
             {state?.ok ? (
@@ -163,7 +157,7 @@ export default function ContactSection() {
                 </div>
               </form>
             )}
-          </motion.div>
+          </div>
         </div>
       </div>
     </section>

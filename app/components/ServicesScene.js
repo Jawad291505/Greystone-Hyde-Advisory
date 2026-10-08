@@ -659,8 +659,29 @@ function Scene({ journey, reduce, mobile, light }) {
   const root = useRef(null);
   const keyLight = useRef(null);
   const mouse = useRef({ x: 0, y: 0, sx: 0, sy: 0 });
-  const { gl } = useThree();
+  const { gl, scene, camera } = useThree();
   const maxAnisotropy = Math.min(8, gl.capabilities.getMaxAnisotropy());
+
+  // Warm-up. Each chapter's objects stay hidden until the story reaches them,
+  // and a hidden object's shaders and textures are only compiled and uploaded
+  // the first time it is drawn: three stalls of several hundred milliseconds,
+  // each one in the middle of a scroll. Drawing everything once here, as the
+  // scene loads and while the visitor is still reading the opening lines,
+  // pays that cost up front. The frame is drawn over by the next real one.
+  useEffect(() => {
+    const hidden = [];
+    const culled = [];
+    scene.traverse((o) => {
+      if (!o.visible) hidden.push(o);
+      if (o.frustumCulled) culled.push(o);
+      o.visible = true;
+      o.frustumCulled = false;
+    });
+    gl.compile(scene, camera);
+    gl.render(scene, camera);
+    hidden.forEach((o) => (o.visible = false));
+    culled.forEach((o) => (o.frustumCulled = true));
+  }, [gl, scene, camera]);
 
   useEffect(() => {
     if (reduce || !window.matchMedia("(pointer: fine)").matches) return;
@@ -690,7 +711,7 @@ function Scene({ journey, reduce, mobile, light }) {
   );
 }
 
-export default function ServicesScene({ journey, reduce, onContextLost }) {
+export default function ServicesScene({ journey, reduce, active = true, onContextLost }) {
   const canvasRef = useRef(null);
   const mobile = typeof window !== "undefined" && window.matchMedia("(max-width: 767px)").matches;
   // The site is now light everywhere, so the scene always uses its light palette.
@@ -710,6 +731,8 @@ export default function ServicesScene({ journey, reduce, onContextLost }) {
   return (
     <Canvas
       ref={canvasRef}
+      // Stops rendering while the stage is off screen
+      frameloop={active ? "always" : "never"}
       dpr={mobile ? [1, 1.5] : [1, 1.75]}
       gl={{ antialias: !mobile, alpha: true, powerPreference: "high-performance" }}
       camera={{ position: [0, 0.2, 10.5], fov: 35, near: 0.1, far: 60 }}

@@ -93,6 +93,14 @@ html {
   color-scheme: dark;
 }
 
+/* Touch devices scroll natively (see SmoothScroll.js); in-page links still
+   glide. Route changes stay instant: data-scroll-behavior on <html>. */
+@media (prefers-reduced-motion: no-preference) {
+  html:not(.lenis) {
+    scroll-behavior: smooth;
+  }
+}
+
 /*
   Full light-theme override, scoped to .theme-light so it can be previewed
   on its own route (/light-preview) without touching the live dark site.
@@ -183,6 +191,9 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-geist-sans), system-ui, sans-serif;
+  /* Nothing decorative may widen the page. `clip`, not `hidden`: it makes no
+     scroll container, so sticky sections keep working. */
+  overflow-x: clip;
 }
 
 @keyframes reveal-up {
@@ -264,10 +275,355 @@ body {
   }
 }
 
-/* Preloader: never under reduced motion */
+/* ---- Entrances ----
+   Every entrance on the site is CSS, so nothing waits for JavaScript to
+   paint. --intro-delay is how long the preloader's curtain covers the page
+   on a full load; page intros start as it lifts. After the first client-side
+   navigation there is no curtain, so the delay drops to zero. */
+:root {
+  --intro-delay: 0.95s;
+}
+
+html[data-nav] {
+  --intro-delay: 0s;
+}
+
+@keyframes rise-in {
+  from {
+    opacity: 0;
+    transform: translateY(var(--rise, 18px));
+  }
+}
+
+/* In the base layer so any utility on the element still wins */
+@layer base {
+  @media (prefers-reduced-motion: no-preference) {
+
+    /* Played once as the element scrolls into view (see Entrances.js) */
+    [data-rise]:not([data-in]) {
+      opacity: 0;
+    }
+
+    [data-rise][data-in] {
+      animation: rise-in 0.9s cubic-bezier(0.22, 1, 0.36, 1) var(--d, 0s) backwards;
+    }
+
+    /* Played on load, above the fold, as the curtain lifts */
+    [data-intro] {
+      animation: rise-in 1s cubic-bezier(0.22, 1, 0.36, 1) calc(var(--intro-delay) + var(--d, 0s)) backwards;
+    }
+
+    /* Line icons: strokes draw in turn, the accent settles last */
+    [data-draw]:not([data-in]) :is(.ln, .dt) {
+      opacity: 0;
+    }
+
+    [data-draw][data-in] .ln {
+      animation: ln-draw 1.1s cubic-bezier(0.22, 1, 0.36, 1) calc(0.1s + var(--i, 0) * 0.09s) backwards;
+    }
+
+    /* Parts of a larger drawing (the coverage map) that arrive in turn */
+    [data-draw]:not([data-in]) .rc {
+      opacity: 0;
+    }
+
+    [data-draw][data-in] .rc {
+      animation: rise-in 0.9s cubic-bezier(0.22, 1, 0.36, 1) var(--d, 0s) backwards;
+    }
+
+    [data-draw][data-in] .dt {
+      transform-box: fill-box;
+      transform-origin: center;
+      animation: dt-pop 0.6s cubic-bezier(0.22, 1, 0.36, 1) calc(0.5s + var(--i, 0) * 0.09s) backwards;
+    }
+  }
+}
+
+@keyframes ln-draw {
+  from {
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+    opacity: 0;
+  }
+
+  18% {
+    opacity: 1;
+  }
+
+  to {
+    stroke-dasharray: 1;
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes dt-pop {
+  from {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+}
+
+/* ---- Preloader ----
+   A one-second curtain on a full page load: the ledger rules draw, the
+   wordmark rises, a rule fills and is closed off with a second, then the
+   panel lifts. A fixed CSS timeline, so it never waits on scripts, fonts or
+   images, and never holds the page back. Never shown under reduced motion. */
+#preloader {
+  animation: pl-lift 0.85s cubic-bezier(0.7, 0.05, 0.13, 1) var(--intro-delay) forwards;
+}
+
+@keyframes pl-lift {
+  to {
+    transform: translateY(-100%);
+    visibility: hidden;
+  }
+}
+
+.pl-col {
+  transform-origin: top;
+  animation: pl-grow-y 0.7s cubic-bezier(0.22, 1, 0.36, 1) calc(var(--i) * 0.02s) backwards;
+}
+
+@keyframes pl-grow-y {
+  from {
+    transform: scaleY(0);
+  }
+}
+
+.pl-word {
+  animation:
+    pl-word-in 0.6s cubic-bezier(0.22, 1, 0.36, 1) calc(0.05s + var(--i) * 0.07s) backwards,
+    pl-word-out 0.4s cubic-bezier(0.55, 0, 0.9, 0.3) calc(0.76s + var(--i) * 0.04s) forwards;
+}
+
+@keyframes pl-word-in {
+  from {
+    transform: translateY(110%);
+  }
+}
+
+@keyframes pl-word-out {
+  to {
+    transform: translateY(-110%);
+  }
+}
+
+.pl-rule {
+  transform-origin: left;
+  animation: pl-grow-x 0.55s cubic-bezier(0.16, 1, 0.3, 1) 0.1s backwards;
+}
+
+.pl-rule-close {
+  animation-duration: 0.3s;
+  animation-delay: 0.6s;
+}
+
+@keyframes pl-grow-x {
+  from {
+    transform: scaleX(0);
+  }
+}
+
+.pl-fade {
+  animation:
+    pl-fade-in 0.4s ease-out 0.15s backwards,
+    pl-fade-out 0.25s ease-out 0.72s forwards;
+}
+
+@keyframes pl-fade-in {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes pl-fade-out {
+  to {
+    opacity: 0;
+  }
+}
+
+/* The count: an integer custom property animated 0 → 100 and printed through
+   a counter, so the figures tick without a script. Browsers without
+   @property simply show the total. */
+@property --pl-n {
+  syntax: "<integer>";
+  initial-value: 100;
+  inherits: false;
+}
+
+@counter-style pl-pad {
+  system: extends decimal;
+  pad: 3 "0";
+}
+
+.pl-count {
+  counter-reset: pl var(--pl-n);
+  animation: pl-count 0.55s cubic-bezier(0.16, 1, 0.3, 1) 0.1s backwards;
+}
+
+.pl-count::after {
+  content: counter(pl, pl-pad);
+}
+
+@keyframes pl-count {
+  from {
+    --pl-n: 0;
+  }
+}
+
+/* "Reconciling" gives way to "Balanced" as the second rule closes */
+.pl-label-a {
+  animation: pl-fade-out 0.01s linear 0.6s forwards;
+}
+
+.pl-label-b {
+  animation: pl-fade-in 0.01s linear 0.6s backwards;
+}
+
 @media (prefers-reduced-motion: reduce) {
   #preloader {
     display: none;
+  }
+}
+
+/* ---- Hero intro: "coming into focus" ----
+   The ledger rules draw, the photograph sharpens while it fills the screen,
+   the frame retracts to its resting place, the headline focuses, the total
+   is double-ruled, then the supporting copy arrives. The resting state is
+   the plain style; each animation only supplies where it starts from. */
+.hero-stage {
+  --t: 0%;
+  --b: 0%;
+  --l: 1.25rem;
+  --r: 1.25rem;
+}
+
+@media (min-width: 640px) {
+  .hero-stage {
+    --l: 2rem;
+    --r: 2rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .hero-stage {
+    --t: 15%;
+    --b: 10%;
+    /* Column 7 of the container's 12, and the container's right gutter, as
+       lengths in the full-width stage's own box */
+    --l: calc(max(0px, (100% - 88rem) / 2) + 3rem + (min(100%, 88rem) - 6rem) * 0.5);
+    --r: calc(max(0px, (100% - 88rem) / 2) + 3rem);
+  }
+
+  /* At rest the frame shows the stage's right half; shifting the photograph
+     right with the clip keeps the pencil hand centred in it */
+  .hi-shift {
+    transform: translateX(20%);
+  }
+}
+
+.hi-frame {
+  clip-path: inset(var(--t) var(--r) var(--b) var(--l) round var(--radius-panel));
+}
+
+@keyframes hi-grow-y {
+  from {
+    transform: scaleY(0);
+  }
+}
+
+@keyframes hi-grow-x {
+  from {
+    transform: scaleX(0);
+  }
+}
+
+@keyframes hi-frame {
+  from {
+    clip-path: inset(0% 0% 0% 0% round 0rem);
+  }
+}
+
+@keyframes hi-shift {
+  from {
+    transform: translateX(0%);
+  }
+}
+
+@keyframes hi-focus {
+  from {
+    filter: blur(28px);
+    transform: scale(1.14);
+  }
+}
+
+@keyframes hi-settle {
+  from {
+    transform: scale(1.1);
+  }
+}
+
+@keyframes hi-line {
+  from {
+    opacity: 0;
+    filter: blur(16px);
+    transform: translateY(0.14em);
+  }
+}
+
+@keyframes hi-line-plain {
+  from {
+    opacity: 0;
+    transform: translateY(0.3em);
+  }
+}
+
+@keyframes hi-detail {
+  from {
+    clip-path: inset(100% 0% 0% 0%);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .hi-rule {
+    transform-origin: top;
+    animation: hi-grow-y 1.2s cubic-bezier(0.22, 1, 0.36, 1) calc(var(--intro-delay) + var(--i) * 0.04s) backwards;
+  }
+
+  .hi-total {
+    animation: hi-grow-x 0.9s cubic-bezier(0.22, 1, 0.36, 1) calc(var(--intro-delay) + 1s + var(--i) * 0.12s) backwards;
+  }
+
+  /* Phones and tablets: transform and opacity only. Animating a blur or a
+     clip over a photograph this size repaints it every frame. */
+  .hi-focus {
+    animation: hi-settle 1.6s cubic-bezier(0.22, 1, 0.36, 1) var(--intro-delay) backwards;
+  }
+
+  .hi-line {
+    animation: hi-line-plain 1s cubic-bezier(0.22, 1, 0.36, 1) calc(var(--intro-delay) + 0.3s + var(--i) * 0.12s) backwards;
+  }
+
+  @media (min-width: 1024px) {
+    .hi-focus {
+      animation: hi-focus 1.9s cubic-bezier(0.22, 1, 0.36, 1) calc(var(--intro-delay) + 0.05s) backwards;
+    }
+
+    .hi-frame {
+      animation: hi-frame 1.4s cubic-bezier(0.76, 0, 0.24, 1) calc(var(--intro-delay) + 0.35s) backwards;
+    }
+
+    .hi-shift {
+      animation: hi-shift 1.4s cubic-bezier(0.76, 0, 0.24, 1) calc(var(--intro-delay) + 0.35s) backwards;
+    }
+
+    .hi-line {
+      animation: hi-line 1.2s cubic-bezier(0.22, 1, 0.36, 1) calc(var(--intro-delay) + 0.5s + var(--i) * 0.14s) backwards;
+    }
+
+    .hi-detail {
+      animation: hi-detail 1.2s cubic-bezier(0.22, 1, 0.36, 1) calc(var(--intro-delay) + 1.2s) backwards;
+    }
   }
 }
 
@@ -632,6 +988,68 @@ body {
   .c3d-accent::before {
     animation: none;
     opacity: 0;
+  }
+}
+
+/* Off screen (set by CubeCssStage): the glare stops with the cube */
+.c3d-paused .c3d-tile::before,
+.c3d-paused .c3d-accent::before {
+  animation-play-state: paused;
+}
+
+/* Phones and tablets: the cube keeps its shape, lighting and movement, but
+   drops the two effects that cost most to composite across its 162 faces —
+   the blended glare sweep and the soft outer shadow under every tile. */
+@media (max-width: 1023px) {
+
+  .c3d-tile::before,
+  .c3d-accent::before {
+    display: none;
+  }
+
+  .c3d-tile {
+    box-shadow:
+      inset 0 2px 0 rgba(225, 238, 255, 0.5),
+      inset 0 -2px 0 rgba(0, 0, 0, 0.65),
+      inset 2px 0 0 rgba(225, 238, 255, 0.16),
+      inset -2px 0 0 rgba(0, 0, 0, 0.5);
+  }
+
+  .c3d-accent {
+    box-shadow:
+      inset 0 2px 0 rgba(240, 248, 255, 0.65),
+      inset 0 -2px 0 rgba(0, 0, 0, 0.5),
+      inset 2px 0 0 rgba(240, 248, 255, 0.24),
+      inset -2px 0 0 rgba(0, 0, 0, 0.4);
+  }
+
+  .c3d-face-surface {
+    text-shadow: none;
+  }
+}
+
+/* ---- Coverage map: London's pulse ---- */
+@keyframes map-pulse {
+  from {
+    transform: scale(1);
+    opacity: 0.8;
+  }
+
+  to {
+    transform: scale(4);
+    opacity: 0;
+  }
+}
+
+.map-pulse {
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .map-pulse {
+    animation: map-pulse 2.4s ease-out 1.2s infinite;
   }
 }
 

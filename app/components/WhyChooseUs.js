@@ -1,10 +1,5 @@
-"use client";
-
-import { motion, useReducedMotion } from "framer-motion";
 import CountUp from "./CountUp";
 import { SERVICES } from "../lib/services";
-
-const ease = [0.22, 1, 0.36, 1];
 
 // Commitments the site already makes elsewhere (contact copy, approach
 // principles, services list), so every counter is backed by existing claims
@@ -20,13 +15,10 @@ const figures = [
 // the row stays a single short band. Single-digit commitments are set
 // statically; counting 0 → 1 adds motion without meaning.
 function Figure({ f, i }) {
-  const reduce = useReducedMotion();
   return (
-    <motion.li
-      initial={reduce ? false : { opacity: 0, y: 18 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-10%" }}
-      transition={{ duration: 0.9, ease, delay: i * 0.08 }}
+    <li
+      data-rise=""
+      style={{ "--d": `${i * 0.08}s` }}
       className="border-white/10 py-6 max-lg:odd:pr-6 max-lg:even:border-l max-lg:even:pl-6 max-lg:[&:nth-child(-n+2)]:border-b lg:border-l lg:px-8 lg:py-7 lg:first:border-l-0 lg:first:pl-0"
     >
       <p className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
@@ -36,7 +28,7 @@ function Figure({ f, i }) {
         <span className="font-mono text-[11px] tracking-[0.16em] text-glint uppercase">{f.label}</span>
       </p>
       <p className="mt-2.5 max-w-[16rem] text-sm leading-relaxed text-white/70">{f.body}</p>
-    </motion.li>
+    </li>
   );
 }
 

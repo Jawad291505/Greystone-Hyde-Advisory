@@ -103,7 +103,7 @@ function SubTabs({ g, sub, setSub }) {
                         onMouseEnter={() => setSub(slug)}
                         onFocus={() => setSub(slug)}
                         onClick={() => setSub(slug)}
-                        className={`rounded-full border px-3 py-1 text-[12px] tracking-wide transition-colors duration-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-royal ${on ? "border-navy bg-navy text-white" : "border-navy/15 text-navy/65 hover:border-royal/40 hover:text-royal"
+                        className={`rounded-full border px-3 py-1 text-[12px] tracking-wide transition-colors max-xl:min-h-10 max-xl:px-4 duration-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-royal ${on ? "border-navy bg-navy text-white" : "border-navy/15 text-navy/65 hover:border-royal/40 hover:text-royal"
                             }`}
                     >
                         {bySlug[slug].name}
@@ -225,9 +225,21 @@ export default function ServicesGrid() {
 
     // A deliberate hover intent, so sweeping across the grid doesn't set every
     // card moving; the card stays open after the pointer leaves.
+    // Only while the page is still: a card that merely scrolls under a
+    // resting pointer must not start the row's resize mid-scroll.
+    const lastScroll = useRef(0);
+    useEffect(() => {
+        const onScroll = () => {
+            lastScroll.current = performance.now();
+        };
+        window.addEventListener("scroll", onScroll, { passive: true });
+        return () => window.removeEventListener("scroll", onScroll);
+    }, []);
     const hover = (i) => {
         clearTimeout(timer.current);
-        timer.current = setTimeout(() => setOpen(i), 200);
+        timer.current = setTimeout(() => {
+            if (performance.now() - lastScroll.current > 150) setOpen(i);
+        }, 200);
     };
     const cancel = () => clearTimeout(timer.current);
 

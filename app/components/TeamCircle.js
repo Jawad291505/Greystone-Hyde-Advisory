@@ -143,11 +143,9 @@ export default function TeamCircle() {
             style={{ left: u(BIG_LEFT), width: u(BIG), height: u(BIG) }}
             className="absolute top-0 rounded-full border border-navy/10 bg-[radial-gradient(circle_at_30%_25%,white,var(--sky)_70%)] shadow-[0_50px_90px_-60px_color-mix(in_srgb,var(--ink)_55%,transparent)]"
           >
-            <motion.span
+            <span
               aria-hidden
-              animate={reduce ? undefined : { rotate: 360 }}
-              transition={{ duration: 90, ease: "linear", repeat: Infinity }}
-              className="absolute -inset-[3.5%] rounded-full border border-dashed border-navy/15"
+              className="slow-turn absolute -inset-[3.5%] rounded-full border border-dashed border-navy/15"
             />
 
             {/* What the circle says: its opening words, or the role in focus */}
@@ -165,7 +163,7 @@ export default function TeamCircle() {
                     exit={reduce ? undefined : { opacity: 0, y: -8 }}
                     transition={{ duration: 0.35, ease }}
                   >
-                    <LineIcon name={current.icon} className="h-16 w-16" />
+                    <LineIcon name={current.icon} className="h-16 w-16" still />
                     <p className="mt-5 font-mono text-[10px] tracking-[0.18em] text-navy/60 uppercase tabular-nums">
                       <span className="text-royal">{num(active)}</span> / {num(roles.length - 1)} · {current.focus}
                     </p>

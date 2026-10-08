@@ -153,7 +153,7 @@ function Plate({ active, playing, reduce, compact = false }) {
             src={r.image}
             alt=""
             fill
-            sizes="(min-width: 1024px) 30vw, 90vw"
+            sizes="(min-width: 1024px) 30vw, 320px"
             style={{ objectPosition: r.at }}
             // The photograph in focus drifts in very slowly while it holds
             className={`object-cover transition-[opacity,scale] duration-[900ms,7000ms] ease-out motion-reduce:transition-none ${
@@ -287,18 +287,15 @@ export default function Reasons() {
   const cancel = () => clearTimeout(intent.current);
 
   return (
-    <section id="people" aria-labelledby="reasons-title" className="relative scroll-mt-20 bg-paper text-ink">
+    <section id="people" aria-labelledby="reasons-title" className="relative scroll-mt-20 overflow-x-clip bg-paper text-ink">
       <div className="mx-auto max-w-[88rem] px-5 py-12 sm:px-8 lg:px-12 lg:py-14">
         <div className="flex items-center justify-between border-t border-navy/10 pt-5 font-mono text-[10px] tracking-[0.2em] text-navy/60 uppercase">
           <span>04 — Six reasons</span>
           <span className="hidden sm:inline">Every figure reviewed, every return checked</span>
         </div>
 
-        <motion.div
-          initial={reduce ? false : { opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-10%" }}
-          transition={{ duration: 0.9, ease }}
+        <div
+          data-rise=""
           className="mt-8 grid gap-5 lg:mt-10 lg:grid-cols-12 lg:items-end lg:gap-8"
         >
           <h2
@@ -323,7 +320,7 @@ export default function Reasons() {
               </a>
             </p>
           </div>
-        </motion.div>
+        </div>
 
         <div ref={stage}>
           {/* Desktop: the circles */}

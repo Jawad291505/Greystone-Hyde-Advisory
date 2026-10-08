@@ -13,6 +13,10 @@ const ServicesScene = dynamic(() => import("./ServicesScene"), { ssr: false });
 export default function ServicesSceneSmart({ journey, reduce, onUnavailable }) {
   const wrapRef = useRef(null);
   const [inView, setInView] = useState(false);
+  // Once built, the scene stays mounted: tearing a WebGL context down and
+  // rebuilding it (textures, shaders, geometry) every time the stage scrolls
+  // out and back is a long stall mid-scroll. Off screen it just stops drawing.
+  const [seen, setSeen] = useState(false);
   const [idle, setIdle] = useState(false);
   const [glOk, setGlOk] = useState(true);
 
@@ -30,10 +34,15 @@ export default function ServicesSceneSmart({ journey, reduce, onUnavailable }) {
     let io;
     if (!el || typeof IntersectionObserver === "undefined") {
       setInView(true);
+      setSeen(true);
     } else {
-      io = new IntersectionObserver(([entry]) => setInView(entry.isIntersecting), {
-        rootMargin: "400px 0px",
-      });
+      io = new IntersectionObserver(
+        ([entry]) => {
+          setInView(entry.isIntersecting);
+          if (entry.isIntersecting) setSeen(true);
+        },
+        { rootMargin: "400px 0px" },
+      );
       io.observe(el);
     }
     return () => {
@@ -44,10 +53,11 @@ export default function ServicesSceneSmart({ journey, reduce, onUnavailable }) {
 
   return (
     <div ref={wrapRef} className="svc-canvas absolute inset-0" aria-hidden>
-      {glOk && inView && idle ? (
+      {glOk && seen && idle ? (
         <ServicesScene
           journey={journey}
           reduce={reduce}
+          active={inView}
           onContextLost={() => {
             setGlOk(false);
             onUnavailable?.();

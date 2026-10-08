@@ -1,9 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { motion, useReducedMotion } from "framer-motion";
-
-const ease = [0.22, 1, 0.36, 1];
+import { useRef, useState } from "react";
+import { useOnScreen } from "../lib/useOnScreen";
 
 // PLACEHOLDER QUOTES — illustrative wording, ratings and attributions only.
 // Replace with real, approved client testimonials before launch. Attribution
@@ -115,14 +113,11 @@ function Card({ q }) {
 // reduced motion it is a plain row to swipe through.
 export default function Testimonials() {
   const [paused, setPaused] = useState(false);
-  const reduce = useReducedMotion();
+  // The track only drifts while it can be seen
+  const marquee = useRef(null);
+  const onScreen = useOnScreen(marquee, { rootMargin: "100px" });
 
-  const fadeIn = (delay) => ({
-    initial: reduce ? false : { opacity: 0, y: 18 },
-    whileInView: { opacity: 1, y: 0 },
-    viewport: { once: true, margin: "-10%" },
-    transition: { duration: 0.9, ease, delay },
-  });
+  const fadeIn = (delay) => ({ "data-rise": "", style: { "--d": `${delay}s` } });
 
   return (
     <section id="testimonials" aria-labelledby="testimonials-title" className="relative scroll-mt-20 bg-paper py-12 text-ink lg:py-16">
@@ -133,21 +128,21 @@ export default function Testimonials() {
         </div>
 
         <div className="mt-10 grid gap-6 lg:mt-12 lg:grid-cols-12 lg:items-end lg:gap-8">
-          <motion.h2
+          <h2
             {...fadeIn(0)}
             id="testimonials-title"
             className="font-display text-[clamp(2.4rem,5vw,4.2rem)] leading-[1.02] tracking-[-0.015em] text-balance lg:col-span-7"
           >
             Trusted by experts <em className="text-royal">from various industries.</em>
-          </motion.h2>
-          <motion.p {...fadeIn(0.1)} className="max-w-md text-base leading-relaxed text-navy/75 lg:col-span-4 lg:col-start-9">
+          </h2>
+          <p {...fadeIn(0.1)} className="max-w-md text-base leading-relaxed text-navy/75 lg:col-span-4 lg:col-start-9">
             Owners and finance leads on what changed once their accounts, tax
             and payroll sat with one team.
-          </motion.p>
+          </p>
         </div>
 
         {/* The sectors on the books, as one ledger line */}
-        <motion.div
+        <div
           {...fadeIn(0.2)}
           className="mt-8 flex flex-wrap items-center justify-between gap-x-8 gap-y-3 border-y border-navy/10 py-4 font-mono text-[10px] tracking-[0.18em] text-navy/60 uppercase"
         >
@@ -163,20 +158,21 @@ export default function Testimonials() {
             type="button"
             aria-pressed={paused}
             onClick={() => setPaused((p) => !p)}
-            className="inline-flex items-center gap-2.5 tracking-[0.18em] uppercase transition-colors duration-300 hover:text-royal focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-royal motion-reduce:hidden"
+            className="-my-3 inline-flex items-center gap-2.5 py-3 tracking-[0.18em] uppercase transition-colors duration-300 hover:text-royal focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-royal motion-reduce:hidden"
           >
             <span aria-hidden className={`h-1.5 w-1.5 rounded-full ${paused ? "bg-navy/30" : "bg-royal"}`} />
             {paused ? "Play" : "Pause"}
           </button>
-        </motion.div>
+        </div>
       </div>
 
       {/* Full-bleed track: two copies of the list, so the loop has no seam */}
-      <motion.div
+      <div
         {...fadeIn(0.3)}
+        ref={marquee}
         className="testimonial-marquee mt-10 overflow-hidden py-2 [mask-image:linear-gradient(90deg,transparent,#000_7%,#000_93%,transparent)] motion-reduce:overflow-x-auto lg:mt-14"
       >
-        <div className="testimonial-track flex w-max" style={paused ? { animationPlayState: "paused" } : undefined}>
+        <div className="testimonial-track flex w-max" style={paused || !onScreen ? { animationPlayState: "paused" } : undefined}>
           <ul className="flex gap-5 pr-5 motion-reduce:px-5">
             {QUOTES.map((q) => (
               <Card key={q.sector} q={q} />
@@ -188,7 +184,7 @@ export default function Testimonials() {
             ))}
           </ul>
         </div>
-      </motion.div>
+      </div>
     </section>
   );
 }

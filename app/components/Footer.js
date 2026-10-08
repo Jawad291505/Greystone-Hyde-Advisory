@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "./ThemeLink";
+import OfficeMap from "./OfficeMap";
 
 const ADDRESS = "4–6 Greatorex St, London E1 5NF";
 const ADDRESS_QUERY = encodeURIComponent("4-6 Greatorex St, London E1 5NF, United Kingdom");
@@ -87,7 +88,7 @@ export default function Footer() {
                                         <a
                                             href={s.href}
                                             aria-label={`Greystone Hyde on ${s.label}`}
-                                            className="grid h-9 w-9 place-items-center rounded-full border border-white/15 text-white/75 transition-colors duration-300 hover:border-white hover:bg-white hover:text-navy focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white"
+                                            className="grid h-11 w-11 place-items-center rounded-full border border-white/15 text-white/75 transition-colors duration-300 hover:border-white hover:bg-white hover:text-navy focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white"
                                         >
                                             <SocialIcon name={s.icon} />
                                         </a>
@@ -101,12 +102,12 @@ export default function Footer() {
                             <p className={label}>Get in touch</p>
                             <ul className="mt-5 space-y-3 text-[15px]">
                                 <li>
-                                    <a href={`mailto:${EMAIL}`} className={link}>
+                                    <a href={`mailto:${EMAIL}`} className={`${link} inline-block max-lg:py-1.5`}>
                                         {EMAIL}
                                     </a>
                                 </li>
                                 <li>
-                                    <a href={PHONE.href} className={link}>
+                                    <a href={PHONE.href} className={`${link} inline-block max-lg:py-1.5`}>
                                         {PHONE.label}
                                     </a>
                                 </li>
@@ -116,7 +117,7 @@ export default function Footer() {
                                         href={DIRECTIONS}
                                         target="_blank"
                                         rel="noopener noreferrer"
-                                        className="group mt-1 inline-flex items-center gap-1.5 text-[13px] text-glint transition-colors hover:text-white"
+                                        className="group inline-flex items-center gap-1.5 py-2.5 text-[13px] text-glint transition-colors hover:text-white"
                                     >
                                         Get directions
                                         <span aria-hidden className="transition-transform duration-300 group-hover:translate-x-0.5">
@@ -134,13 +135,7 @@ export default function Footer() {
                             cropped off the top; the attribution stays visible below */}
                         <div className="sm:col-span-2 lg:col-span-4">
                             <div className="relative h-60 overflow-hidden rounded-card border border-white/10 bg-white lg:h-full lg:min-h-64">
-                                <iframe
-                                    title="Map showing the Greystone Hyde office at 4–6 Greatorex St, London E1 5NF"
-                                    src={MAP_SRC}
-                                    loading="lazy"
-                                    referrerPolicy="no-referrer-when-downgrade"
-                                    className="absolute inset-x-0 bottom-0 h-[calc(100%+5rem)] w-full border-0"
-                                />
+                                <OfficeMap src={MAP_SRC} title={`Map showing the Greystone Hyde office at ${ADDRESS}`} />
                             </div>
                         </div>
                     </div>
@@ -149,17 +144,17 @@ export default function Footer() {
                     <div className="mt-14 flex flex-col gap-4 border-t border-white/10 pt-6 text-[13px] lg:flex-row lg:items-center lg:justify-between">
                         <p className="text-white/45">© {year} Greystone Hyde Advisory</p>
                         <nav aria-label="Footer">
-                            <ul className="flex flex-wrap gap-x-6 gap-y-2">
+                            <ul className="flex flex-wrap gap-x-6 max-lg:-my-2">
                                 {LINKS.map((l) => (
                                     <li key={l.label}>
-                                        <Link href={l.href} className={link}>
+                                        <Link href={l.href} className={`${link} inline-block py-2.5 lg:py-1`}>
                                             {l.label}
                                         </Link>
                                     </li>
                                 ))}
                             </ul>
                         </nav>
-                        <a href="#" className="group inline-flex items-center gap-1.5 self-start text-white/55 transition-colors hover:text-white lg:self-auto">
+                        <a href="#" className="group -my-2.5 inline-flex items-center gap-1.5 self-start py-2.5 text-white/55 transition-colors hover:text-white lg:self-auto">
                             Back to top
                             <span aria-hidden className="transition-transform duration-300 group-hover:-translate-y-0.5">
                                 ↑
