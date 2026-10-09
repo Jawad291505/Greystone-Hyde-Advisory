@@ -35,9 +35,9 @@ const editorial = Newsreader({
 });
 
 export const metadata = {
-  title: "Greystone Hyde Advisory | London Accounting & Financial Advisory",
+  title: "Bookkeeping & Accounting Services in London | Greystone Hyde",
   description:
-    "London accounting and financial advisory that turns financial complexity into clarity.",
+    "Bookkeeping and accounting for UK businesses: year-end accounts, tax and VAT, payroll, management reporting and advisory from one dedicated London team.",
 };
 
 export const viewport = {

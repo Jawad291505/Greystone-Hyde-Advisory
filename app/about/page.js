@@ -33,29 +33,29 @@ const goals = [
 ];
 
 // How an engagement unfolds, told in three chapters, each with its photograph.
-// Draft copy drawn from the practice's existing principles, and stock
-// photographs for now — replace both with the firm's own.
+// Draft copy drawn from the practice's existing principles — replace with
+// the firm's own.
 const chapters = [
   {
-    src: "/images/team-discussion.jpg",
-    alt: "Colleagues talking through a set of figures around a table",
-    at: "50% 40%",
+    src: "/images/Listening.webp",
+    alt: "An accountant talking a client through the figures on a laptop across a desk",
+    at: "50% 50%",
     when: "First",
     title: "We start by listening.",
     body: "Before any figures, we learn how your business works: what it does, how it earns, and what you want from it. The person in that first conversation is the person you keep.",
   },
   {
-    src: "/images/desk-documents.jpg",
-    alt: "Working papers being marked up by hand beside a laptop",
-    at: "58% 50%",
+    src: "/images/We_get_the numbers_staright.webp",
+    alt: "An accountant reconciling ledgers at a desk with the City of London skyline behind",
+    at: "50% 50%",
     when: "Then",
     title: "We get the numbers straight.",
     body: "Clean, reconciled books and returns checked by a qualified accountant. If a number can't be explained in one sentence, it isn't finished yet.",
   },
   {
-    src: "/images/hero-meeting.jpg",
-    alt: "Advisers and a client in conversation across a meeting table",
-    at: "50% 35%",
+    src: "/images/We_stay.webp",
+    alt: "An adviser and a client going through a printed report together",
+    at: "50% 50%",
     when: "And after",
     title: "We stay.",
     body: "The same team, year after year. We flag what's coming before it becomes a problem, and we're there when the questions get bigger.",

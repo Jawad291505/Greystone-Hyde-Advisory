@@ -9,24 +9,24 @@ import { useScrollProgress } from "../lib/useScrollProgress";
 const ease = [0.22, 1, 0.36, 1];
 
 const STATEMENT =
-    "Most businesses don't need more figures. They need someone who reads them properly, and tells them what they mean.";
+    "Behind every set of accounts is a business with real decisions to make. We read the numbers properly, then tell you what they mean.";
 
 // How we work, stated as commitments rather than metrics.
 const principles = [
     {
         n: "01",
-        title: "One named accountant",
-        body: "You work with the same person, who knows your business and answers your questions directly.",
+        title: "A dedicated accountant",
+        body: "One person looks after your business from the start. They know your history, understand your goals and give you a direct answer whenever you ask, with no ticket numbers or call centres in between.",
     },
     {
         n: "02",
-        title: "Reviewed by people",
-        body: "Software does the recording. Qualified professionals check the numbers before they reach you.",
+        title: "Checked by qualified people",
+        body: "Software handles the data entry. A qualified accountant then reviews every figure, return and filing, so nothing reaches you until it has been checked properly.",
     },
     {
         n: "03",
-        title: "Advice you can act on",
-        body: "Plain English, clear next steps, and the context behind every figure we report.",
+        title: "Guidance you can use",
+        body: "No jargon, just clear explanations and sensible next steps. You'll know what changed in your numbers, why it happened and what to do next.",
     },
 ];
 
@@ -100,6 +100,13 @@ export default function Positioning() {
                             ))}
                     </p>
 
+                    <p className="mt-8 max-w-md text-base leading-relaxed text-navy/75 lg:mt-10">
+                        Anyone can enter numbers into software. What matters is someone
+                        who looks at them with care and talks you through them. We take
+                        care of the paperwork, so our conversations stay about your
+                        business.
+                    </p>
+
                     <motion.figure
                         initial={reduce ? false : { clipPath: "inset(0% 0% 100% 0%)" }}
                         whileInView={{ clipPath: "inset(0% 0% 0% 0%)" }}
@@ -125,9 +132,10 @@ export default function Positioning() {
                     </motion.figure>
 
                     <p className="mt-12 max-w-md text-base leading-relaxed text-navy/75">
-                        Good accounting is less about software and more about judgement. We
-                        keep the process organised so the conversation can focus on your
-                        business.
+                        Good accounting is less about software and more about judgement.
+                        Technology records the numbers, but people decide what they mean.
+                        We keep the process organised so every conversation can focus on
+                        your business, not on chasing paperwork.
                     </p>
 
                     <ol className="mt-10 max-w-lg border-t border-navy/10">
@@ -152,13 +160,14 @@ export default function Positioning() {
                     {/* The cube's payoff: lands as the cube locks into place */}
                     <div className="mt-14 lg:mt-20">
                         <p className="max-w-md text-lg leading-relaxed text-navy/80">
-                            Accounts, tax, payroll, compliance, reporting, advice. Each one
-                            moves on its own schedule, and each one affects the others.
+                            Your finances are never one task. Accounts, tax, payroll and
+                            reporting each have their own deadlines and depend on one
+                            another. We keep every part in step.
                         </p>
                         <p className="mt-10 font-display text-[clamp(2.6rem,5vw,4.4rem)] leading-[1] tracking-[-0.015em]">
-                            Complexity,
+                            Finance,
                             <br />
-                            <em className="text-royal">organised.</em>
+                            <em className="text-royal">made clear.</em>
                         </p>
                         <ul className="mt-8 flex flex-wrap gap-x-5 gap-y-2 font-mono text-[10px] tracking-[0.18em] text-navy/55 uppercase">
                             {DISCIPLINES.map((d) => (

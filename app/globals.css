@@ -487,9 +487,9 @@ html[data-nav] {
 }
 
 /* ---- Hero intro: "coming into focus" ----
-   The ledger rules draw, the photograph sharpens while it fills the screen,
-   the frame retracts to its resting place, the headline focuses, the total
-   is double-ruled, then the supporting copy arrives. The resting state is
+   The ledger rules draw, the photograph is unveiled in its frame from the
+   foot up while it settles back, the headline focuses, the total is
+   double-ruled, then the supporting copy arrives. The resting state is
    the plain style; each animation only supplies where it starts from. */
 .hero-stage {
   --t: 0%;
@@ -507,23 +507,27 @@ html[data-nav] {
 
 @media (min-width: 1024px) {
   .hero-stage {
-    --t: 15%;
-    --b: 10%;
     /* Column 7 of the container's 12, and the container's right gutter, as
        lengths in the full-width stage's own box */
     --l: calc(max(0px, (100% - 88rem) / 2) + 3rem + (min(100%, 88rem) - 6rem) * 0.5);
     --r: calc(max(0px, (100% - 88rem) / 2) + 3rem);
-  }
-
-  /* At rest the frame shows the stage's right half; shifting the photograph
-     right with the clip keeps the pencil hand centred in it */
-  .hi-shift {
-    transform: translateX(20%);
+    /* The frame is six columns wide. Its height follows the screen's, but
+       only between 1.6:1 and 1.3:1, so the 16:9 photograph is never cropped
+       hard; it then sits just below the stage's middle, clear of the header. */
+    --fw: calc((min(100vw, 88rem) - 6rem) * 0.5);
+    --fh: clamp(calc(var(--fw) / 1.6), 64svh, calc(var(--fw) / 1.3));
+    --t: calc((100svh - var(--fh)) / 2 + 1.5rem);
+    --b: calc((100svh - var(--fh)) / 2 - 1.5rem);
   }
 }
 
 .hi-frame {
   clip-path: inset(var(--t) var(--r) var(--b) var(--l) round var(--radius-panel));
+}
+
+/* The photograph fills the frame the clip rests on, and nothing more */
+.hi-photo {
+  inset: var(--t) var(--r) var(--b) var(--l);
 }
 
 @keyframes hi-grow-y {
@@ -540,26 +544,13 @@ html[data-nav] {
 
 @keyframes hi-frame {
   from {
-    clip-path: inset(0% 0% 0% 0% round 0rem);
-  }
-}
-
-@keyframes hi-shift {
-  from {
-    transform: translateX(0%);
-  }
-}
-
-@keyframes hi-focus {
-  from {
-    filter: blur(28px);
-    transform: scale(1.14);
+    clip-path: inset(calc(100% - var(--b)) var(--r) var(--b) var(--l) round var(--radius-panel));
   }
 }
 
 @keyframes hi-settle {
   from {
-    transform: scale(1.1);
+    transform: scale(1.12);
   }
 }
 
@@ -580,7 +571,8 @@ html[data-nav] {
 
 @keyframes hi-detail {
   from {
-    clip-path: inset(100% 0% 0% 0%);
+    opacity: 0;
+    transform: scale(0.72);
   }
 }
 
@@ -594,10 +586,10 @@ html[data-nav] {
     animation: hi-grow-x 0.9s cubic-bezier(0.22, 1, 0.36, 1) calc(var(--intro-delay) + 1s + var(--i) * 0.12s) backwards;
   }
 
-  /* Phones and tablets: transform and opacity only. Animating a blur or a
-     clip over a photograph this size repaints it every frame. */
-  .hi-focus {
-    animation: hi-settle 1.6s cubic-bezier(0.22, 1, 0.36, 1) var(--intro-delay) backwards;
+  /* The photograph eases back inside its frame. Phones and tablets get
+     only this: transform and opacity, no blur or clip to repaint. */
+  .hi-settle {
+    animation: hi-settle 1.8s cubic-bezier(0.22, 1, 0.36, 1) var(--intro-delay) backwards;
   }
 
   .hi-line {
@@ -605,16 +597,12 @@ html[data-nav] {
   }
 
   @media (min-width: 1024px) {
-    .hi-focus {
-      animation: hi-focus 1.9s cubic-bezier(0.22, 1, 0.36, 1) calc(var(--intro-delay) + 0.05s) backwards;
+    .hi-settle {
+      animation-duration: 2.2s;
     }
 
     .hi-frame {
-      animation: hi-frame 1.4s cubic-bezier(0.76, 0, 0.24, 1) calc(var(--intro-delay) + 0.35s) backwards;
-    }
-
-    .hi-shift {
-      animation: hi-shift 1.4s cubic-bezier(0.76, 0, 0.24, 1) calc(var(--intro-delay) + 0.35s) backwards;
+      animation: hi-frame 1.3s cubic-bezier(0.76, 0, 0.24, 1) calc(var(--intro-delay) + 0.1s) backwards;
     }
 
     .hi-line {
@@ -1216,5 +1204,146 @@ html[data-nav] {
 @media (prefers-reduced-motion: reduce) {
   .faq-float {
     animation: none;
+  }
+}
+
+/* ---- Hero mark: the logo as a seal on the photograph's corner ----
+   Each piece is drawn in outline, fills, and locks in from its own side as
+   the seal arrives. After that the three ease apart and back in turn, the
+   name turns slowly round the rim, the glow behind the mark breathes and a
+   sheen crosses the disc. Transform, opacity and one stroke only; at rest
+   (and for visitors who ask for less motion) it is simply the mark. */
+.lm-stroke {
+  stroke-dasharray: 1;
+  opacity: 0.55;
+}
+
+@keyframes lm-draw {
+  from {
+    stroke-dashoffset: 1;
+    opacity: 1;
+  }
+
+  70% {
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
+}
+
+@keyframes lm-fill {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes lm-arrive {
+  from {
+    transform: translate(calc(var(--dx) * 3), calc(var(--dy) * 3));
+  }
+}
+
+@keyframes lm-part {
+  0%,
+  18%,
+  100% {
+    transform: translate(0, 0);
+  }
+
+  9% {
+    transform: translate(var(--dx), var(--dy));
+  }
+}
+
+@keyframes lm-orbit {
+  to {
+    rotate: 360deg;
+  }
+}
+
+@keyframes lm-glow {
+  from {
+    opacity: 0.55;
+    scale: 0.92;
+  }
+
+  to {
+    opacity: 1;
+    scale: 1.08;
+  }
+}
+
+@keyframes lm-sheen {
+  0%,
+  62% {
+    transform: translateX(-160%) skewX(-18deg);
+  }
+
+  100% {
+    transform: translateX(360%) skewX(-18deg);
+  }
+}
+
+.lm-sheen {
+  transform: translateX(-160%) skewX(-18deg);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .lm-piece {
+    --at: calc(var(--intro-delay) + 1.5s + var(--i) * 0.22s);
+    animation:
+      lm-arrive 1.5s cubic-bezier(0.22, 1, 0.36, 1) var(--at) backwards,
+      lm-part 9s cubic-bezier(0.65, 0, 0.35, 1) calc(var(--at) + 3.2s) infinite;
+  }
+
+  .lm-stroke {
+    animation: lm-draw 1.7s cubic-bezier(0.65, 0, 0.35, 1) var(--at) backwards;
+  }
+
+  .lm-fill {
+    animation: lm-fill 0.9s ease-out calc(var(--at) + 0.9s) backwards;
+  }
+
+  .lm-orbit {
+    animation: lm-orbit 40s linear infinite;
+  }
+
+  .lm-glow {
+    animation: lm-glow 4.5s ease-in-out infinite alternate;
+  }
+
+  .lm-sheen {
+    animation: lm-sheen 7s cubic-bezier(0.65, 0, 0.35, 1) calc(var(--intro-delay) + 3.5s) infinite;
+  }
+}
+
+/* Header phone icon: a short shake every few seconds, as a phone ringing.
+   Rotation only; still for visitors who ask for less motion. */
+@keyframes phone-ring {
+  0%,
+  76%,
+  100% {
+    rotate: 0deg;
+  }
+
+  79%,
+  85%,
+  91% {
+    rotate: -16deg;
+  }
+
+  82%,
+  88%,
+  94% {
+    rotate: 14deg;
+  }
+
+  97% {
+    rotate: -6deg;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .phone-ring {
+    animation: phone-ring 5s ease-in-out 3s infinite;
   }
 }

@@ -13,7 +13,8 @@ const glide = [0.65, 0, 0.35, 1];
 const bySlug = Object.fromEntries(SERVICES.map((s) => [s.slug, s]));
 
 // The nine practice areas, gathered into six disciplines so the section
-// reads as six cards. Every service keeps its own copy and report panel.
+// reads as six cards. Each card has its own description and points; every
+// service inside it keeps its own report panel.
 // `lead` is the specialist who handles the discipline: responsibilities
 // only, no names, credentials or tenure until the firm supplies team details.
 const GROUPS = [
@@ -21,36 +22,48 @@ const GROUPS = [
         name: "Accounting & Bookkeeping",
         icon: "ledger",
         slugs: ["accounting", "bookkeeping"],
+        desc: "Accurate records, year-end accounts and statutory filings, prepared to deadline and ready for Companies House and HMRC.",
+        points: ["Bookkeeping and bank reconciliations", "Annual accounts and confirmation statements", "Cloud software setup (Xero, QuickBooks, FreeAgent)"],
         lead: { role: "Client accountant", note: "Owns your books, deadlines and day-to-day questions." },
     },
     {
         name: "Tax & VAT",
         icon: "tax",
         slugs: ["tax", "vat"],
+        desc: "Corporation tax, self assessment and VAT returns, calculated carefully and filed on time with no surprises.",
+        points: ["Corporation tax and self assessment", "VAT registration, returns and Making Tax Digital", "Responses to HMRC enquiries"],
         lead: { role: "Tax specialist", note: "Prepares each return and reviews reliefs before it is filed." },
     },
     {
         name: "Payroll",
         icon: "payroll",
         slugs: ["payroll"],
+        desc: "Dependable payroll and pension administration, with RTI submissions, payslips and year-end returns taken off your hands.",
+        points: ["Weekly, fortnightly or monthly pay runs", "Auto-enrolment pensions", "P11Ds, P60s and year-end filings"],
         lead: { role: "Payroll specialist", note: "Runs each pay cycle on the same date every month." },
     },
     {
         name: "Reporting & Management Accounts",
         icon: "chart",
         slugs: ["financial-reporting", "management-accounts"],
+        desc: "Clear, timely reports that show how the business is really performing, so you can make decisions with confidence.",
+        points: ["Monthly and quarterly reporting packs", "Formats ready for your board or lender", "Budgets and forecasts tracked against actuals"],
         lead: { role: "Client accountant", note: "Knows the history behind every number in the pack." },
     },
     {
         name: "Tax Planning",
         icon: "planning",
         slugs: ["tax-planning"],
+        desc: "Practical, compliant planning that keeps your tax bill as low as the rules legitimately allow, all year round.",
+        points: ["Planning throughout the year, not a last-minute scramble", "Reliefs, allowances and incentives you may be missing", "Salary, dividend and pension strategy for owners"],
         lead: { role: "Tax specialist", note: "Plans ahead of year end, not after it." },
     },
     {
         name: "Business Advisory",
         icon: "compass",
         slugs: ["business-advisory"],
+        desc: "Independent, commercial advice on growing, funding and changing your business, from people who know your numbers.",
+        points: ["Growth and funding plans", "Scenario modelling", "A trusted sounding board when decisions get big"],
         lead: { role: "Advisory partner", note: "Joins for the bigger questions: funding, structure and change." },
     },
 ];
@@ -79,8 +92,8 @@ const SWAP_MS = 1100;
 // Row heights: a closed row shows each card's icon, title and description;
 // the row holding the open card grows to reveal points, links and the panel.
 // Only one row is ever open, so the section's overall height never changes.
-const ROW_CLOSED = "15rem";
-const ROW_OPEN = "35rem";
+const ROW_CLOSED = "17rem";
+const ROW_OPEN = "38rem";
 
 const list = { show: { transition: { staggerChildren: 0.1 } } };
 const cardIn = {
@@ -114,10 +127,10 @@ function SubTabs({ g, sub, setSub }) {
     );
 }
 
-function Points({ s }) {
+function Points({ g }) {
     return (
         <ul className="border-t border-navy/10">
-            {s.points.map((p) => (
+            {g.points.map((p) => (
                 <li key={p} className="flex items-baseline gap-3 border-b border-navy/10 py-2.5 text-[13px] leading-snug text-ink/80">
                     <span className="h-px w-2.5 shrink-0 -translate-y-1 bg-royal" />
                     {p}
@@ -277,9 +290,9 @@ export default function ServicesGrid() {
                         What we do, <em className="text-royal">in detail.</em>
                     </h2>
                     <p className="max-w-md text-base leading-relaxed text-navy/75 lg:col-span-4 lg:col-start-9">
-                        Each engagement is handled by the same small team of
-                        accountants and advisers, who work directly with you, so your
-                        accounts, tax and payroll are always read together.
+                        One dedicated team looks after your whole financial picture,
+                        so your bookkeeping, tax and payroll always line up with each
+                        other.
                     </p>
                 </div>
 
@@ -336,12 +349,12 @@ export default function ServicesGrid() {
                                                 >
                                                     {g.name}
                                                 </h3>
-                                                <p className="mt-3 text-sm leading-relaxed text-navy/75">{s.desc}</p>
+                                                <p className="mt-3 text-sm leading-relaxed text-navy/75">{g.desc}</p>
                                                 <div
                                                     inert={r !== activeRow}
                                                     className={`mt-auto pt-5 transition-opacity ${r === activeRow ? "opacity-100 delay-500 duration-700" : "opacity-0 duration-300"}`}
                                                 >
-                                                    <Points s={s} />
+                                                    <Points g={g} />
                                                     <Lead g={g} />
                                                     <div className="mt-5">
                                                         <Actions g={g} s={s} />
@@ -408,7 +421,7 @@ export default function ServicesGrid() {
                                                 className={`grid transition-[grid-template-rows,opacity] duration-[800ms] ease-[cubic-bezier(0.65,0,0.35,1)] motion-reduce:transition-none ${on ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"}`}
                                             >
                                                 <span className="overflow-hidden">
-                                                    <span className="block pt-2 text-[15px] leading-relaxed text-navy/75">{s.desc}</span>
+                                                    <span className="block pt-2 text-[15px] leading-relaxed text-navy/75">{g.desc}</span>
                                                 </span>
                                             </span>
                                         </span>
@@ -435,7 +448,7 @@ export default function ServicesGrid() {
                                                     <div className="mb-5 empty:hidden">
                                                         <SubTabs g={g} sub={s.slug} setSub={setSubOf(i)} />
                                                     </div>
-                                                    <Points s={s} />
+                                                    <Points g={g} />
                                                     <Lead g={g} />
                                                     <div className="mt-5">
                                                         <Actions g={g} s={s} />
