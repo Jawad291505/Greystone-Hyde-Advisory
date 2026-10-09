@@ -6,20 +6,20 @@ import Image from "next/image";
 // than Xero's disc does).
 const ROWS = [
     [
-        { src: "xero", name: "Xero", size: 72 },
-        { src: "bq", name: "QuickBooks", size: 155 },
-        { src: "stripe", name: "Stripe", size: 110 },
-        { src: "shopify", name: "Shopify", size: 145 },
-        { src: "gusto", name: "Gusto", size: 120 },
-        { src: "ramp", name: "Ramp", size: 130 },
+        { src: "xero", name: "Xero", size: 46 },
+        { src: "bq", name: "QuickBooks", size: 100 },
+        { src: "stripe", name: "Stripe", size: 72 },
+        { src: "shopify", name: "Shopify", size: 94 },
+        { src: "gusto", name: "Gusto", size: 78 },
+        { src: "ramp", name: "Ramp", size: 84 },
     ],
     [
-        { src: "a2x", name: "A2X", size: 150 },
-        { src: "amazon", name: "Amazon", size: 140 },
-        { src: "square", name: "Square", size: 150 },
-        { src: "adp", name: "ADP", size: 120 },
-        { src: "bill", name: "BILL", size: 130 },
-        { src: "bluevine", name: "Bluevine", size: 160 },
+        { src: "a2x", name: "A2X", size: 96 },
+        { src: "amazon", name: "Amazon", size: 90 },
+        { src: "square", name: "Square", size: 96 },
+        { src: "adp", name: "ADP", size: 78 },
+        { src: "bill", name: "BILL", size: 84 },
+        { src: "bluevine", name: "Bluevine", size: 104 },
     ],
 ];
 
@@ -32,7 +32,7 @@ function Tiles({ row, hidden }) {
         <li
             key={t.src}
             aria-hidden={hidden || undefined}
-            className="relative mr-3 h-20 w-40 shrink-0 overflow-hidden rounded-inner border border-navy/10 bg-white sm:mr-4 sm:h-24 sm:w-48"
+            className="relative mr-3 h-14 w-28 shrink-0 overflow-hidden rounded-inner border border-navy/10 bg-white sm:mr-4 sm:h-16 sm:w-36"
         >
             <Image
                 src={`/logo/${t.src}.svg`}
@@ -70,18 +70,18 @@ export default function ToolsMarquee() {
                     <div className="lg:col-span-7">
                         <p className="flex items-center gap-2 font-mono text-[10px] tracking-[0.2em] text-navy/50 uppercase">
                             <span className="h-px w-4 bg-royal/50" />
-                            Our expertise
+                            Platforms we work with
                         </p>
                         <h2
                             id="tools-title"
                             className="mt-4 font-display text-[clamp(1.9rem,3.4vw,3rem)] leading-[1.05] tracking-[-0.015em]"
                         >
-                            Fluent in the tools <em className="text-royal">you already use.</em>
+                            The software <em className="text-royal">behind your numbers.</em>
                         </h2>
                     </div>
                     <p className="max-w-md text-base leading-relaxed text-navy/75 lg:col-span-4 lg:col-start-9">
-                        Accounting, payroll, payments and e-commerce platforms, connected
-                        properly so your figures arrive clean and reconcile first time.
+                        From bookkeeping and payroll to payments and online sales, we
+                        work inside the systems your business already runs on.
                     </p>
                 </div>
             </div>
