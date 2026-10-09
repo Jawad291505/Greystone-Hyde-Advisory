@@ -2,6 +2,7 @@ import { Suspense } from "react";
 import Hero from "./components/Hero";
 import Positioning from "./components/Positioning";
 import ServicesGrid from "./components/ServicesGrid";
+import ToolsMarquee from "./components/ToolsMarquee";
 import WhyChooseUs from "./components/WhyChooseUs";
 import Reasons from "./components/Reasons";
 import Pricing from "./components/Pricing";
@@ -20,6 +21,7 @@ export default function Home() {
       <Suspense>
         <ServicesGrid />
       </Suspense>
+      <ToolsMarquee />
       <Suspense>
         <Positioning />
       </Suspense>

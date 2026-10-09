@@ -359,7 +359,8 @@ function Kpi({ value, format, active }) {
     );
 }
 
-export default function ServicePanel({ slug }) {
+// `dense` trims the padding and spacing for the narrow desktop card column.
+export default function ServicePanel({ slug, dense = false }) {
     const p = PANELS[slug];
     const ref = useRef(null);
     const inView = useInView(ref, { once: true, amount: 0.35 });
@@ -373,7 +374,7 @@ export default function ServicePanel({ slug }) {
             ref={ref}
             initial={reduce ? false : "hidden"}
             animate={active ? "show" : "hidden"}
-            className="relative overflow-hidden bg-[linear-gradient(160deg,var(--navy)_0%,var(--ink)_100%)] p-6 text-white sm:p-7"
+            className={`relative overflow-hidden bg-[linear-gradient(160deg,var(--navy)_0%,var(--ink)_100%)] text-white ${dense ? "p-5" : "p-6 sm:p-7"}`}
         >
             {/* Soft royal light, top right */}
             <div aria-hidden className="pointer-events-none absolute -top-1/3 -right-1/4 h-[80%] w-[70%] bg-[radial-gradient(closest-side,color-mix(in_srgb,var(--royal)_55%,transparent),transparent)]" />
@@ -387,7 +388,7 @@ export default function ServicePanel({ slug }) {
                     </span>
                 </div>
 
-                <div className="mt-5 flex items-end justify-between gap-4">
+                <div className={`flex items-end justify-between gap-4 ${dense ? "mt-4" : "mt-5"}`}>
                     <div>
                         <p className="text-xs text-white/60">{p.kpi.label}</p>
                         <p className="mt-1.5 font-display text-[2.25rem] leading-none tracking-tight">
@@ -407,7 +408,7 @@ export default function ServicePanel({ slug }) {
                 </div>
                 <p className="mt-2 text-xs text-glint">{p.kpi.delta}</p>
 
-                <div className="mt-5">
+                <div className={dense ? "mt-3" : "mt-5"}>
                     <Chart chart={p.chart} gid={gid} />
                 </div>
 
@@ -420,7 +421,7 @@ export default function ServicePanel({ slug }) {
                     ))}
                 </dl>
 
-                <p className="mt-4 text-right font-mono text-[9px] tracking-[0.16em] text-white/35 uppercase">
+                <p className={`text-right font-mono text-[9px] tracking-[0.16em] text-white/35 uppercase ${dense ? "mt-3" : "mt-4"}`}>
                     Illustrative figures
                 </p>
             </div>

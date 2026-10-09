@@ -275,6 +275,30 @@ body {
   }
 }
 
+/* Tools carousel: two rows on the same drift, the second run backwards so
+   they pass each other. Both fade out at the page edges. */
+.logo-marquees {
+  mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+}
+
+.logo-track {
+  animation: testimonial-drift 90s linear infinite;
+}
+
+.logo-track-reverse {
+  animation-direction: reverse;
+}
+
+.logo-marquees:hover .logo-track {
+  animation-play-state: paused;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .logo-track {
+    animation: none;
+  }
+}
+
 /* ---- Entrances ----
    Every entrance on the site is CSS, so nothing waits for JavaScript to
    paint. --intro-delay is how long the preloader's curtain covers the page

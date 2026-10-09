@@ -6,35 +6,31 @@ import Link from "../components/ThemeLink";
 export const metadata = {
   title: "About | Greystone Hyde Advisory",
   description:
-    "The story and principles behind Greystone Hyde Advisory — London accounting and financial advisory that turns complexity into clarity.",
+    "Meet the UK accounting and advisory practice that turns financial complexity into clarity. One accountable team for your accounts, tax, payroll and advice.",
 };
 
 const CONTAINER = "mx-auto max-w-[88rem] px-5 sm:px-8 lg:px-12";
 
-// Draft copy, restating the practice's existing principles as goals — confirm
-// the wording with the firm.
 const goals = [
   {
-    title: "Make every number legible",
-    body: "If a number can't be explained in one sentence, it isn't finished yet.",
+    title: "Make every number clear",
+    body: "Every figure we report can be explained simply, and in plain English.",
   },
   {
     title: "Stay ahead of what's coming",
-    body: "We flag what's coming before it becomes a problem you have to react to.",
+    body: "We spot deadlines, risks and opportunities early, so you're planning rather than reacting.",
   },
   {
     title: "Be one accountable team",
-    body: "The person who understands your business is the person you actually talk to.",
+    body: "The person who understands your business is the person you actually speak to.",
   },
   {
     title: "Earn trust through continuity",
-    body: "Every recommendation is one we'd act on ourselves, in your position.",
+    body: "We only recommend what we would do ourselves in your position.",
   },
 ];
 
 // How an engagement unfolds, told in three chapters, each with its photograph.
-// Draft copy drawn from the practice's existing principles — replace with
-// the firm's own.
 const chapters = [
   {
     src: "/images/Listening.webp",
@@ -42,7 +38,7 @@ const chapters = [
     at: "50% 50%",
     when: "First",
     title: "We start by listening.",
-    body: "Before any figures, we learn how your business works: what it does, how it earns, and what you want from it. The person in that first conversation is the person you keep.",
+    body: "Before we look at a single figure, we learn how your business works: what it does, how it earns and where you want it to go. The person you speak to first is the person you keep.",
   },
   {
     src: "/images/We_get_the numbers_staright.webp",
@@ -50,7 +46,7 @@ const chapters = [
     at: "50% 50%",
     when: "Then",
     title: "We get the numbers straight.",
-    body: "Clean, reconciled books and returns checked by a qualified accountant. If a number can't be explained in one sentence, it isn't finished yet.",
+    body: "Clean, reconciled books and returns, all reviewed by a qualified accountant. If a figure can't be explained in one sentence, we're not finished with it yet.",
   },
   {
     src: "/images/We_stay.webp",
@@ -58,7 +54,7 @@ const chapters = [
     at: "50% 50%",
     when: "And after",
     title: "We stay.",
-    body: "The same team, year after year. We flag what's coming before it becomes a problem, and we're there when the questions get bigger.",
+    body: "The same team, year after year. We raise issues before they become problems, and we are on hand when the questions get bigger.",
   },
 ];
 
@@ -150,8 +146,8 @@ export default function AboutPage() {
                 To turn financial complexity <em className="text-glint">into clarity.</em>
               </p>
               <p className="mt-7 max-w-xl text-[17px] leading-[1.7] text-white/80">
-                Every service we offer, every report we send, is built around
-                one goal: making your numbers legible enough to act on with
+                Every service we offer and every report we send is built around
+                one aim: making your numbers clear enough to act on with
                 confidence.
               </p>
             </div>
@@ -173,8 +169,8 @@ export default function AboutPage() {
               </h2>
             </div>
             <p className="max-w-md text-base leading-relaxed text-navy/80 lg:col-span-4 lg:col-start-9">
-              The mission only means something if it shows up in the work. These
-              are the standards we measure every engagement against.
+              A mission only matters if it shows up in the work. These are the
+              standards we measure every client engagement against.
             </p>
           </Reveal>
 

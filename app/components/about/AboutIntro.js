@@ -32,10 +32,12 @@ export default function AboutIntro() {
         <div className="lg:col-span-6">
           <p
             {...rise(0)}
-            className="flex items-center gap-3 font-mono text-[11px] tracking-[0.2em] text-navy/70 uppercase"
+            className="flex flex-wrap items-center gap-x-3 gap-y-2 font-mono text-[11px] tracking-[0.2em] text-navy/70 uppercase"
           >
             <span className="h-px w-8 bg-royal" />
             About us
+            <span aria-hidden className="text-navy/30">/</span>
+            <span className="text-navy/55">UK — Accounting &amp; Advisory</span>
           </p>
 
           <h1
@@ -43,22 +45,20 @@ export default function AboutIntro() {
             id="about-title"
             className="mt-7 font-display text-[clamp(2.6rem,5vw,4.4rem)] leading-[1.02] tracking-[-0.015em] text-balance"
           >
-            Greystone Hyde is a London accounting and <em className="text-royal">advisory practice.</em>
+            Greystone Hyde is a UK accounting and <em className="text-royal">advisory practice.</em>
           </h1>
 
           <p {...rise(0.22)} className="mt-8 max-w-[34rem] text-[17px] leading-[1.7] text-navy/90 sm:text-lg">
-            We work directly with owners and finance teams, on the books, the
-            tax, the payroll and the decisions that follow.
+            We work directly with business owners and finance teams on their
+            accounts, tax, payroll and the decisions that follow.
           </p>
           <p {...rise(0.3)} className="mt-5 max-w-[34rem] text-[17px] leading-[1.7] text-navy/80">
-            Most businesses don&apos;t struggle because of bad decisions. They
-            struggle because their numbers are unclear. We take everything that
-            makes up a business&apos;s financial life and organise it into
-            something you can actually read and act on.
-          </p>
-          <p {...rise(0.38)} className="mt-5 max-w-[34rem] text-[17px] leading-[1.7] text-navy/80">
-            And we do it as a single accountable team, not a rotating cast of
-            contacts, because trust is built through continuity.
+            Most businesses don&apos;t struggle because of poor decisions. They
+            struggle because their numbers are unclear. We bring every part of
+            your financial life together and turn it into something you can
+            read, trust and act on. We do it as one accountable team, not a
+            rotating cast of contacts, because trust is built through
+            continuity.
           </p>
         </div>
 
@@ -131,7 +131,7 @@ export default function AboutIntro() {
               Greystone Hyde
             </p>
             <p {...rise(1.1)} className="mt-3 font-mono text-[10px] tracking-[0.22em] text-navy/65 uppercase">
-              Accounting &amp; Advisory · London
+              Accounting &amp; Advisory · UK
             </p>
           </div>
         </motion.div>

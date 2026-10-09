@@ -12,7 +12,7 @@ const num = (i) => String(i + 1).padStart(2, "0");
 const rise = (delay) => ({ "data-intro": "", style: { "--d": `${delay}s`, "--rise": "20px" } });
 
 // Questions the search box "types" to itself while it is empty and unfocused
-const HINTS = ["How do I switch accountants?", "How are your fees set?", "Who will I deal with?", "Which software do you use?"];
+const HINTS = ["How do I get started?", "How much will it cost?", "Will I deal with the same person?", "Which software do you use?"];
 
 // The self-typing hint. Its own component, so the timer re-renders these few
 // characters and nothing else on the page.

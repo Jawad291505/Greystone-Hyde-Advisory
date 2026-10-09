@@ -92,8 +92,11 @@ const SWAP_MS = 1100;
 // Row heights: a closed row shows each card's icon, title and description;
 // the row holding the open card grows to reveal points, links and the panel.
 // Only one row is ever open, so the section's overall height never changes.
-const ROW_CLOSED = "17rem";
-const ROW_OPEN = "38rem";
+// Both heights are measured from the cards' own content (see the sizer in
+// the grid), so they stay exactly as tall as the copy needs at any width;
+// these are only the values used until the first measurement lands.
+const ROW_CLOSED = "var(--row-closed, 12.5rem)";
+const ROW_OPEN = "var(--row-open, 30rem)";
 
 const list = { show: { transition: { staggerChildren: 0.1 } } };
 const cardIn = {
@@ -177,8 +180,51 @@ function Actions({ g, s }) {
     );
 }
 
+// Desktop card heading: icon beside the number and title, description below.
+function Head({ g, i, id }) {
+    return (
+        <>
+            <div className="flex items-start gap-4">
+                <LineIcon name={g.icon} className="h-10 w-10" />
+                <div className="min-w-0 flex-1">
+                    <span className="block font-mono text-[10px] tracking-[0.18em] text-navy/40">{num(i)}</span>
+                    <h3 id={id} className="mt-1 font-display text-[1.5rem] leading-[1.08] tracking-tight text-ink">
+                        {g.name}
+                    </h3>
+                </div>
+            </div>
+            <p className="mt-3 text-sm leading-relaxed text-navy/75">{g.desc}</p>
+        </>
+    );
+}
+
+// What a desktop card reveals when its row opens.
+function Details({ g, s }) {
+    return (
+        <>
+            <Points g={g} />
+            <Lead g={g} />
+            <div className="mt-4">
+                <Actions g={g} s={s} />
+            </div>
+        </>
+    );
+}
+
+// The open desktop card's second column: service tabs above the report panel.
+function Report({ g, s, setSub, reduce }) {
+    return (
+        <>
+            <SubTabs g={g} sub={s.slug} setSub={setSub} />
+            <div className={g.slugs.length > 1 ? "mt-4" : ""}>
+                <Panel slug={s.slug} reduce={reduce} dense />
+            </div>
+        </>
+    );
+}
+
 // The report panel for the service in focus, cross-fading when it changes.
-function Panel({ slug, reduce }) {
+function Panel({ slug, reduce, dense }) {
     return (
         <AnimatePresence mode="wait" initial={false}>
             <motion.div
@@ -189,9 +235,43 @@ function Panel({ slug, reduce }) {
                 transition={{ duration: 0.5, ease }}
                 className="w-full overflow-hidden rounded-inner"
             >
-                <ServiceIllustration slug={slug} />
+                <ServiceIllustration slug={slug} dense={dense} />
             </motion.div>
         </AnimatePresence>
+    );
+}
+
+const noop = () => {};
+
+// Invisible copies of the desktop cards in both of their layouts, used only
+// to measure how tall a row has to be: every card's full copy one track wide
+// (plus a report panel) for the open row, and every heading a third wide for
+// a closed row. Each strip is as tall as its tallest card.
+function Sizer({ reduce }) {
+    const g0 = GROUPS.find((g) => g.slugs.length > 1) ?? GROUPS[0];
+    return (
+        <div aria-hidden inert className="pointer-events-none invisible absolute inset-x-0 top-0 h-0 overflow-hidden">
+            <div data-size="open" className="flex items-start">
+                {GROUPS.map((g, i) => (
+                    <div key={g.name} className="shrink-0 p-6" style={{ width: TRACK }}>
+                        <Head g={g} i={i} />
+                        <div className="pt-5">
+                            <Details g={g} s={bySlug[g.slugs[0]]} />
+                        </div>
+                    </div>
+                ))}
+                <div className="shrink-0 py-6 pr-6" style={{ width: TRACK }}>
+                    <Report g={g0} s={bySlug[g0.slugs[0]]} setSub={noop} reduce={reduce} />
+                </div>
+            </div>
+            <div data-size="closed" className="flex items-start">
+                {GROUPS.map((g, i) => (
+                    <div key={g.name} className="shrink-0 p-6" style={{ width: THIRD }}>
+                        <Head g={g} i={i} />
+                    </div>
+                ))}
+            </div>
+        </div>
     );
 }
 
@@ -232,6 +312,22 @@ export default function ServicesGrid() {
     }, [activeRow, reduce]);
 
     useEffect(() => () => clearTimeout(timer.current), []);
+
+    // Row heights follow the sizer, so they track the content through font
+    // loading, resizes and copy changes instead of being tuned by hand.
+    const grid = useRef(null);
+    useEffect(() => {
+        const el = grid.current;
+        if (!el) return;
+        const ro = new ResizeObserver((entries) => {
+            for (const e of entries) {
+                const h = Math.ceil(e.target.getBoundingClientRect().height);
+                if (h) el.style.setProperty(`--row-${e.target.dataset.size}`, `${h}px`);
+            }
+        });
+        el.querySelectorAll("[data-size]").forEach((n) => ro.observe(n));
+        return () => ro.disconnect();
+    }, []);
 
     const subOf = (i) => subs[i] ?? GROUPS[i].slugs[0];
     const setSubOf = (i) => (slug) => setSubs((s) => ({ ...s, [i]: slug }));
@@ -297,12 +393,14 @@ export default function ServicesGrid() {
                 </div>
 
                 {/* Desktop: two rows of three, one open card across both */}
+                <div ref={grid} className="@container relative mt-14 hidden xl:block">
+                <Sizer reduce={reduce} />
                 <motion.div
                     variants={list}
                     initial={reduce ? false : "hidden"}
                     whileInView="show"
                     viewport={{ once: true, margin: "-10%" }}
-                    className="@container mt-14 hidden flex-col xl:flex"
+                    className="flex flex-col"
                     style={{ gap: GAP }}
                 >
                     {ROWS.map((row, r) => (
@@ -338,40 +436,23 @@ export default function ServicesGrid() {
                                         />
                                         <div className="flex h-full">
                                             {/* Copy: one track wide in the open row, a third otherwise */}
-                                            <div className="flex h-full shrink-0 flex-col p-7" style={{ width: narrow[r] ? TRACK : THIRD }}>
-                                                <div className="flex items-start justify-between">
-                                                    <LineIcon name={g.icon} className="h-11 w-11" />
-                                                    <span className="font-mono text-[11px] text-navy/40">{num(i)}</span>
-                                                </div>
-                                                <h3
-                                                    id={`${uid}-t-${i}`}
-                                                    className={`mt-6 font-display text-[1.6rem] leading-[1.08] tracking-tight text-ink ${narrow[r] ? "min-h-[2.16em]" : ""}`}
-                                                >
-                                                    {g.name}
-                                                </h3>
-                                                <p className="mt-3 text-sm leading-relaxed text-navy/75">{g.desc}</p>
+                                            <div className="flex h-full shrink-0 flex-col p-6" style={{ width: narrow[r] ? TRACK : THIRD }}>
+                                                <Head g={g} i={i} id={`${uid}-t-${i}`} />
                                                 <div
                                                     inert={r !== activeRow}
                                                     className={`mt-auto pt-5 transition-opacity ${r === activeRow ? "opacity-100 delay-500 duration-700" : "opacity-0 duration-300"}`}
                                                 >
-                                                    <Points g={g} />
-                                                    <Lead g={g} />
-                                                    <div className="mt-5">
-                                                        <Actions g={g} s={s} />
-                                                    </div>
+                                                    <Details g={g} s={s} />
                                                 </div>
                                             </div>
 
                                             {/* Report panel: revealed as the card opens */}
                                             <div
                                                 inert={!on}
-                                                className={`flex h-full shrink-0 flex-col justify-center py-7 pr-7 transition-opacity ${on ? "opacity-100 delay-300 duration-700" : "opacity-0 duration-300"}`}
+                                                className={`flex h-full shrink-0 flex-col justify-center py-6 pr-6 transition-opacity ${on ? "opacity-100 delay-300 duration-700" : "opacity-0 duration-300"}`}
                                                 style={{ width: TRACK }}
                                             >
-                                                <SubTabs g={g} sub={s.slug} setSub={setSubOf(i)} />
-                                                <div className={g.slugs.length > 1 ? "mt-4" : ""}>
-                                                    <Panel slug={s.slug} reduce={reduce} />
-                                                </div>
+                                                <Report g={g} s={s} setSub={setSubOf(i)} reduce={reduce} />
                                             </div>
                                         </div>
                                     </motion.article>
@@ -380,6 +461,7 @@ export default function ServicesGrid() {
                         </div>
                     ))}
                 </motion.div>
+                </div>
 
                 {/* Below desktop: stacked cards, the first open, one open at a time */}
                 <motion.ul
