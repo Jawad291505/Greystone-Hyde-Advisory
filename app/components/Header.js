@@ -85,9 +85,8 @@ export default function Header() {
   // either side of the bar stay clickable, and the full-screen mobile nav (a
   // fixed child) is not trapped inside a filtered ancestor.
   //
-  // The frosted backdrop is for wide screens only. A backdrop blur on a fixed
-  // bar is re-rendered on every scrolled frame, which phones pay for in
-  // dropped frames, so there the bar is simply near-opaque.
+  // No frosted backdrop: a backdrop blur on a fixed bar is re-rendered on
+  // every scrolled frame, and behind a near-opaque bar it barely showed.
   return (
     <header className="pointer-events-none fixed inset-x-0 top-0 z-50 px-3 pt-3 text-ink sm:px-5 sm:pt-4">
       <div
@@ -95,8 +94,8 @@ export default function Header() {
           open
             ? "border-navy/10 bg-white shadow-none"
             : scrolled
-              ? "border-navy/15 bg-white/[0.97] shadow-[0_22px_44px_-22px_color-mix(in_srgb,var(--ink)_55%,transparent)] lg:bg-white/95 lg:backdrop-blur-md"
-              : "border-navy/10 bg-white/95 shadow-[0_16px_36px_-24px_color-mix(in_srgb,var(--ink)_40%,transparent)] lg:bg-white/85 lg:backdrop-blur-md"
+              ? "border-navy/15 bg-white/[0.97] shadow-[0_22px_44px_-22px_color-mix(in_srgb,var(--ink)_55%,transparent)]"
+              : "border-navy/10 bg-white/95 shadow-[0_16px_36px_-24px_color-mix(in_srgb,var(--ink)_40%,transparent)]"
         }`}
       >
         <Link href="/" className="-my-2 flex items-center gap-3 py-2">

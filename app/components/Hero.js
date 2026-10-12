@@ -147,7 +147,7 @@ export default function Hero() {
     >
       {/* --t/--r/--b/--l (set by .hero-stage) are the photograph's resting
           frame, as insets of this stage */}
-      <div className="hero-stage relative isolate lg:h-svh lg:overflow-hidden">
+      <div className="hero-stage relative isolate pb-6 sm:pb-10 lg:h-svh lg:overflow-hidden lg:pb-0">
         <LedgerRules />
 
         {/* Headline and copy, on paper */}
@@ -196,7 +196,7 @@ export default function Hero() {
         {/* Metadata: facts about where the practice is, no claims */}
         <div className="absolute inset-x-0 bottom-0 hidden lg:block">
           <div {...intro(1.25)} className={`${CONTAINER} pb-[4svh]`}>
-            <dl className="flex w-[min(30rem,32%)] gap-10 border-t border-navy/15 pt-4 font-mono text-[11px] tracking-[0.16em] text-navy/70 uppercase">
+            <dl className="flex w-[min(30rem,36%)] gap-x-6 whitespace-nowrap xl:gap-x-10 border-t border-navy/15 pt-4 font-mono text-[11px] tracking-[0.16em] text-navy/70 uppercase">
               <div>
                 <dt className="sr-only">Practice</dt>
                 <dd>London</dd>
@@ -228,7 +228,7 @@ export default function Hero() {
           className="hi-photo pointer-events-none absolute hidden rounded-panel shadow-[0_45px_80px_-45px_color-mix(in_srgb,var(--navy)_75%,transparent),0_18px_36px_-24px_color-mix(in_srgb,var(--ink)_45%,transparent)] lg:block"
         />
 
-        <figure className="hi-frame relative m-0 aspect-[3/2] sm:aspect-[16/9] lg:absolute lg:inset-0 lg:aspect-auto">
+        <figure className="hi-frame relative m-0 aspect-[16/10] lg:absolute lg:inset-0 lg:aspect-auto">
           <div className="hi-photo absolute overflow-hidden bg-navy">
             {/* Served as supplied: the file is small, and re-encoding it at a
                 narrower width would only soften it further */}
@@ -238,8 +238,8 @@ export default function Hero() {
               fill
               preload
               unoptimized
-              sizes="(min-width: 1024px) 70vw, 130vw"
-              className="hi-settle object-cover object-[80%_50%] [filter:saturate(0.82)_contrast(1.08)]"
+              sizes="(min-width: 1024px) 50vw, 100vw"
+              className="hi-settle object-cover object-center [filter:saturate(0.82)_contrast(1.08)]"
             />
             {/* House grade, so the busy skyline reads as one calm picture: the
                 colours are pulled towards navy, the corners fall away, and the
@@ -256,7 +256,7 @@ export default function Hero() {
 
           <figcaption
             {...intro(1.15)}
-            className="absolute right-9 bottom-4 flex items-center gap-2 font-mono text-[10px] tracking-[0.18em] text-paper/75 uppercase sm:right-14 lg:right-[calc(var(--r)_+_1.75rem)] lg:bottom-[calc(var(--b)_+_1.1rem)]"
+            className="absolute right-9 bottom-4 flex items-center gap-2 font-mono text-[9px] tracking-[0.14em] sm:text-[10px] sm:tracking-[0.18em] text-paper/75 uppercase sm:right-14 lg:right-[calc(var(--r)_+_1.75rem)] lg:bottom-[calc(var(--b)_+_1.1rem)]"
           >
             <span className="h-px w-4 bg-paper/40" />
             Clear numbers, considered advice

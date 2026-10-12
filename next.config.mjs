@@ -1,9 +1,10 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    // AVIF where the browser takes it (about a fifth smaller than WebP for
-    // these photographs), WebP otherwise.
-    formats: ["image/avif", "image/webp"],
+    // WebP only. AVIF is about a fifth smaller, but encoding it takes
+    // seconds per size, so whoever first asks for a photo at a new width
+    // waited that long for it to appear.
+    formats: ["image/webp"],
     // The photographs never change under the same file name
     minimumCacheTTL: 60 * 60 * 24 * 30,
   },

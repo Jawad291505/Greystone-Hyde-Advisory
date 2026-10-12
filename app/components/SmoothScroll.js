@@ -21,7 +21,8 @@ export default function SmoothScroll() {
       async () => {
         const { default: Lenis } = await import("lenis");
         if (cancelled) return;
-        lenis = new Lenis({ lerp: 0.085, anchors: true, autoRaf: true });
+        // Much below 0.1 the page trails the wheel enough to read as lag
+        lenis = new Lenis({ lerp: 0.12, anchors: true, autoRaf: true });
       },
       { timeout: 1200 },
     );

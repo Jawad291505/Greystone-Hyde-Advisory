@@ -4,6 +4,7 @@ import Image from "next/image";
 import { useRef, useState } from "react";
 import { motion, useReducedMotion, useScroll, useSpring, useTransform } from "framer-motion";
 import CubeCssStage from "./CubeCssStage";
+import deskDocuments from "../../public/images/desk-documents.webp";
 import { useScrollProgress } from "../lib/useScrollProgress";
 
 const ease = [0.22, 1, 0.36, 1];
@@ -117,7 +118,10 @@ export default function Positioning() {
                         <div ref={imageRef} className="relative aspect-[4/3] overflow-hidden rounded-panel bg-mist">
                             <motion.div style={{ y: imageY }} className="absolute -inset-y-[10%] inset-x-0">
                                 <Image
-                                    src="/images/desk-documents.jpg"
+                                    src={deskDocuments}
+                                    // A blurred preview from the build shows at once, so the
+                                    // frame is never an empty panel while the photo arrives
+                                    placeholder="blur"
                                     alt="Financial documents, a laptop and notes spread across a desk during a review"
                                     fill
                                     sizes="(min-width: 1024px) 45vw, 100vw"

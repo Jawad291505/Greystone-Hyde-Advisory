@@ -344,13 +344,26 @@ export default function ServicesGrid() {
         window.addEventListener("scroll", onScroll, { passive: true });
         return () => window.removeEventListener("scroll", onScroll);
     }, []);
+    // Real pointer movement retries, so a hover that lands while the smooth
+    // scroll is still settling opens the card a moment later rather than
+    // needing the pointer to leave and come back.
+    const pending = useRef(-1);
     const hover = (i) => {
+        if (i === open || pending.current === i) return;
         clearTimeout(timer.current);
+        pending.current = i;
         timer.current = setTimeout(() => {
+            pending.current = -1;
             if (performance.now() - lastScroll.current > 150) setOpen(i);
         }, 200);
     };
-    const cancel = () => clearTimeout(timer.current);
+    const moved = (i) => (e) => {
+        if (e.movementX || e.movementY) hover(i);
+    };
+    const cancel = () => {
+        clearTimeout(timer.current);
+        pending.current = -1;
+    };
 
     // Stacked cards: the card above folds away as this one opens, which can
     // carry its heading off the top of the screen, so bring it back into view.
@@ -423,6 +436,8 @@ export default function ServicesGrid() {
                                         key={g.name}
                                         variants={cardIn}
                                         onMouseEnter={() => hover(i)}
+                                        onMouseMove={moved(i)}
+                                        onMouseLeave={cancel}
                                         onFocusCapture={() => setOpen(i)}
                                         aria-labelledby={`${uid}-t-${i}`}
                                         className={`relative h-full overflow-hidden rounded-card border transition-[background-color,border-color,box-shadow] duration-700 ${on
