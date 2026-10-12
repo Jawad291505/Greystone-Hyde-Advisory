@@ -161,6 +161,20 @@ export default function Footer() {
                             </span>
                         </a>
                     </div>
+
+                    {/* Site credit */}
+                    <p className="mt-4 text-xs text-white/40 lg:mt-6 lg:text-center">
+                        Powered by{" "}
+                        <a
+                            href="https://www.diversifydigitalglobal.online/"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className={`${link} inline-block py-2.5 lg:py-1`}
+                        >
+                            Diversify Digital
+                            <span className="sr-only"> (opens in a new tab)</span>
+                        </a>
+                    </p>
                 </div>
             </footer>
         </div>
