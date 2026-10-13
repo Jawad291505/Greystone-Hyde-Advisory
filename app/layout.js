@@ -11,12 +11,11 @@ const geistSans = Geist({
   subsets: ["latin"],
 });
 
-// Small labels and captions only, none of them in the first paint's critical
-// path: fetched when first used rather than preloaded ahead of the hero.
+// Small labels and captions, but the preloader sets its captions and count in
+// it from the first frame: preloaded, so they don't swap face mid-animation.
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
-  preload: false,
 });
 
 const display = Instrument_Serif({
@@ -35,7 +34,7 @@ const editorial = Newsreader({
 });
 
 export const metadata = {
-  title: "Bookkeeping & Accounting Services in London | Greystone Hyde",
+  title: "Greystone Hyde | Bookkeeping & Accounting Services in London",
   description:
     "Bookkeeping and accounting for UK businesses: year-end accounts, tax and VAT, payroll, management reporting and advisory from one dedicated London team.",
 };

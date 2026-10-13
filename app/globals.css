@@ -391,14 +391,31 @@ html[data-nav] {
    A one-second curtain on a full page load: the ledger rules draw, the
    wordmark rises, a rule fills and is closed off with a second, then the
    panel lifts. A fixed CSS timeline, so it never waits on scripts, fonts or
-   images, and never holds the page back. Never shown under reduced motion. */
+   images, and never holds the page back. Never shown under reduced motion.
+
+   It plays while the page is hydrating, so every moving part has to run on
+   the compositor, off the busy main thread. That means transform and opacity
+   only, and never two animations of the same property on one element (the
+   browser falls back to the main thread for those): an entrance and an exit
+   share one set of keyframes instead. */
 #preloader {
-  animation: pl-lift 0.85s cubic-bezier(0.7, 0.05, 0.13, 1) var(--intro-delay) forwards;
+  /* Hiding is its own animation: a keyframe that mixes visibility with the
+     transform can't run on the compositor either */
+  animation:
+    pl-lift 0.85s cubic-bezier(0.65, 0, 0.35, 1) var(--intro-delay) forwards,
+    pl-hide 0s linear calc(var(--intro-delay) + 0.85s) forwards;
+  will-change: transform;
+  contain: strict;
 }
 
 @keyframes pl-lift {
   to {
     transform: translateY(-100%);
+  }
+}
+
+@keyframes pl-hide {
+  to {
     visibility: hidden;
   }
 }
@@ -414,19 +431,27 @@ html[data-nav] {
   }
 }
 
+/* Rises for 0.7s, rests, then leaves over 0.6s as the panel lifts */
 .pl-word {
-  animation:
-    pl-word-in 0.6s cubic-bezier(0.22, 1, 0.36, 1) calc(0.05s + var(--i) * 0.07s) backwards,
-    pl-word-out 0.4s cubic-bezier(0.55, 0, 0.9, 0.3) calc(0.76s + var(--i) * 0.04s) forwards;
+  animation: pl-word 1.4s linear calc(0.05s + var(--i) * 0.07s) both;
+  will-change: transform;
 }
 
-@keyframes pl-word-in {
+@keyframes pl-word {
   from {
     transform: translateY(110%);
+    animation-timing-function: cubic-bezier(0.25, 1, 0.5, 1);
   }
-}
 
-@keyframes pl-word-out {
+  50% {
+    transform: translateY(0);
+  }
+
+  57% {
+    transform: translateY(0);
+    animation-timing-function: cubic-bezier(0.65, 0, 0.35, 1);
+  }
+
   to {
     transform: translateY(-110%);
   }
@@ -448,10 +473,29 @@ html[data-nav] {
   }
 }
 
+/* Fades in over 0.5s, holds, and is gone by 1.2s */
 .pl-fade {
-  animation:
-    pl-fade-in 0.4s ease-out 0.15s backwards,
-    pl-fade-out 0.25s ease-out 0.72s forwards;
+  animation: pl-fade 1.05s linear 0.15s both;
+}
+
+@keyframes pl-fade {
+  from {
+    opacity: 0;
+    animation-timing-function: ease-out;
+  }
+
+  48% {
+    opacity: 1;
+  }
+
+  60% {
+    opacity: 1;
+    animation-timing-function: ease-in-out;
+  }
+
+  to {
+    opacity: 0;
+  }
 }
 
 @keyframes pl-fade-in {
@@ -466,42 +510,29 @@ html[data-nav] {
   }
 }
 
-/* The count: an integer custom property animated 0 → 100 and printed through
-   a counter, so the figures tick without a script. Browsers without
-   @property simply show the total. */
-@property --pl-n {
-  syntax: "<integer>";
-  initial-value: 100;
-  inherits: false;
-}
-
-@counter-style pl-pad {
-  system: extends decimal;
-  pad: 3 "0";
-}
-
+/* The count: a column of figures (COUNT in Preloader.js) stepped past a
+   one-line window, so it ticks on the compositor rather than re-laying out
+   text each frame. It rests on the last figure; the steps are one fewer than
+   the figures. */
 .pl-count {
-  counter-reset: pl var(--pl-n);
-  animation: pl-count 0.55s cubic-bezier(0.16, 1, 0.3, 1) 0.1s backwards;
-}
-
-.pl-count::after {
-  content: counter(pl, pl-pad);
+  transform: translateY(calc(-100% * 14 / 15));
+  animation: pl-count 0.55s steps(14) 0.1s backwards;
+  will-change: transform;
 }
 
 @keyframes pl-count {
   from {
-    --pl-n: 0;
+    transform: translateY(0);
   }
 }
 
 /* "Reconciling" gives way to "Balanced" as the second rule closes */
 .pl-label-a {
-  animation: pl-fade-out 0.01s linear 0.6s forwards;
+  animation: pl-fade-out 0.2s ease-in-out 0.5s forwards;
 }
 
 .pl-label-b {
-  animation: pl-fade-in 0.01s linear 0.6s backwards;
+  animation: pl-fade-in 0.2s ease-in-out 0.5s backwards;
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -7,10 +7,14 @@ const ADDRESS_QUERY = encodeURIComponent("4-6 Greatorex St, London E1 5NF, Unite
 const MAP_SRC = `https://www.google.com/maps?q=${ADDRESS_QUERY}&z=16&output=embed`;
 const DIRECTIONS = `https://www.google.com/maps/dir/?api=1&destination=${ADDRESS_QUERY}`;
 
-// Placeholder contact details, shared with the contact section — replace
-// with the firm's real ones.
-const EMAIL = "hello@greystonehyde.co.uk";
-const PHONE = { label: "+44 (0)20 0000 0000", href: "tel:+442000000000" };
+const EMAIL = "info@greystonehyde.co.uk";
+
+// Both numbers open a WhatsApp chat, as the header's does (wa.me takes the
+// full international number, digits only).
+const WHATSAPP = [
+    { label: "+44 7453 592896", href: "https://wa.me/447453592896" },
+    { label: "+44 7424 395949", href: "https://wa.me/447424395949" },
+];
 
 // PLACEHOLDER profile URLs — replace with the firm's real pages before launch.
 const SOCIAL = [
@@ -34,6 +38,13 @@ function SocialIcon({ name }) {
         return (
             <svg viewBox="0 0 24 24" className="h-3.5 w-3.5" fill="currentColor" aria-hidden>
                 <path d="M6.94 8.75H3.56V20h3.38V8.75zM5.25 3.5a1.96 1.96 0 1 0 0 3.92 1.96 1.96 0 0 0 0-3.92zM20.44 13.55c0-3.03-1.62-4.44-3.78-4.44-1.74 0-2.52.96-2.96 1.63V8.75h-3.38c.04.95 0 11.25 0 11.25h3.38v-6.28c0-.34.02-.67.12-.91.27-.67.88-1.37 1.91-1.37 1.35 0 1.89 1.03 1.89 2.53V20h3.38l-.56-6.45z" />
+            </svg>
+        );
+    if (name === "email")
+        return (
+            <svg viewBox="0 0 24 24" className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+                <rect x="3" y="5" width="18" height="14" rx="2.5" />
+                <path d="m3.8 7.2 8.2 6 8.2-6" />
             </svg>
         );
     if (name === "instagram")
@@ -94,6 +105,15 @@ export default function Footer() {
                                         </a>
                                     </li>
                                 ))}
+                                <li>
+                                    <a
+                                        href={`mailto:${EMAIL}`}
+                                        aria-label={`Email Greystone Hyde at ${EMAIL}`}
+                                        className="grid h-11 w-11 place-items-center rounded-full border border-white/15 text-white/75 transition-colors duration-300 hover:border-white hover:bg-white hover:text-navy focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white"
+                                    >
+                                        <SocialIcon name="email" />
+                                    </a>
+                                </li>
                             </ul>
                         </div>
 
@@ -106,11 +126,19 @@ export default function Footer() {
                                         {EMAIL}
                                     </a>
                                 </li>
-                                <li>
-                                    <a href={PHONE.href} className={`${link} inline-block max-lg:py-1.5`}>
-                                        {PHONE.label}
-                                    </a>
-                                </li>
+                                {WHATSAPP.map((w) => (
+                                    <li key={w.href}>
+                                        <a
+                                            href={w.href}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            aria-label={`Message us on WhatsApp: ${w.label}`}
+                                            className={`${link} inline-block tabular-nums max-lg:py-1.5`}
+                                        >
+                                            {w.label}
+                                        </a>
+                                    </li>
+                                ))}
                                 <li className="text-white/75">
                                     <address className="not-italic">{ADDRESS}</address>
                                     <a

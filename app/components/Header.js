@@ -15,10 +15,10 @@ const links = [
   { href: "/faqs", label: "FAQs" },
 ];
 
-// PLACEHOLDER NUMBER, as in the footer and contact section — replace with
-// the practice's WhatsApp number. The link opens a WhatsApp chat (wa.me takes
-// the full international number, digits only), not a phone call.
-const WHATSAPP = { label: "+44 20 0000 0000", href: "https://wa.me/442000000000" };
+// The practice's main WhatsApp number (the footer lists both). The link opens
+// a WhatsApp chat (wa.me takes the full international number, digits only),
+// not a phone call.
+const WHATSAPP = { label: "+44 7453 592896", href: "https://wa.me/447453592896" };
 
 // A plain line-drawn handset, in the weight of the site's other line icons.
 // It shakes briefly every few seconds, as a phone ringing (.phone-ring in

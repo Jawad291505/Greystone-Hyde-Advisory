@@ -1,5 +1,9 @@
 const WORDS = ["Greystone", "Hyde"];
 
+// The figures the count ticks through, slowing towards the total. Fifteen of
+// them: .pl-count in globals.css steps through exactly this many.
+const COUNT = ["000", "014", "027", "039", "050", "060", "069", "077", "084", "089", "093", "096", "098", "099", "100"];
+
 // Every full page load: a paper panel where the ledger rules draw, the
 // wordmark rises and a rule fills. A second rule closes it off (an
 // accountant's double rule under a balanced total), then the panel lifts and
@@ -64,7 +68,15 @@ export default function Preloader() {
             <span className="pl-label-a">Reconciling</span>
             <span className="pl-label-b">Balanced</span>
           </span>
-          <span className="pl-count text-ink" />
+          <span className="block h-[1.5em] overflow-hidden leading-[1.5] text-ink">
+            <span className="pl-count block">
+              {COUNT.map((n) => (
+                <span key={n} className="block h-[1.5em]">
+                  {n}
+                </span>
+              ))}
+            </span>
+          </span>
         </span>
       </div>
     </div>

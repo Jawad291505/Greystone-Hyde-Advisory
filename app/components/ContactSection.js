@@ -4,12 +4,27 @@ import { useActionState } from "react";
 import { sendEnquiry } from "../actions/contact";
 import { SERVICES } from "../lib/services";
 
-// Placeholder contact details — replace with the firm's real ones.
+// The same details as the footer's. Both numbers open a WhatsApp chat (wa.me
+// takes the full international number, digits only), not a phone call. `tip`
+// is the note shown while a link is pointed at or focused, as on the header's
+// number.
 const details = [
-  { label: "Email", value: "hello@greystonehyde.co.uk", href: "mailto:hello@greystonehyde.co.uk" },
-  { label: "Phone", value: "+44 (0)20 0000 0000", href: "tel:+442000000000" },
-  { label: "Office", value: "4–6 Greatorex St, London E1 5NF" },
-  { label: "Hours", value: "Mon – Fri, 9:00 – 17:30" },
+  {
+    label: "Email",
+    below: true,
+    tip: "Email us and a qualified accountant will reply within one working day.",
+    items: [{ value: "info@greystonehyde.co.uk", href: "mailto:info@greystonehyde.co.uk" }],
+  },
+  {
+    label: "WhatsApp",
+    tip: "Message us on WhatsApp to arrange your free consultation.",
+    items: [
+      { value: "+44 7453 592896", href: "https://wa.me/447453592896", external: true },
+      { value: "+44 7424 395949", href: "https://wa.me/447424395949", external: true },
+    ],
+  },
+  { label: "Office", items: [{ value: "4–6 Greatorex St, London E1 5NF" }] },
+  { label: "Hours", items: [{ value: "Mon – Fri, 9:00 – 17:30" }] },
 ];
 
 const inputClass =
@@ -67,15 +82,36 @@ export default function ContactSection() {
               {details.map((d) => (
                 <div key={d.label} className="border-b border-navy/10 py-4 sm:odd:pr-6">
                   <dt className="font-mono text-[10px] tracking-[0.18em] text-navy/50 uppercase">{d.label}</dt>
-                  <dd className="mt-1.5 text-[15px] text-ink">
-                    {d.href ? (
-                      <a href={d.href} className="transition-colors duration-300 hover:text-royal">
-                        {d.value}
-                      </a>
-                    ) : (
-                      d.value
-                    )}
-                  </dd>
+                  {d.items.map((item, i) => (
+                    <dd key={item.value} className="mt-1.5 text-[15px] text-ink tabular-nums">
+                      {item.href ? (
+                        <a
+                          href={item.href}
+                          aria-describedby={`contact-tip-${d.label}-${i}`}
+                          {...(item.external && {
+                            target: "_blank",
+                            rel: "noopener noreferrer",
+                            "aria-label": `Message us on WhatsApp: ${item.value}`,
+                          })}
+                          className="group relative inline-block transition-colors duration-300 hover:text-royal focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-royal"
+                        >
+                          {item.value}
+                          {/* The numbers' notes open above, so one never covers the
+                              number below it; the email's opens below */}
+                          <span
+                            id={`contact-tip-${d.label}-${i}`}
+                            role="tooltip"
+                            className={`${d.below ? "top-full mt-3 translate-y-1" : "bottom-full mb-3 -translate-y-1"} pointer-events-none invisible absolute left-0 z-10 w-60 rounded-inner bg-navy px-4 py-3 text-[13px] leading-snug font-normal tracking-normal whitespace-normal text-white opacity-0 shadow-[0_22px_44px_-22px_color-mix(in_srgb,var(--ink)_70%,transparent)] transition-[opacity,translate,visibility] duration-300 group-hover:visible group-hover:translate-y-0 group-hover:opacity-100 group-focus-visible:visible group-focus-visible:translate-y-0 group-focus-visible:opacity-100`}
+                          >
+                            <span aria-hidden className={`${d.below ? "-top-1" : "-bottom-1"} absolute left-6 h-2.5 w-2.5 rotate-45 bg-navy`} />
+                            {d.tip}
+                          </span>
+                        </a>
+                      ) : (
+                        item.value
+                      )}
+                    </dd>
+                  ))}
                 </div>
               ))}
             </dl>

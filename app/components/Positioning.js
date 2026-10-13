@@ -58,7 +58,6 @@ function useCubeProgress(ref) {
 
 export default function Positioning() {
     const statementRef = useRef(null);
-    const imageRef = useRef(null);
     const cubeCol = useRef(null);
     const reduce = useReducedMotion();
     const words = STATEMENT.split(" ");
@@ -69,9 +68,6 @@ export default function Positioning() {
         offset: ["start 0.85", "end 0.45"],
     });
     const progress = useSpring(statementP, { stiffness: 120, damping: 28, mass: 0.5 });
-
-    const { scrollYProgress: imageP } = useScroll({ target: imageRef, offset: ["start end", "end start"] });
-    const imageY = useTransform(imageP, [0, 1], reduce ? ["0%", "0%"] : ["-8%", "8%"]);
 
     return (
         <section id="approach" aria-labelledby="approach-title" className="relative scroll-mt-20 bg-paper text-ink">
@@ -108,32 +104,26 @@ export default function Positioning() {
                         business.
                     </p>
 
-                    <motion.figure
-                        initial={reduce ? false : { clipPath: "inset(0% 0% 100% 0%)" }}
-                        whileInView={{ clipPath: "inset(0% 0% 0% 0%)" }}
-                        viewport={{ once: true, margin: "-8%" }}
-                        transition={{ duration: 1.4, ease }}
-                        className="mt-12 lg:mt-14"
-                    >
-                        <div ref={imageRef} className="relative aspect-[4/3] overflow-hidden rounded-panel bg-mist">
-                            <motion.div style={{ y: imageY }} className="absolute -inset-y-[10%] inset-x-0">
-                                <Image
-                                    src={deskDocuments}
-                                    // A blurred preview from the build shows at once, so the
-                                    // frame is never an empty panel while the photo arrives
-                                    placeholder="blur"
-                                    alt="Financial documents, a laptop and notes spread across a desk during a review"
-                                    fill
-                                    sizes="(min-width: 1024px) 45vw, 100vw"
-                                    className="object-cover"
-                                />
-                            </motion.div>
+                    {/* Shown plainly, with no reveal or parallax: the scroll-triggered
+                        unveil sometimes never fired and left the frame empty */}
+                    <figure className="mt-12 lg:mt-14">
+                        <div className="relative aspect-[4/3] overflow-hidden rounded-panel bg-mist">
+                            <Image
+                                src={deskDocuments}
+                                // A blurred preview from the build shows at once, so the
+                                // frame is never an empty panel while the photo arrives
+                                placeholder="blur"
+                                alt="Financial documents, a laptop and notes spread across a desk during a review"
+                                fill
+                                sizes="(min-width: 1024px) 45vw, 100vw"
+                                className="object-cover"
+                            />
                         </div>
                         <figcaption className="mt-3 flex items-center gap-2 font-mono text-[10px] tracking-[0.18em] text-navy/50 uppercase">
                             <span className="h-px w-4 bg-royal/50" />
                             Behind every report, a review
                         </figcaption>
-                    </motion.figure>
+                    </figure>
 
                     <p className="mt-12 max-w-md text-base leading-relaxed text-navy/75">
                         Good accounting is less about software and more about judgement.
