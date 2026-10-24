@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "./ThemeLink";
 import OfficeMap from "./OfficeMap";
+import CookieSettingsButton from "./CookieSettingsButton";
 
 // The registered office, set on two lines. The map and directions search for
 // the building without the suite, which Google Maps doesn't know.
@@ -34,6 +35,7 @@ const LINKS = [
     { label: "FAQs", href: "/faqs" },
     { label: "Contact", href: "/#contact" },
     { label: "Pay an invoice", href: "/services#payments" },
+    { label: "Privacy & cookies", href: "/privacy" },
 ];
 
 function SocialIcon({ name }) {
@@ -193,6 +195,9 @@ export default function Footer() {
                                         </Link>
                                     </li>
                                 ))}
+                                <li>
+                                    <CookieSettingsButton className={`${link} inline-block cursor-pointer py-2.5 lg:py-1`} />
+                                </li>
                             </ul>
                         </nav>
                         <a href="#" className="group -my-2.5 inline-flex items-center gap-1.5 self-start py-2.5 text-white/55 transition-colors hover:text-white lg:self-auto">
