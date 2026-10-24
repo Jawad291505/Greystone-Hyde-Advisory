@@ -27,13 +27,14 @@ const k = (v) => `£${Math.round(v / 1000)}k`;
 const m = (v) => `£${v.toFixed(1)}m`;
 const pct = (v) => `${v.toFixed(1)}%`;
 const n0 = (v) => `${Math.round(v)}`;
+const pct0 = (v) => `${Math.round(v)}%`;
 const MONTHS = ["A", "M", "J", "J", "A", "S", "O", "N", "D", "J", "F", "M"];
 
 export const PANELS = {
     accounting: {
         title: "Profit & loss",
         tag: "FY 2025/26",
-        kpi: { label: "Net profit", value: 181240, format: { prefix: "£" }, delta: "+12.4% on prior year" },
+        kpi: { label: "Net profit", value: 181000, format: { prefix: "£" }, delta: "+12.4% on prior year" },
         chart: {
             type: "line",
             area: true,
@@ -77,16 +78,19 @@ export const PANELS = {
     tax: {
         title: "Corporation tax",
         tag: "Computed",
-        kpi: { label: "Tax provision", value: 26375, format: { prefix: "£" }, delta: "After £14.5k of reliefs" },
+        // A worked computation: £120,000 profit less £14,500 of reliefs leaves
+        // £105,500 taxable, inside the marginal relief band (£50k–£250k), so
+        // 25% (£26,375) less marginal relief of 3/200 × (£250,000 − £105,500)
+        kpi: { label: "Corporation tax due", value: 24207.5, format: { prefix: "£", decimals: 2 }, delta: "After £2,167.50 marginal relief" },
         chart: {
             type: "bars",
-            x: ["Profit", "Reliefs", "Taxable", "Tax"],
+            x: ["Profit", "Reliefs", "Taxable", "Tax 25%", "Marginal", "Payable"],
             tick: k,
-            series: [{ values: [120000, 14500, 105500, 26375], bases: [0, 105500, 0, 0] }],
-            faint: [1],
-            highlight: 3,
+            series: [{ values: [120000, 14500, 105500, 26375, 2167.5, 24207.5], bases: [0, 105500, 0, 0, 24207.5, 0] }],
+            faint: [1, 4],
+            highlight: 5,
         },
-        rows: [["Taxable profit", "£120,000"], ["Reliefs", "−£14,500"], ["Rate", "25%"]],
+        rows: [["Taxable", "£105,500"], ["At 25%", "£26,375"], ["Marg. relief", "−£2,167.50"]],
     },
     payroll: {
         title: "Payroll run · March",
@@ -104,7 +108,7 @@ export const PANELS = {
     "financial-reporting": {
         title: "Revenue · year to date",
         tag: "Monthly pack",
-        kpi: { label: "YTD revenue", value: 1.24, format: { prefix: "£", suffix: "m", decimals: 2 }, delta: "+8.4% against budget" },
+        kpi: { label: "YTD revenue", value: 1.24, format: { prefix: "£", suffix: "m", decimals: 2 }, delta: "+8.8% against budget" },
         chart: {
             type: "line",
             area: true,
@@ -117,7 +121,7 @@ export const PANELS = {
             legend: ["Actual", "Budget"],
             note: { i: 10, label: "£121k" },
         },
-        rows: [["Actual", "£1.24m"], ["Budget", "£1.14m"], ["Variance", "+8.4%"]],
+        rows: [["Actual", "£1.24m"], ["Budget", "£1.14m"], ["Variance", "+8.8%"]],
     },
     "management-accounts": {
         title: "Management pack · March",
@@ -149,6 +153,35 @@ export const PANELS = {
             ],
         },
         rows: [["A · Hold", "£1.10m"], ["B · Expand", "£1.90m"], ["C · Restructure", "£1.45m"]],
+    },
+    "cloud-accounting": {
+        title: "Move to Xero",
+        tag: "Live",
+        kpi: { label: "Transactions auto-matched", value: 92, format: { suffix: "%" }, delta: "Up from 38% before the move" },
+        chart: {
+            type: "line",
+            x: ["Before", "M1", "M2", "M3", "M4", "M5", "M6"],
+            tick: pct0,
+            series: [{ values: [38, 61, 74, 83, 88, 90, 92], markers: true }],
+            note: { i: 6, label: "92%" },
+        },
+        rows: [["Platform", "Xero"], ["Bank feeds", "3 live"], ["Go-live", "4 weeks"]],
+    },
+    // A director paid a £12,570 salary (covered by the personal allowance)
+    // and £60,000 of dividends in 2025/26: £500 at 0%, the rest of the basic
+    // rate band (£37,200) at 8.75% and the remaining £22,300 at 33.75%
+    "self-assessment": {
+        title: "Self assessment · 2025/26",
+        tag: "Filed",
+        kpi: { label: "Income tax on dividends", value: 10781.25, format: { prefix: "£", decimals: 2 }, delta: "Salary set at the £12,570 personal allowance" },
+        chart: {
+            type: "bars",
+            x: ["Salary", "Div. 0%", "Div. 8.75%", "Div. 33.75%"],
+            tick: k,
+            series: [{ values: [12570, 500, 37200, 22300] }],
+            highlight: 3,
+        },
+        rows: [["Salary", "£12,570"], ["Dividends", "£60,000"], ["File by", "31 Jan 2027"]],
     },
     "tax-planning": {
         title: "Planning calendar",
@@ -391,7 +424,7 @@ export default function ServicePanel({ slug, dense = false }) {
                 <div className={`flex items-end justify-between gap-4 ${dense ? "mt-4" : "mt-5"}`}>
                     <div>
                         <p className="text-xs text-white/60">{p.kpi.label}</p>
-                        <p className="mt-1.5 font-display text-[2.25rem] leading-none tracking-tight">
+                        <p className={`mt-1.5 font-display leading-none tracking-tight ${dense ? "text-[1.85rem]" : "text-[2.25rem]"}`}>
                             <Kpi value={p.kpi.value} format={p.kpi.format} active={active} />
                         </p>
                     </div>
@@ -416,7 +449,7 @@ export default function ServicePanel({ slug, dense = false }) {
                     {p.rows.map(([label, value]) => (
                         <div key={label} className="min-w-0">
                             <dt className="truncate font-mono text-[10px] tracking-[0.1em] text-white/50 uppercase">{label}</dt>
-                            <dd className="mt-1 font-mono text-[13px] tabular-nums text-white/90">{value}</dd>
+                            <dd className={`mt-1 font-mono tabular-nums text-white/90 ${dense ? "text-[12px]" : "text-[13px]"}`}>{value}</dd>
                         </div>
                     ))}
                 </dl>

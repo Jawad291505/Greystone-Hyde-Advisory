@@ -2,7 +2,11 @@ import Image from "next/image";
 import Link from "./ThemeLink";
 import OfficeMap from "./OfficeMap";
 
-const ADDRESS = "4–6 Greatorex St, London E1 5NF";
+// The registered office, set on two lines. The map and directions search for
+// the building without the suite, which Google Maps doesn't know.
+const ADDRESS_LINES = ["Suite C220, 4–6 Greatorex Street", "London, England, E1 5NF"];
+const ADDRESS = ADDRESS_LINES.join(", ");
+const COMPANY_NO = "15520640";
 const ADDRESS_QUERY = encodeURIComponent("4-6 Greatorex St, London E1 5NF, United Kingdom");
 const MAP_SRC = `https://www.google.com/maps?q=${ADDRESS_QUERY}&z=16&output=embed`;
 const DIRECTIONS = `https://www.google.com/maps/dir/?api=1&destination=${ADDRESS_QUERY}`;
@@ -16,11 +20,10 @@ const WHATSAPP = [
     { label: "+44 7424 395949", href: "https://wa.me/447424395949" },
 ];
 
-// PLACEHOLDER profile URLs — replace with the firm's real pages before launch.
 const SOCIAL = [
-    { label: "LinkedIn", href: "#", icon: "linkedin" },
-    { label: "Instagram", href: "#", icon: "instagram" },
-    { label: "Facebook", href: "#", icon: "facebook" },
+    { label: "LinkedIn", href: "https://www.linkedin.com/company/greystone-hyde/", icon: "linkedin" },
+    { label: "Instagram", href: "https://www.instagram.com/greystonehyde/?hl=en", icon: "instagram" },
+    { label: "Facebook", href: "https://www.facebook.com/share/1CMRFDzsT9/?mibextid=wwXIfr", icon: "facebook" },
 ];
 
 const LINKS = [
@@ -98,7 +101,9 @@ export default function Footer() {
                                     <li key={s.label}>
                                         <a
                                             href={s.href}
-                                            aria-label={`Greystone Hyde on ${s.label}`}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            aria-label={`Greystone Hyde on ${s.label} (opens in a new tab)`}
                                             className="grid h-11 w-11 place-items-center rounded-full border border-white/15 text-white/75 transition-colors duration-300 hover:border-white hover:bg-white hover:text-navy focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white"
                                         >
                                             <SocialIcon name={s.icon} />
@@ -140,7 +145,11 @@ export default function Footer() {
                                     </li>
                                 ))}
                                 <li className="text-white/75">
-                                    <address className="not-italic">{ADDRESS}</address>
+                                    <address className="not-italic">
+                                        {ADDRESS_LINES[0]}
+                                        <br />
+                                        {ADDRESS_LINES[1]}
+                                    </address>
                                     <a
                                         href={DIRECTIONS}
                                         target="_blank"
@@ -170,7 +179,11 @@ export default function Footer() {
 
                     {/* One line: copyright, links, back to top */}
                     <div className="mt-14 flex flex-col gap-4 border-t border-white/10 pt-6 text-[13px] lg:flex-row lg:items-center lg:justify-between">
-                        <p className="text-white/45">© {year} Greystone Hyde Advisory</p>
+                        <p className="text-white/45">
+                            © {year} Greystone Hyde Advisory
+                            <span aria-hidden className="mx-2">·</span>
+                            <span className="whitespace-nowrap">Companies House No. {COMPANY_NO}</span>
+                        </p>
                         <nav aria-label="Footer">
                             <ul className="flex flex-wrap gap-x-6 max-lg:-my-2">
                                 {LINKS.map((l) => (

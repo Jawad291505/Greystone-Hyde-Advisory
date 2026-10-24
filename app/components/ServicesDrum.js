@@ -165,7 +165,7 @@ export default function ServicesDrum() {
                 </Link>
               </div>
               <h2 className="font-display text-[clamp(1.5rem,3.2vw,2.5rem)] leading-tight tracking-tight text-foreground/90">
-                Nine services. One accountable team.
+                Eleven services. One accountable team.
               </h2>
               <Link
                 href="/services"

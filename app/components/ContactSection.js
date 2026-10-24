@@ -23,7 +23,7 @@ const details = [
       { value: "+44 7424 395949", href: "https://wa.me/447424395949", external: true },
     ],
   },
-  { label: "Office", items: [{ value: "4–6 Greatorex St, London E1 5NF" }] },
+  { label: "Office", items: [{ value: "Suite C220, 4–6 Greatorex Street, London, England, E1 5NF" }] },
   { label: "Hours", items: [{ value: "Mon – Fri, 9:00 – 17:30" }] },
 ];
 

@@ -12,27 +12,33 @@ const ease = [0.22, 1, 0.36, 1];
 const glide = [0.65, 0, 0.35, 1];
 const bySlug = Object.fromEntries(SERVICES.map((s) => [s.slug, s]));
 
-// The nine practice areas, gathered into six disciplines so the section
-// reads as six cards. Each card has its own description and points; every
+// The eleven practice areas, gathered into six disciplines so the section
+// reads as six cards: the finance function on the first row, tax and advice
+// on the second. Each card has its own description and points; every
 // service inside it keeps its own report panel.
 // `lead` is the specialist who handles the discipline: responsibilities
 // only, no names, credentials or tenure until the firm supplies team details.
 const GROUPS = [
     {
-        name: "Accounting & Bookkeeping",
+        name: "Accounting & Reporting",
         icon: "ledger",
-        slugs: ["accounting", "bookkeeping"],
-        desc: "Accurate records, year-end accounts and statutory filings, prepared to deadline and ready for Companies House and HMRC.",
-        points: ["Bookkeeping and bank reconciliations", "Annual accounts and confirmation statements", "Cloud software setup (Xero, QuickBooks, FreeAgent)"],
-        lead: { role: "Client accountant", note: "Owns your books, deadlines and day-to-day questions." },
+        slugs: ["accounting", "bookkeeping", "financial-reporting", "management-accounts"],
+        desc: "Accurate books, year-end accounts and clear management reporting, so your filings are on time and you always know how the business is performing.",
+        points: [
+            "Bookkeeping and bank reconciliations",
+            "Annual accounts and confirmation statements",
+            "Monthly and quarterly management accounts",
+            "Budgets and forecasts tracked against actuals",
+        ],
+        lead: { role: "Client accountant", note: "Owns your books and deadlines, and knows the history behind every number." },
     },
     {
-        name: "Tax & VAT",
-        icon: "tax",
-        slugs: ["tax", "vat"],
-        desc: "Corporation tax, self assessment and VAT returns, calculated carefully and filed on time with no surprises.",
-        points: ["Corporation tax and self assessment", "VAT registration, returns and Making Tax Digital", "Responses to HMRC enquiries"],
-        lead: { role: "Tax specialist", note: "Prepares each return and reviews reliefs before it is filed." },
+        name: "Cloud Accounting & Migration",
+        icon: "cloud",
+        slugs: ["cloud-accounting"],
+        desc: "Set-up and migration to Xero, QuickBooks or FreeAgent, without losing a transaction, built around how your business works.",
+        points: ["Software chosen to fit your business", "Clean migration of historic data", "Bank feeds, receipt apps and team training"],
+        lead: { role: "Systems specialist", note: "Plans the move and stays on until your team is comfortable." },
     },
     {
         name: "Payroll",
@@ -43,20 +49,25 @@ const GROUPS = [
         lead: { role: "Payroll specialist", note: "Runs each pay cycle on the same date every month." },
     },
     {
-        name: "Reporting & Management Accounts",
-        icon: "chart",
-        slugs: ["financial-reporting", "management-accounts"],
-        desc: "Clear, timely reports that show how the business is really performing, so you can make decisions with confidence.",
-        points: ["Monthly and quarterly reporting packs", "Formats ready for your board or lender", "Budgets and forecasts tracked against actuals"],
-        lead: { role: "Client accountant", note: "Knows the history behind every number in the pack." },
+        name: "Tax, VAT & Planning",
+        icon: "tax",
+        slugs: ["tax", "vat", "tax-planning"],
+        desc: "Corporation tax and VAT filed on time, with year-round planning that keeps your bill as low as the rules legitimately allow.",
+        points: [
+            "Corporation tax returns and computations",
+            "VAT registration, returns and Making Tax Digital",
+            "Reliefs, allowances and incentives you may be missing",
+            "Responses to HMRC enquiries",
+        ],
+        lead: { role: "Tax specialist", note: "Prepares each return and plans ahead of year end, not after it." },
     },
     {
-        name: "Tax Planning",
-        icon: "planning",
-        slugs: ["tax-planning"],
-        desc: "Practical, compliant planning that keeps your tax bill as low as the rules legitimately allow, all year round.",
-        points: ["Planning throughout the year, not a last-minute scramble", "Reliefs, allowances and incentives you may be missing", "Salary, dividend and pension strategy for owners"],
-        lead: { role: "Tax specialist", note: "Plans ahead of year end, not after it." },
+        name: "Self Assessment & Personal Tax",
+        icon: "review",
+        slugs: ["self-assessment"],
+        desc: "Personal tax returns for directors, landlords and the self-employed, with salary and dividends planned so you keep more of what you earn.",
+        points: ["Self assessment returns filed on time", "Salary and dividend income for directors", "Rental income, capital gains and payments on account"],
+        lead: { role: "Tax specialist", note: "Checks every allowance before your return is filed." },
     },
     {
         name: "Business Advisory",
@@ -67,10 +78,6 @@ const GROUPS = [
         lead: { role: "Advisory partner", note: "Joins for the bigger questions: funding, structure and change." },
     },
 ];
-const ROWS = [
-    [0, 1, 2],
-    [3, 4, 5],
-];
 const num = (i) => String(i + 1).padStart(2, "0");
 
 const PHONE = "(max-width: 639px)";
@@ -80,13 +87,23 @@ function subscribePhone(cb) {
     return () => mq.removeEventListener("change", cb);
 }
 
-// Only one card is open at a time. Its row is four tracks wide (open card
-// 2fr, the others 1fr) and the other row splits evenly into thirds. The
+// Only one card is open at a time. Its row is one track wider than it has
+// cards (open card 2fr, the others 1fr) and any other row splits evenly. The
 // copy column is one track wide in the open row, so opening a card reveals
 // its report panel beside the copy rather than reflowing it.
 const GAP = "1.25rem";
-const TRACK = `calc((100cqw - 2 * ${GAP}) / 4)`;
-const THIRD = `calc((100cqw - 2 * ${GAP}) / 3)`;
+function layout(cols) {
+    const rows = [];
+    for (let i = 0; i < GROUPS.length; i += cols) rows.push(GROUPS.slice(i, i + cols).map((_, j) => i + j));
+    return {
+        cols,
+        rows,
+        track: `calc((100cqw - ${cols - 1} * ${GAP}) / ${cols + 1})`,
+        share: `calc((100cqw - ${cols - 1} * ${GAP}) / ${cols})`,
+    };
+}
+// Two rows of three
+const L = layout(3);
 // Matches the row's grid-template-columns transition
 const SWAP_MS = 1100;
 // Row heights: a closed row shows each card's icon, title and description;
@@ -245,28 +262,29 @@ const noop = () => {};
 
 // Invisible copies of the desktop cards in both of their layouts, used only
 // to measure how tall a row has to be: every card's full copy one track wide
-// (plus a report panel) for the open row, and every heading a third wide for
-// a closed row. Each strip is as tall as its tallest card.
+// (plus a report panel) for the open row, and every heading a row's share wide for
+// a closed row. Each strip is as tall as its tallest card. The panel is
+// measured under the card with the most service tabs, which wrap tallest.
 function Sizer({ reduce }) {
-    const g0 = GROUPS.find((g) => g.slugs.length > 1) ?? GROUPS[0];
+    const g0 = GROUPS.reduce((a, g) => (g.slugs.length > a.slugs.length ? g : a));
     return (
         <div aria-hidden inert className="pointer-events-none invisible absolute inset-x-0 top-0 h-0 overflow-hidden">
             <div data-size="open" className="flex items-start">
                 {GROUPS.map((g, i) => (
-                    <div key={g.name} className="shrink-0 p-6" style={{ width: TRACK }}>
+                    <div key={g.name} className="shrink-0 p-6" style={{ width: L.track }}>
                         <Head g={g} i={i} />
                         <div className="pt-5">
                             <Details g={g} s={bySlug[g.slugs[0]]} />
                         </div>
                     </div>
                 ))}
-                <div className="shrink-0 py-6 pr-6" style={{ width: TRACK }}>
+                <div className="shrink-0 py-6 pr-6" style={{ width: L.track }}>
                     <Report g={g0} s={bySlug[g0.slugs[0]]} setSub={noop} reduce={reduce} />
                 </div>
             </div>
             <div data-size="closed" className="flex items-start">
                 {GROUPS.map((g, i) => (
-                    <div key={g.name} className="shrink-0 p-6" style={{ width: THIRD }}>
+                    <div key={g.name} className="shrink-0 p-6" style={{ width: L.share }}>
                         <Head g={g} i={i} />
                     </div>
                 ))}
@@ -294,7 +312,7 @@ export default function ServicesGrid() {
     const settle = useRef();
     const items = useRef([]);
 
-    const activeRow = ROWS.findIndex((row) => row.includes(open));
+    const activeRow = L.rows.findIndex((row) => row.includes(open));
     // Which rows lay their copy out one track wide. A row that gains the open
     // card narrows its copy at once (its cards are shrinking); a row that loses
     // it keeps the narrow copy until its cards have finished widening, so the
@@ -305,7 +323,7 @@ export default function ServicesGrid() {
         // eslint-disable-next-line react-hooks/set-state-in-effect
         setNarrow((n) => n.map((v, r) => v || r === activeRow));
         settle.current = setTimeout(
-            () => setNarrow(ROWS.map((_, r) => r === activeRow)),
+            () => setNarrow(L.rows.map((_, r) => r === activeRow)),
             reduce ? 0 : SWAP_MS,
         );
         return () => clearTimeout(settle.current);
@@ -416,7 +434,7 @@ export default function ServicesGrid() {
                     className="flex flex-col"
                     style={{ gap: GAP }}
                 >
-                    {ROWS.map((row, r) => (
+                    {L.rows.map((row, r) => (
                         <div
                             key={r}
                             onMouseLeave={cancel}
@@ -424,7 +442,7 @@ export default function ServicesGrid() {
                             style={{
                                 gap: GAP,
                                 height: r === activeRow ? ROW_OPEN : ROW_CLOSED,
-                                gridTemplateColumns: r === activeRow ? row.map((i) => (i === open ? "2fr" : "1fr")).join(" ") : "1fr 1fr 1fr",
+                                gridTemplateColumns: r === activeRow ? row.map((i) => (i === open ? "2fr" : "1fr")).join(" ") : `repeat(${L.cols}, 1fr)`,
                             }}
                         >
                             {row.map((i) => {
@@ -450,8 +468,8 @@ export default function ServicesGrid() {
                                             className={`absolute top-0 left-0 h-0.5 w-full origin-left bg-royal transition-transform duration-1000 ${on ? "scale-x-100" : "scale-x-0"}`}
                                         />
                                         <div className="flex h-full">
-                                            {/* Copy: one track wide in the open row, a third otherwise */}
-                                            <div className="flex h-full shrink-0 flex-col p-6" style={{ width: narrow[r] ? TRACK : THIRD }}>
+                                            {/* Copy: one track wide in the open row, an even share otherwise */}
+                                            <div className="flex h-full shrink-0 flex-col p-6" style={{ width: narrow[r] ? L.track : L.share }}>
                                                 <Head g={g} i={i} id={`${uid}-t-${i}`} />
                                                 <div
                                                     inert={r !== activeRow}
@@ -465,7 +483,7 @@ export default function ServicesGrid() {
                                             <div
                                                 inert={!on}
                                                 className={`flex h-full shrink-0 flex-col justify-center py-6 pr-6 transition-opacity ${on ? "opacity-100 delay-300 duration-700" : "opacity-0 duration-300"}`}
-                                                style={{ width: TRACK }}
+                                                style={{ width: L.track }}
                                             >
                                                 <Report g={g} s={s} setSub={setSubOf(i)} reduce={reduce} />
                                             </div>

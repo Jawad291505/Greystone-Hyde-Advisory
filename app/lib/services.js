@@ -1,5 +1,7 @@
-// The nine services, shared by the homepage drum and the /services page.
+// The eleven services, shared by the homepage drum and the /services page.
 // Draft copy and illustrative figures — replace with the firm's real wording.
+// Ordered as the homepage cards and /services chapters group them, which is
+// how /services numbers them.
 export const SERVICES = [
   {
     name: "Accounting",
@@ -12,29 +14,8 @@ export const SERVICES = [
     name: "Bookkeeping",
     slug: "bookkeeping",
     desc: "Clean, reconciled books kept up to date, so you always know where you stand.",
-    points: ["Bank and card reconciliation", "Invoice and expense processing", "Cloud accounting set-up and support"],
+    points: ["Bank and card reconciliation", "Invoice and expense processing", "Month-end close on a fixed timetable"],
     visual: { type: "rows", title: "Bank feed", rows: [["Client receipt", "£3,420", "✓"], ["Office rent", "−£1,800", "✓"], ["Supplier invoice 118", "−£640", "✓"], ["Unmatched payment", "£210", "·"]] },
-  },
-  {
-    name: "VAT",
-    slug: "vat",
-    desc: "Registration, returns and Making Tax Digital compliance handled end to end.",
-    points: ["Registration and scheme advice", "Quarterly MTD-compliant returns", "HMRC enquiry support"],
-    visual: { type: "rows", title: "VAT return", tag: "Filed", rows: [["Box 1 · VAT due on sales", "£18,240"], ["Box 4 · VAT reclaimed", "£6,905"], ["Box 5 · Net VAT due", "£11,335"]] },
-  },
-  {
-    name: "Tax",
-    slug: "tax",
-    desc: "Corporation tax, self assessment and personal tax, prepared and filed correctly.",
-    points: ["Corporation tax returns", "Self assessment for directors and owners", "Reliefs and allowances claimed in full"],
-    visual: { type: "rows", title: "Tax computation", rows: [["Taxable profit", "£120,000"], ["Reliefs & allowances", "−£14,500"], ["Provision", "Calculated"]] },
-  },
-  {
-    name: "Payroll",
-    slug: "payroll",
-    desc: "Reliable payroll and pensions, with RTI submissions and payslips handled for you.",
-    points: ["Payslips and RTI submissions", "Auto-enrolment pensions", "P11D and year-end reporting"],
-    visual: { type: "rows", title: "Payslip", tag: "Processed", rows: [["Gross pay", "£4,200.00"], ["PAYE tax", "−£620.40"], ["Employee NI", "−£287.20"], ["Net pay", "£3,292.40"]] },
   },
   {
     name: "Financial Reporting",
@@ -51,11 +32,25 @@ export const SERVICES = [
     visual: { type: "tiles", title: "This month", tiles: [["Gross margin", "41%", "+2.1"], ["Cash", "£284k", "+6%"], ["Debtor days", "32", "−4"], ["Runway", "14 mo", "="]] },
   },
   {
-    name: "Business Advisory",
-    slug: "business-advisory",
-    desc: "Independent, practical advice on growth, funding and change.",
-    points: ["Growth and funding planning", "Scenario modelling", "An ongoing sounding board"],
-    visual: { type: "bars", title: "Scenarios", rows: [["A · Hold", 48, "Lower risk"], ["B · Expand", 72, "Higher return"], ["C · Restructure", 60, "Balanced"]] },
+    name: "Cloud Accounting",
+    slug: "cloud-accounting",
+    desc: "Set-up and migration to Xero, QuickBooks or FreeAgent, built around how your business works.",
+    points: ["Software chosen to fit your business", "Clean migration of historic data", "Bank feeds, receipt apps and training"],
+    visual: { type: "rows", title: "Migration plan", rows: [["Software chosen", "Xero", "✓"], ["Historic data", "Migrated", "✓"], ["Bank feeds", "3 live", "✓"], ["Team training", "Booked", "·"]] },
+  },
+  {
+    name: "Tax",
+    slug: "tax",
+    desc: "Corporation tax computed and filed correctly, with every relief claimed.",
+    points: ["Corporation tax returns", "Computations and iXBRL filing", "Reliefs and allowances claimed in full"],
+    visual: { type: "rows", title: "Tax computation", rows: [["Profit", "£120,000"], ["Reliefs & allowances", "−£14,500"], ["Taxable profit", "£105,500"]] },
+  },
+  {
+    name: "VAT",
+    slug: "vat",
+    desc: "Registration, returns and Making Tax Digital compliance handled end to end.",
+    points: ["Registration and scheme advice", "Quarterly MTD-compliant returns", "HMRC enquiry support"],
+    visual: { type: "rows", title: "VAT return", tag: "Filed", rows: [["Box 1 · VAT due on sales", "£18,240"], ["Box 4 · VAT reclaimed", "£6,905"], ["Box 5 · Net VAT due", "£11,335"]] },
   },
   {
     name: "Tax Planning",
@@ -63,5 +58,26 @@ export const SERVICES = [
     desc: "Structured, compliant planning to keep your tax bill as efficient as the law allows.",
     points: ["Year-round planning, not year-end panic", "Reliefs, allowances and incentives", "Owner remuneration strategy"],
     visual: { type: "rows", title: "Planning calendar", rows: [["Q1", "Review structure"], ["Q2", "Plan pension & dividends"], ["Q3", "Model year-end position"], ["Q4", "Confirm & implement"]] },
+  },
+  {
+    name: "Self Assessment",
+    slug: "self-assessment",
+    desc: "Personal tax returns for directors, landlords and the self-employed, filed accurately and on time.",
+    points: ["Salary and dividend income for directors", "Rental income and capital gains", "Payments on account planned ahead"],
+    visual: { type: "rows", title: "Tax return · 2025/26", rows: [["Salary", "£12,570"], ["Dividends", "£60,000"], ["Tax on dividends", "£10,781.25"]] },
+  },
+  {
+    name: "Payroll",
+    slug: "payroll",
+    desc: "Reliable payroll and pensions, with RTI submissions and payslips handled for you.",
+    points: ["Payslips and RTI submissions", "Auto-enrolment pensions", "P11D and year-end reporting"],
+    visual: { type: "rows", title: "Payslip", tag: "Processed", rows: [["Gross pay", "£4,200.00"], ["PAYE tax", "−£620.40"], ["Employee NI", "−£287.20"], ["Net pay", "£3,292.40"]] },
+  },
+  {
+    name: "Business Advisory",
+    slug: "business-advisory",
+    desc: "Independent, practical advice on growth, funding and change.",
+    points: ["Growth and funding planning", "Scenario modelling", "An ongoing sounding board"],
+    visual: { type: "bars", title: "Scenarios", rows: [["A · Hold", 48, "Lower risk"], ["B · Expand", 72, "Higher return"], ["C · Restructure", 60, "Balanced"]] },
   },
 ];

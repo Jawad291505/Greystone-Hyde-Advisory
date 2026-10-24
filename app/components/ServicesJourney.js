@@ -8,38 +8,39 @@ import MagneticButton from "./MagneticButton";
 import { STRIPE_PAYMENT_LINK } from "../lib/payments";
 import { SERVICES } from "../lib/services";
 
-// The nine services (shared with the homepage) grouped into the scene's
-// three service chapters, plus payments. Draft copy — replace with the
+// The eleven services (shared with the homepage) grouped into the scene's
+// three service chapters, plus payments. The groups follow the homepage's
+// cards, with Payroll and Business Advisory sharing the third chapter. Draft copy — replace with the
 // firm's real wording.
 const bySlug = Object.fromEntries(SERVICES.map((s, i) => [s.slug, { ...s, n: i + 1 }]));
 
 const CHAPTERS = [
   {
-    id: "accounting-bookkeeping",
+    id: "accounting-reporting",
     index: "01",
-    label: "Accounting, Bookkeeping & Payroll",
+    label: "Accounting & Reporting",
     short: "Accounting",
     title: ["Every transaction,", "in its place."],
-    body: "The day-to-day finance function, handled — clean books, accurate accounts and a payroll your team can rely on.",
-    services: ["accounting", "bookkeeping", "payroll"],
+    body: "Clean books, accurate year-end accounts, cloud software that fits, and reporting that shows exactly where you stand.",
+    services: ["accounting", "bookkeeping", "financial-reporting", "management-accounts", "cloud-accounting"],
   },
   {
-    id: "tax-compliance",
+    id: "tax-vat",
     index: "02",
-    label: "Tax & Compliance",
+    label: "Tax & VAT",
     short: "Tax",
     title: ["Filed correctly.", "Filed on time."],
     body: "Compliance done properly and planning done early — so tax is something you manage, not something that happens to you.",
-    services: ["vat", "tax", "tax-planning"],
+    services: ["tax", "vat", "tax-planning", "self-assessment"],
   },
   {
-    id: "reporting-advisory",
+    id: "payroll-advisory",
     index: "03",
-    label: "Reporting & Advisory",
-    short: "Advisory",
+    label: "Payroll & Advisory",
+    short: "Payroll & Advisory",
     title: ["See where the numbers", "are heading."],
-    body: "Reporting that shows exactly where you stand, and independent advice on where to go next.",
-    services: ["financial-reporting", "management-accounts", "business-advisory"],
+    body: "A payroll your team can rely on, and independent advice on where to go next from people who know your numbers.",
+    services: ["payroll", "business-advisory"],
   },
   {
     id: "payments",
