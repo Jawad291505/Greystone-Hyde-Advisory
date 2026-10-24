@@ -75,6 +75,22 @@ export const PANELS = {
         },
         rows: [["Box 1", "£18,240"], ["Box 4", "£6,905"], ["Box 5", "£11,335"]],
     },
+    // Accounting profit adjusted for tax: disallowable costs added back and
+    // capital allowances deducted, giving the £120,000 the tax panel starts from
+    "tax-ready-accounts": {
+        title: "Accounts to tax",
+        tag: "Reconciled",
+        kpi: { label: "Profit for tax", value: 120000, format: { prefix: "£" }, delta: "Carried straight into the tax computation" },
+        chart: {
+            type: "bars",
+            x: ["Profit", "Add-backs", "Allowances", "For tax"],
+            tick: k,
+            series: [{ values: [128400, 3200, 11600, 120000], bases: [0, 128400, 120000, 0] }],
+            faint: [1, 2],
+            highlight: 3,
+        },
+        rows: [["Accounting profit", "£128,400"], ["Add-backs", "+£3,200"], ["Allowances", "−£11,600"]],
+    },
     tax: {
         title: "Corporation tax",
         tag: "Computed",

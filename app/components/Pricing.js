@@ -1,44 +1,22 @@
-// PLACEHOLDER PLANS — the names, prices and inclusions below are illustrative
-// and must be replaced with the practice's real fee structure before launch.
 const plans = [
   {
     name: "Essentials",
-    forWho: "Sole directors and small companies",
-    price: "£95",
-    summary: "The statutory work, done accurately and on time.",
-    includes: [
-      "Year-end accounts and filings",
-      "Corporation tax return",
-      "Confirmation statement",
-      "A named client accountant",
-    ],
+    forWho: "Sole traders & small startups",
+    price: "£150",
+    includes: ["Monthly bookkeeping", "VAT returns", "Year-end accounts", "24/7 accessibility"],
   },
   {
-    name: "Growth",
-    forWho: "Trading businesses with a team",
-    price: "£245",
-    summary: "Your books, VAT and payroll kept current, month by month.",
-    includes: [
-      "Everything in Essentials",
-      "Monthly bookkeeping and reconciliation",
-      "Quarterly VAT returns",
-      "Payroll and auto-enrolment pensions",
-      "Quarterly review call",
-    ],
+    name: "Scale",
+    forWho: "Ambitious businesses ready to accelerate",
+    price: "£1,200",
+    includes: ["Everything in Growth", "Fractional CFO", "Financial modelling", "Growth diagnostic included"],
     featured: true,
   },
   {
-    name: "Advisory",
-    forWho: "Established businesses planning ahead",
-    price: "£595",
-    summary: "Management information and advice for the bigger decisions.",
-    includes: [
-      "Everything in Growth",
-      "Monthly management accounts",
-      "Year-round tax planning",
-      "Cash-flow forecasts and scenarios",
-      "Time with an advisory partner",
-    ],
+    name: "Growth",
+    forWho: "Established SMEs, £200K–£1M revenue",
+    price: "£500",
+    includes: ["Everything in Essentials", "Management accounts", "Cash flow forecasting", "Monthly strategy call"],
   },
 ];
 
@@ -116,7 +94,7 @@ export default function Pricing() {
                     </span>
                     <span className={`text-sm ${f ? "text-white/70" : "text-navy/70"}`}>/ month + VAT</span>
                   </p>
-                  <p className={`mt-4 text-[15px] leading-relaxed ${f ? "text-white/80" : "text-navy/80"}`}>{p.summary}</p>
+                  {p.summary && <p className={`mt-4 text-[15px] leading-relaxed ${f ? "text-white/80" : "text-navy/80"}`}>{p.summary}</p>}
 
                   <ul className="mt-6 mb-8 space-y-3">
                     {p.includes.map((line) => (

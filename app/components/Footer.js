@@ -167,7 +167,7 @@ export default function Footer() {
                                 </li>
                             </ul>
                             <p className={`mt-8 ${label}`}>Hours</p>
-                            <p className="mt-2 text-sm text-white/70">Mon – Fri, 9:00 – 17:30</p>
+                            <p className="mt-2 text-sm text-white/70">Mon – Sat, 9:00 – 17:30</p>
                         </div>
 
                         {/* Office map in Google's default style. Its own place card is

@@ -8,7 +8,7 @@ import MagneticButton from "./MagneticButton";
 import { STRIPE_PAYMENT_LINK } from "../lib/payments";
 import { SERVICES } from "../lib/services";
 
-// The eleven services (shared with the homepage) grouped into the scene's
+// The twelve services (shared with the homepage) grouped into the scene's
 // three service chapters, plus payments. The groups follow the homepage's
 // cards, with Payroll and Business Advisory sharing the third chapter. Draft copy — replace with the
 // firm's real wording.
@@ -31,7 +31,7 @@ const CHAPTERS = [
     short: "Tax",
     title: ["Filed correctly.", "Filed on time."],
     body: "Compliance done properly and planning done early — so tax is something you manage, not something that happens to you.",
-    services: ["tax", "vat", "tax-planning", "self-assessment"],
+    services: ["tax-ready-accounts", "tax", "vat", "tax-planning", "self-assessment"],
   },
   {
     id: "payroll-advisory",

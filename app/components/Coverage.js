@@ -65,11 +65,11 @@ export default function Coverage() {
             >
               Based in London.
               <br />
-              <em className="text-royal">Working across the UK.</em>
+              <em className="text-royal">Serving clients across the UK &amp; internationally.</em>
             </h2>
             <p className="mt-6 max-w-md text-base leading-relaxed text-navy/75">
-              Our office is in London, and most of our work happens online, so
-              where your business is registered matters far less than how it runs.
+              Our main office is in London, but we operate seamlessly online
+              supporting businesses across the UK, the US, and worldwide.
             </p>
 
             <ul className="mt-10 border-t border-navy/10">
@@ -208,7 +208,7 @@ export default function Coverage() {
 
               <p className="relative mt-4 flex items-center gap-3 font-mono text-[10px] tracking-[0.18em] text-navy/50 uppercase">
                 <span className="h-px w-6 bg-royal/50" />
-                Fig. 03 — Where we work
+                  Where we are based at
               </p>
             </div>
           </div>

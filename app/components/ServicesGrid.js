@@ -12,7 +12,7 @@ const ease = [0.22, 1, 0.36, 1];
 const glide = [0.65, 0, 0.35, 1];
 const bySlug = Object.fromEntries(SERVICES.map((s) => [s.slug, s]));
 
-// The eleven practice areas, gathered into six disciplines so the section
+// The twelve practice areas, gathered into six disciplines so the section
 // reads as six cards: the finance function on the first row, tax and advice
 // on the second. Each card has its own description and points; every
 // service inside it keeps its own report panel.
@@ -51,7 +51,7 @@ const GROUPS = [
     {
         name: "Tax, VAT & Planning",
         icon: "tax",
-        slugs: ["tax", "vat", "tax-planning"],
+        slugs: ["tax-ready-accounts", "tax", "vat", "tax-planning"],
         desc: "Corporation tax and VAT filed on time, with year-round planning that keeps your bill as low as the rules legitimately allow.",
         points: [
             "Corporation tax returns and computations",

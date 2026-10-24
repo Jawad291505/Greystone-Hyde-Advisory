@@ -1,4 +1,4 @@
-// The eleven services, shared by the homepage drum and the /services page.
+// The twelve services, shared by the homepage drum and the /services page.
 // Draft copy and illustrative figures — replace with the firm's real wording.
 // Ordered as the homepage cards and /services chapters group them, which is
 // how /services numbers them.
@@ -37,6 +37,13 @@ export const SERVICES = [
     desc: "Set-up and migration to Xero, QuickBooks or FreeAgent, built around how your business works.",
     points: ["Software chosen to fit your business", "Clean migration of historic data", "Bank feeds, receipt apps and training"],
     visual: { type: "rows", title: "Migration plan", rows: [["Software chosen", "Xero", "✓"], ["Historic data", "Migrated", "✓"], ["Bank feeds", "3 live", "✓"], ["Team training", "Booked", "·"]] },
+  },
+  {
+    name: "Tax-Ready Accounts",
+    slug: "tax-ready-accounts",
+    desc: "Year-end accounts prepared with your tax return in mind, so the figures carry straight into the computation.",
+    points: ["Accounts and tax computation prepared together", "Disallowable costs and capital allowances adjusted", "Every figure reconciled before anything is filed"],
+    visual: { type: "rows", title: "Accounts to tax", rows: [["Accounting profit", "£128,400"], ["Disallowable costs", "+£3,200"], ["Capital allowances", "−£11,600"], ["Profit for tax", "£120,000"]] },
   },
   {
     name: "Tax",
