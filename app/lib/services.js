@@ -32,10 +32,10 @@ export const SERVICES = [
     visual: { type: "tiles", title: "This month", tiles: [["Gross margin", "41%", "+2.1"], ["Cash", "£284k", "+6%"], ["Debtor days", "32", "−4"], ["Runway", "14 mo", "="]] },
   },
   {
-    name: "Cloud Accounting",
+    name: "ERP & Cloud Accounting",
     slug: "cloud-accounting",
     desc: "Set-up and migration to Xero, QuickBooks or FreeAgent, built around how your business works.",
-    points: ["Software chosen to fit your business", "Clean migration of historic data", "Bank feeds, receipt apps and training"],
+    points: ["Software chosen to fit your business", "Clean migration of historic data", "Bank feeds, receipt apps and training", "E-invoicing (Peppol) readiness and set-up ahead of the 2029 UK mandate"],
     visual: { type: "rows", title: "Migration plan", rows: [["Software chosen", "Xero", "✓"], ["Historic data", "Migrated", "✓"], ["Bank feeds", "3 live", "✓"], ["Team training", "Booked", "·"]] },
   },
   {

@@ -177,14 +177,8 @@ export default function Hero() {
               </a>
             </div>
 
-            {/* Trust strip: the client rating, then the software we work in */}
+            {/* Trust strip: the software we work in */}
             <ul {...intro(1.15)} className="mt-6 space-y-1.5 text-sm text-navy/80 lg:mt-5">
-              <li className="flex items-center gap-3">
-                <span aria-hidden className="w-1.5 shrink-0 text-center text-[13px] leading-none text-royal [text-indent:-0.25em]">
-                  ★
-                </span>
-                4.8/5 from 200+ client reviews
-              </li>
               <li className="flex items-center gap-3">
                 <span aria-hidden className="h-1.5 w-1.5 shrink-0 rounded-full bg-royal" />
                 Works with Xero, QuickBooks, Sage and more
