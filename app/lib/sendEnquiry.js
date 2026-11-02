@@ -1,9 +1,11 @@
-"use server";
-
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-// Handles the homepage contact form. Validation runs here regardless of the
-// client-side `required` attributes, since the action can be called directly.
+// Enquiries are delivered by FormSubmit (formsubmit.co), so the site needs no
+// backend of its own. The very first submission sends an activation email to
+// this address; enquiries arrive once that link has been clicked.
+const ENDPOINT = "https://formsubmit.co/ajax/info@greystonehyde.co.uk";
+
+// Handles the homepage contact form in the browser, as a useActionState action.
 export async function sendEnquiry(prevState, formData) {
   // Honeypot: real visitors never see or fill this field.
   if (formData.get("company_website")) {
@@ -29,9 +31,34 @@ export async function sendEnquiry(prevState, formData) {
     return { ok: false, errors, values, message: "Please check the highlighted fields." };
   }
 
-  // TODO: deliver the enquiry (e.g. Resend/SMTP/CRM). Until then it's only
-  // logged on the server.
-  console.log("[contact] new enquiry", values);
+  const failed = {
+    ok: false,
+    values,
+    message: "Sorry, your message couldn't be sent. Please try again or email info@greystonehyde.co.uk.",
+  };
+
+  try {
+    const res = await fetch(ENDPOINT, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", Accept: "application/json" },
+      body: JSON.stringify({
+        Name: values.name,
+        Email: values.email,
+        Phone: values.phone || "—",
+        Company: values.company || "—",
+        Service: values.service || "Not sure yet",
+        Message: values.message,
+        _subject: `New enquiry from ${values.name}`,
+        _replyto: values.email,
+        _template: "table",
+        _captcha: "false",
+      }),
+    });
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok || String(data.success) !== "true") return failed;
+  } catch {
+    return failed;
+  }
 
   return { ok: true, message: "Thanks — we'll be in touch within one working day." };
 }

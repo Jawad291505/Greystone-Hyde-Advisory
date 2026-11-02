@@ -1,7 +1,7 @@
 "use client";
 
 import { useActionState } from "react";
-import { sendEnquiry } from "../actions/contact";
+import { sendEnquiry } from "../lib/sendEnquiry";
 import { SERVICES } from "../lib/services";
 
 // The same details as the footer's. Both numbers open a WhatsApp chat (wa.me
