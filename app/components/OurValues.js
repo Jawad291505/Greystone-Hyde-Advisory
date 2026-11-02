@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 
 // Draft copy — replace with the firm's real values.
 const values = [
@@ -54,7 +54,7 @@ export default function OurValues() {
 
           <ol className="space-y-3 sm:space-y-4">
             {values.map((v, i) => (
-              <motion.li
+              <m.li
                 key={v.name}
                 initial={{ opacity: 0, y: 24 }}
                 whileInView={{ opacity: 1, y: 0 }}
@@ -71,7 +71,7 @@ export default function OurValues() {
                   </h3>
                   <p className="mt-3 text-sm leading-relaxed text-muted md:mt-0">{v.body}</p>
                 </div>
-              </motion.li>
+              </m.li>
             ))}
           </ol>
         </div>

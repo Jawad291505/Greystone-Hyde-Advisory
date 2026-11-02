@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { motion, useReducedMotion } from "framer-motion";
+import { m, useReducedMotion } from "framer-motion";
 import { useIntroReady } from "../../lib/intro";
 import { PIECES } from "../../lib/logoMark";
 
@@ -63,7 +63,7 @@ export default function AboutIntro() {
         </div>
 
         {/* The mark */}
-        <motion.div
+        <m.div
           variants={{
             hidden: { opacity: 0, y: 20 },
             show: { opacity: 1, y: 0, transition: { duration: 1, ease, delay: entered ? 0 : 0.2 } },
@@ -82,7 +82,7 @@ export default function AboutIntro() {
           <span aria-hidden className="absolute inset-[16%] rounded-full border border-navy/[0.07]" />
           {/* Drawn round the mark while the plate is pointed at */}
           <svg viewBox="0 0 100 100" fill="none" aria-hidden className="pointer-events-none absolute inset-[16%] h-[68%] w-[68%] -rotate-90">
-            <motion.circle
+            <m.circle
               cx={50}
               cy={50}
               r={49.6}
@@ -98,7 +98,7 @@ export default function AboutIntro() {
           </svg>
 
           <div className="absolute inset-0 flex flex-col items-center justify-center">
-            <motion.svg
+            <m.svg
               viewBox="0 0 50 50"
               role="img"
               aria-label="Greystone Hyde"
@@ -110,7 +110,7 @@ export default function AboutIntro() {
               className="w-[38%] overflow-visible"
             >
               {PIECES.map((p, i) => (
-                <motion.path
+                <m.path
                   key={i}
                   d={p.d}
                   fill={p.fill}
@@ -126,7 +126,7 @@ export default function AboutIntro() {
                   }}
                 />
               ))}
-            </motion.svg>
+            </m.svg>
             <p {...rise(1)} className="mt-[7%] font-display text-[clamp(1.7rem,2.6vw,2.4rem)] leading-none tracking-tight">
               Greystone Hyde
             </p>
@@ -134,7 +134,7 @@ export default function AboutIntro() {
               Accounting &amp; Advisory · UK
             </p>
           </div>
-        </motion.div>
+        </m.div>
       </div>
     </section>
   );

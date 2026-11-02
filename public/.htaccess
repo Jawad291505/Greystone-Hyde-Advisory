@@ -1,0 +1,41 @@
+# Apache settings for the static export on shared (cPanel) hosting.
+# Copied into out/ by `npm run build`; upload it with the rest of the site.
+
+Options -Indexes
+DirectoryIndex index.html
+ErrorDocument 404 /404.html
+
+# Always HTTPS (the second condition avoids a loop behind a proxy)
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteCond %{HTTPS} off
+  RewriteCond %{HTTP:X-Forwarded-Proto} !https
+  RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+</IfModule>
+
+# Compress text files
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/plain text/css text/xml application/javascript application/json image/svg+xml text/x-component
+</IfModule>
+
+<IfModule mod_mime.c>
+  AddType image/webp .webp
+  AddType font/woff2 .woff2
+  AddType text/x-component .rsc
+</IfModule>
+
+# Caching: scripts, styles and fonts under /_next/static have the content's
+# hash in their name, so they can be kept for a year. Pages are always
+# re-checked so a new deploy shows at once.
+<IfModule mod_headers.c>
+  <FilesMatch "\.(html|rsc|txt)$">
+    Header set Cache-Control "no-cache"
+  </FilesMatch>
+  <FilesMatch "\.(webp|jpe?g|png|svg|ico)$">
+    Header set Cache-Control "public, max-age=2592000"
+  </FilesMatch>
+</IfModule>
+<IfModule mod_headers.c>
+  SetEnvIf Request_URI "^/_next/static/" IMMUTABLE
+  Header set Cache-Control "public, max-age=31536000, immutable" env=IMMUTABLE
+</IfModule>

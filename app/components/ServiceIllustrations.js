@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useId, useLayoutEffect, useRef } from "react";
-import { animate, motion, useInView, useReducedMotion } from "framer-motion";
+import { animate, m, useInView, useReducedMotion } from "framer-motion";
 
 // Report-style panels for each service: a headline figure, a real chart
 // (gridlines, axis labels, annotations) and supporting line items.
@@ -24,7 +24,7 @@ const C = {
 };
 
 const k = (v) => `£${Math.round(v / 1000)}k`;
-const m = (v) => `£${v.toFixed(1)}m`;
+const gbpM = (v) => `£${v.toFixed(1)}m`;
 const pct = (v) => `${v.toFixed(1)}%`;
 const n0 = (v) => `${Math.round(v)}`;
 const pct0 = (v) => `${Math.round(v)}%`;
@@ -161,7 +161,7 @@ export const PANELS = {
         chart: {
             type: "line",
             x: ["Y0", "Y1", "Y2", "Y3", "Y4", "Y5"],
-            tick: m,
+            tick: gbpM,
             series: [
                 { values: [0.62, 0.7, 0.78, 0.88, 0.98, 1.1], faint: true, end: "A" },
                 { values: [0.62, 0.66, 0.9, 1.2, 1.55, 1.9], end: "B" },
@@ -294,7 +294,7 @@ function Chart({ chart, gid }) {
                     const hi = chart.highlight === i;
                     const faint = chart.faint?.includes(i);
                     return (
-                        <motion.rect
+                        <m.rect
                             key={i}
                             x={xAt(i, count, true) - bw / 2}
                             y={top}
@@ -319,13 +319,13 @@ function Chart({ chart, gid }) {
                     return (
                         <g key={si}>
                             {chart.area && si === 0 && (
-                                <motion.path
+                                <m.path
                                     d={`${d} L${last[0]} ${BOTTOM} L${pts[0][0]} ${BOTTOM} Z`}
                                     fill={`url(#${gid})`}
                                     variants={fadeIn(1)}
                                 />
                             )}
-                            <motion.path
+                            <m.path
                                 d={d}
                                 fill="none"
                                 stroke={s.faint ? C.faint : C.line}
@@ -337,12 +337,12 @@ function Chart({ chart, gid }) {
                             />
                             {s.markers &&
                                 pts.map((p, i) => (
-                                    <motion.circle key={i} cx={p[0]} cy={p[1]} r="3" fill="var(--ink)" stroke={C.line} strokeWidth="1.5" variants={fadeIn(0.6 + i * 0.12)} />
+                                    <m.circle key={i} cx={p[0]} cy={p[1]} r="3" fill="var(--ink)" stroke={C.line} strokeWidth="1.5" variants={fadeIn(0.6 + i * 0.12)} />
                                 ))}
                             {s.end && (
-                                <motion.text x={last[0] + 7} y={last[1] + 3} fontSize="9" fill={s.faint ? C.label : C.line} className="font-mono" variants={fadeIn(1.4)}>
+                                <m.text x={last[0] + 7} y={last[1] + 3} fontSize="9" fill={s.faint ? C.label : C.line} className="font-mono" variants={fadeIn(1.4)}>
                                     {s.end}
-                                </motion.text>
+                                </m.text>
                             )}
                         </g>
                     );
@@ -354,7 +354,7 @@ function Chart({ chart, gid }) {
                 const cx = xAt(chart.note.i, count, false);
                 const cy = y(s.values[chart.note.i]);
                 return (
-                    <motion.g variants={fadeIn(1.5)}>
+                    <m.g variants={fadeIn(1.5)}>
                         <line x1={cx} x2={cx} y1={cy} y2={BOTTOM} stroke={C.line} strokeOpacity="0.35" strokeDasharray="2 3" />
                         <circle cx={cx} cy={cy} r="7" fill={C.line} fillOpacity="0.18" />
                         <circle cx={cx} cy={cy} r="3.2" fill="#fff" />
@@ -362,7 +362,7 @@ function Chart({ chart, gid }) {
                         <text x={cx - 26} y={cy - 13.5} textAnchor="middle" fontSize="8.5" fontWeight="600" fill="var(--ink)" className="font-mono">
                             {chart.note.label}
                         </text>
-                    </motion.g>
+                    </m.g>
                 );
             })()}
         </svg>
@@ -419,7 +419,7 @@ export default function ServicePanel({ slug, dense = false }) {
     const active = inView || reduce;
 
     return (
-        <motion.div
+        <m.div
             ref={ref}
             initial={reduce ? false : "hidden"}
             animate={active ? "show" : "hidden"}
@@ -474,6 +474,6 @@ export default function ServicePanel({ slug, dense = false }) {
                     Illustrative figures
                 </p>
             </div>
-        </motion.div>
+        </m.div>
     );
 }

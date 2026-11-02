@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+import { AnimatePresence, m, useReducedMotion } from "framer-motion";
 import LineIcon from "./LineIcons";
 
 const ease = [0.22, 1, 0.36, 1];
@@ -128,7 +128,7 @@ export default function TeamCircle() {
         </h2>
 
         {/* Desktop: the circles */}
-        <motion.div
+        <m.div
           variants={stageIn}
           initial={reduce ? false : "hidden"}
           whileInView="show"
@@ -138,7 +138,7 @@ export default function TeamCircle() {
           className="relative mx-auto mt-14 hidden [--u:clamp(0.85rem,1.37vw,1.05rem)] lg:block"
         >
           {/* The pale circle, with a slow dashed orbit just outside it */}
-          <motion.div
+          <m.div
             variants={rise}
             style={{ left: u(BIG_LEFT), width: u(BIG), height: u(BIG) }}
             className="absolute top-0 rounded-full border border-navy/10 bg-[radial-gradient(circle_at_30%_25%,white,var(--sky)_70%)] shadow-[0_50px_90px_-60px_color-mix(in_srgb,var(--ink)_55%,transparent)]"
@@ -155,7 +155,7 @@ export default function TeamCircle() {
             >
               <AnimatePresence mode="wait" initial={false}>
                 {current ? (
-                  <motion.div
+                  <m.div
                     key={current.role}
                     aria-hidden
                     initial={reduce ? false : { opacity: 0, y: 12 }}
@@ -171,9 +171,9 @@ export default function TeamCircle() {
                       {current.role}
                     </p>
                     <p className="mt-3 text-[15px] leading-relaxed text-navy/80">{current.body}</p>
-                  </motion.div>
+                  </m.div>
                 ) : (
-                  <motion.div
+                  <m.div
                     key="intro"
                     initial={reduce ? false : { opacity: 0, y: 12 }}
                     animate={{ opacity: 1, y: 0 }}
@@ -192,14 +192,14 @@ export default function TeamCircle() {
                       You deal with your client accountant; the others join as
                       your business needs them.
                     </p>
-                  </motion.div>
+                  </m.div>
                 )}
               </AnimatePresence>
             </div>
-          </motion.div>
+          </m.div>
 
           {/* The navy disc */}
-          <motion.div
+          <m.div
             variants={{
               hidden: { opacity: 0, x: -40 },
               show: { opacity: 1, x: 0, transition: { duration: 1.1, ease } },
@@ -216,7 +216,7 @@ export default function TeamCircle() {
               <br />
               <em className="text-glint-soft">business.</em>
             </span>
-          </motion.div>
+          </m.div>
 
           {/* The four roles, on the arc */}
           {roles.map((r, i) => {
@@ -224,7 +224,7 @@ export default function TeamCircle() {
             const p = NODES[i];
             return (
               <div key={r.role}>
-                <motion.span
+                <m.span
                   aria-hidden
                   variants={pop}
                   style={{ left: u(p.x), top: u(p.y), width: u(NODE), height: u(NODE) }}
@@ -232,14 +232,14 @@ export default function TeamCircle() {
                   onMouseEnter={() => setActive(i)}
                 >
                   <Node r={r} on={on} className="h-full w-full" />
-                </motion.span>
-                <motion.span
+                </m.span>
+                <m.span
                   aria-hidden
                   variants={drawX}
                   style={{ left: u(p.x + LEAD_FROM), top: u(p.y), width: u(LEAD_TO - LEAD_FROM) }}
                   className={`absolute h-px origin-left transition-colors duration-500 ${on ? "bg-royal" : "bg-navy/20"}`}
                 />
-                <motion.button
+                <m.button
                   type="button"
                   variants={fade}
                   aria-pressed={on}
@@ -251,11 +251,11 @@ export default function TeamCircle() {
                   className="absolute right-0 block max-w-[20rem] -translate-y-1/2 text-left focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-royal"
                 >
                   <RoleCopy r={r} i={i} on={on} />
-                </motion.button>
+                </m.button>
               </div>
             );
           })}
-        </motion.div>
+        </m.div>
 
         {/* Below desktop: the disc as a heading, then the four down a rail */}
         <div className="mt-10 lg:hidden">
@@ -280,7 +280,7 @@ export default function TeamCircle() {
 
           <ol className="relative mt-8 space-y-7 before:absolute before:top-2 before:bottom-2 before:left-6 before:w-px before:bg-navy/15">
             {roles.map((r, i) => (
-              <motion.li
+              <m.li
                 key={r.role}
                 initial={reduce ? false : { opacity: 0, y: 18 }}
                 whileInView={{ opacity: 1, y: 0 }}
@@ -292,7 +292,7 @@ export default function TeamCircle() {
                 <div className="min-w-0 flex-1 pt-0.5">
                   <RoleCopy r={r} i={i} on={false} />
                 </div>
-              </motion.li>
+              </m.li>
             ))}
           </ol>
         </div>

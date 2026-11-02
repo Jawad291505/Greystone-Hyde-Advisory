@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "./ThemeLink";
-import { MotionConfig, motion } from "framer-motion";
+import { MotionConfig, m } from "framer-motion";
 import ServicesSceneSmart from "./ServicesSceneSmart";
 import MagneticButton from "./MagneticButton";
 import { STRIPE_PAYMENT_LINK } from "../lib/payments";
@@ -109,7 +109,7 @@ function CardFallback() {
 
 function PaymentActions() {
   return (
-    <motion.div variants={item} className="mt-9 flex flex-wrap items-center gap-x-6 gap-y-4">
+    <m.div variants={item} className="mt-9 flex flex-wrap items-center gap-x-6 gap-y-4">
       <MagneticButton
         href={STRIPE_PAYMENT_LINK}
         target="_blank"
@@ -128,7 +128,7 @@ function PaymentActions() {
       >
         Questions about an invoice?
       </Link>
-    </motion.div>
+    </m.div>
   );
 }
 
@@ -144,7 +144,7 @@ function Chapter({ chapter, fallbackCard }) {
       <div className="mx-auto w-full max-w-7xl px-5 sm:px-6 lg:px-10">
         {/* Mobile: the copy runs taller than the space under the scene, so it gets a
             soft backdrop that fades in from above rather than overlapping the 3D */}
-        <motion.div
+        <m.div
           variants={reveal}
           initial="hidden"
           whileInView="show"
@@ -152,25 +152,25 @@ function Chapter({ chapter, fallbackCard }) {
           className="pointer-events-auto mt-[38svh] max-w-lg max-lg:-mx-5 max-lg:bg-paper/85 max-lg:px-5 max-lg:pt-6 max-lg:pb-4 max-lg:shadow-[0_-56px_48px_-8px_color-mix(in_srgb,var(--paper)_85%,transparent)] sm:max-lg:-mx-6 sm:max-lg:px-6 lg:mt-0"
         >
           {payments && fallbackCard ? <CardFallback /> : null}
-          <motion.div variants={item}>
+          <m.div variants={item}>
             <Eyebrow>
               <span className="font-mono">{chapter.index}</span>
               <span className="text-ink/30">—</span>
               {chapter.label}
             </Eyebrow>
-          </motion.div>
-          <motion.h2
+          </m.div>
+          <m.h2
             variants={item}
             id={`${chapter.id}-title`}
             className="font-display text-[clamp(2.1rem,4.6vw,3.3rem)] leading-[1.05] tracking-tight"
           >
             {chapter.title[0]} <span className="text-royal">{chapter.title[1]}</span>
-          </motion.h2>
-          <motion.p variants={item} className="mt-5 text-sm leading-relaxed text-ink/70 sm:text-base">
+          </m.h2>
+          <m.p variants={item} className="mt-5 text-sm leading-relaxed text-ink/70 sm:text-base">
             {chapter.body}
-          </motion.p>
+          </m.p>
           {chapter.services ? (
-            <motion.ul variants={item} className="mt-7 border-t border-navy/[0.08]">
+            <m.ul variants={item} className="mt-7 border-t border-navy/[0.08]">
               {chapter.services.map((slug) => {
                 const s = bySlug[slug];
                 return (
@@ -197,9 +197,9 @@ function Chapter({ chapter, fallbackCard }) {
                   </li>
                 );
               })}
-            </motion.ul>
+            </m.ul>
           ) : (
-            <motion.ul variants={item} className="mt-7 border-t border-navy/[0.08]">
+            <m.ul variants={item} className="mt-7 border-t border-navy/[0.08]">
               {chapter.points.map((p) => (
                 <li
                   key={p}
@@ -209,10 +209,10 @@ function Chapter({ chapter, fallbackCard }) {
                   {p}
                 </li>
               ))}
-            </motion.ul>
+            </m.ul>
           )}
           {payments ? <PaymentActions /> : null}
-        </motion.div>
+        </m.div>
       </div>
     </section>
   );

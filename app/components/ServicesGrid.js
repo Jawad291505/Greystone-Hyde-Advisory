@@ -2,7 +2,7 @@
 
 import Link from "./ThemeLink";
 import { useEffect, useId, useRef, useState, useSyncExternalStore } from "react";
-import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+import { AnimatePresence, m, useReducedMotion } from "framer-motion";
 import ServiceIllustration from "./ServiceIllustrations";
 import LineIcon from "./LineIcons";
 import { SERVICES } from "../lib/services";
@@ -252,7 +252,7 @@ function Report({ g, s, setSub, reduce }) {
 function Panel({ slug, reduce, dense }) {
     return (
         <AnimatePresence mode="wait" initial={false}>
-            <motion.div
+            <m.div
                 key={slug}
                 initial={reduce ? false : { opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -261,7 +261,7 @@ function Panel({ slug, reduce, dense }) {
                 className="w-full overflow-hidden rounded-inner"
             >
                 <ServiceIllustration slug={slug} dense={dense} />
-            </motion.div>
+            </m.div>
         </AnimatePresence>
     );
 }
@@ -434,7 +434,7 @@ export default function ServicesGrid() {
                 {/* Desktop: two rows of three, one open card across both */}
                 <div ref={grid} className="@container relative mt-14 hidden xl:block">
                 <Sizer reduce={reduce} />
-                <motion.div
+                <m.div
                     variants={list}
                     initial={reduce ? false : "hidden"}
                     whileInView="show"
@@ -458,7 +458,7 @@ export default function ServicesGrid() {
                                 const on = i === open;
                                 const s = bySlug[subOf(i)];
                                 return (
-                                    <motion.article
+                                    <m.article
                                         key={g.name}
                                         variants={cardIn}
                                         onMouseEnter={() => hover(i)}
@@ -496,16 +496,16 @@ export default function ServicesGrid() {
                                                 <Report g={g} s={s} setSub={setSubOf(i)} reduce={reduce} />
                                             </div>
                                         </div>
-                                    </motion.article>
+                                    </m.article>
                                 );
                             })}
                         </div>
                     ))}
-                </motion.div>
+                </m.div>
                 </div>
 
                 {/* Below desktop: stacked cards, the first open, one open at a time */}
-                <motion.ul
+                <m.ul
                     variants={list}
                     initial={reduce ? false : "hidden"}
                     whileInView="show"
@@ -516,7 +516,7 @@ export default function ServicesGrid() {
                         const on = i === stacked;
                         const s = bySlug[subOf(i)];
                         return (
-                            <motion.li
+                            <m.li
                                 key={g.name}
                                 variants={cardIn}
                                 ref={(el) => {
@@ -559,7 +559,7 @@ export default function ServicesGrid() {
                                 </h3>
                                 <AnimatePresence initial={false}>
                                     {on && (
-                                        <motion.div
+                                        <m.div
                                             id={`${uid}-acc-${i}`}
                                             initial={reduce ? false : { height: 0, opacity: 0 }}
                                             animate={{ height: "auto", opacity: 1 }}
@@ -579,13 +579,13 @@ export default function ServicesGrid() {
                                                 </div>
                                                 <Panel slug={s.slug} reduce={reduce} />
                                             </div>
-                                        </motion.div>
+                                        </m.div>
                                     )}
                                 </AnimatePresence>
-                            </motion.li>
+                            </m.li>
                         );
                     })}
-                </motion.ul>
+                </m.ul>
 
                 <p className="mt-8 flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-navy/70">
                     Not sure where to start?

@@ -224,15 +224,17 @@ export default function Hero() {
 
         <figure className="hi-frame relative m-0 aspect-[16/10] lg:absolute lg:inset-0 lg:aspect-auto">
           <div className="hi-photo absolute overflow-hidden bg-navy">
-            {/* Served as supplied: the file is small, and re-encoding it at a
-                narrower width would only soften it further */}
+            {/* The page's LCP element: fetched first, and resized for the
+                screen so a phone isn't sent the full-width file. A higher
+                quality than the default keeps the re-encode from softening it */}
             <Image
               src="/images/hero.webp"
               alt="An accountant and a client reviewing a financial report at a desk overlooking the City of London skyline"
               fill
-              preload
-              unoptimized
-              sizes="(min-width: 1024px) 50vw, 100vw"
+              loading="eager"
+              fetchPriority="high"
+              quality={85}
+              sizes="(min-width: 1024px) 50vw, calc(100vw - 2.5rem)"
               className="hi-settle object-cover object-center [filter:saturate(0.82)_contrast(1.08)]"
             />
             {/* House grade, so the busy skyline reads as one calm picture: the

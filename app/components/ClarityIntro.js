@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef } from "react";
-import { motion, useScroll, useSpring, useTransform } from "framer-motion";
+import { m, useScroll, useSpring, useTransform } from "framer-motion";
 
 const HEADLINE =
   "Accounting is never just numbers. It is invoices, expenses, tax, payroll and cash flow, all moving at once.";
@@ -24,9 +24,9 @@ function Word({ progress, index, total, children }) {
   const start = (index / total) * 0.6;
   const opacity = useTransform(progress, [start, start + 0.16], [0.16, 1]);
   return (
-    <motion.span style={{ opacity }} className="inline-block">
+    <m.span style={{ opacity }} className="inline-block">
       {children}{" "}
-    </motion.span>
+    </m.span>
   );
 }
 
@@ -41,19 +41,19 @@ function Fragment({ progress, index, total, label, meta }) {
   const dot = useTransform(progress, [start, end], [0.25, 1]);
 
   return (
-    <motion.div
+    <m.div
       style={{ opacity, y, scale }}
       className="card px-4 py-3.5 sm:px-5 sm:py-4"
     >
       <div className="flex items-center justify-between">
         <span className="text-sm font-medium">{label}</span>
-        <motion.span
+        <m.span
           style={{ opacity: dot }}
           className="h-1.5 w-1.5 rounded-full bg-brand shadow-[0_0_10px_var(--brand)]"
         />
       </div>
       <p className="mt-1.5 font-mono text-[11px] text-muted">{meta}</p>
-    </motion.div>
+    </m.div>
   );
 }
 
@@ -84,27 +84,27 @@ export default function ClarityIntro() {
     <section id="clarity" ref={section} className="relative h-[220vh]">
       {/* Depth layers: drift at different speeds against the static page */}
       <div aria-hidden className="pointer-events-none absolute inset-x-0 top-0 h-full overflow-hidden">
-        <motion.span style={{ y: trail1 }} className="trail-line left-[12%]" />
-        <motion.span style={{ y: trail2 }} className="trail-line left-[38%]" />
-        <motion.span style={{ y: trail3 }} className="trail-line left-[71%]" />
-        <motion.span style={{ y: trail4 }} className="trail-line left-[90%]" />
+        <m.span style={{ y: trail1 }} className="trail-line left-[12%]" />
+        <m.span style={{ y: trail2 }} className="trail-line left-[38%]" />
+        <m.span style={{ y: trail3 }} className="trail-line left-[71%]" />
+        <m.span style={{ y: trail4 }} className="trail-line left-[90%]" />
       </div>
 
       <div className="sticky top-0 flex h-svh flex-col justify-center overflow-hidden">
-        <motion.div
+        <m.div
           aria-hidden
           style={{ opacity: glowOpacity }}
           className="pointer-events-none absolute left-1/2 top-1/2 h-[70vmin] w-[70vmin] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(closest-side,rgba(49,106,162,0.22),transparent)]"
         />
 
         <div className="relative mx-auto w-full max-w-6xl px-5 sm:px-6 lg:px-10">
-          <motion.p
+          <m.p
             style={{ opacity: kickerOpacity }}
             className="mb-6 flex items-center gap-3 text-[11px] tracking-[0.22em] text-brand uppercase sm:gap-4 sm:text-xs sm:tracking-[0.28em]"
           >
             <span className="h-px w-10 bg-brand" />
             From complexity to clarity
-          </motion.p>
+          </m.p>
 
           <h2 className="max-w-4xl font-display text-[clamp(1.75rem,5.4vw,3.75rem)] leading-[1.12] tracking-tight">
             {words.map((w, i) => (
@@ -127,13 +127,13 @@ export default function ClarityIntro() {
             ))}
           </div>
 
-          <motion.p
+          <m.p
             style={{ opacity: captionOpacity, y: captionY }}
             className="mt-8 text-sm text-muted sm:mt-10"
           >
             Every fragment, accounted for. This is what we bring to your
             business.
-          </motion.p>
+          </m.p>
         </div>
       </div>
     </section>

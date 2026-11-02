@@ -1,4 +1,5 @@
-import { Geist, Geist_Mono, Instrument_Serif, Newsreader } from "next/font/google";
+import { Geist, Geist_Mono, Instrument_Serif } from "next/font/google";
+import localFont from "next/font/local";
 import "./globals.css";
 import SmoothScroll from "./components/SmoothScroll";
 import Header from "./components/Header";
@@ -6,6 +7,7 @@ import Footer from "./components/Footer";
 import Preloader from "./components/Preloader";
 import Entrances from "./components/Entrances";
 import CookieBanner from "./components/CookieBanner";
+import MotionFeatures from "./components/MotionFeatures";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -25,13 +27,19 @@ const display = Instrument_Serif({
   weight: "400",
 });
 
-// Editorial display face for the hero: variable weight plus the optical-size
-// axis, so the headline is drawn from the high-contrast display cut.
-const editorial = Newsreader({
+// Editorial display face for the hero: Newsreader's high-contrast display
+// cut. Every use sets 'opsz' 72 at weight 350–400, so these files are
+// Google's latin Newsreader with the optical size pinned at 72 and weight
+// cut to that range: the same letterforms at about a quarter of the bytes,
+// which on a phone frees the connection for the hero photograph.
+const editorial = localFont({
   variable: "--font-editorial",
-  subsets: ["latin"],
-  style: ["normal", "italic"],
-  axes: ["opsz"],
+  src: [
+    { path: "./fonts/newsreader-roman.woff2", weight: "350 400", style: "normal" },
+    { path: "./fonts/newsreader-italic.woff2", weight: "350 400", style: "italic" },
+  ],
+  display: "swap",
+  adjustFontFallback: "Times New Roman",
 });
 
 export const metadata = {
@@ -63,7 +71,7 @@ export default function RootLayout({ children }) {
         <SmoothScroll />
         <Entrances />
         <Header />
-        {children}
+        <MotionFeatures>{children}</MotionFeatures>
         <Footer />
         <CookieBanner />
       </body>

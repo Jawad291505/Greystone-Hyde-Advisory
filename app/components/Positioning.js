@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { useRef, useState } from "react";
-import { motion, useReducedMotion, useScroll, useSpring, useTransform } from "framer-motion";
+import { m, useReducedMotion, useScroll, useSpring, useTransform } from "framer-motion";
 import CubeCssStage from "./CubeCssStage";
 import deskDocuments from "../../public/images/desk-documents.webp";
 import { useScrollProgress } from "../lib/useScrollProgress";
@@ -39,9 +39,9 @@ function Word({ progress, i, total, children }) {
     // Ink at 18% → 100%, as opacity so the colour itself stays a theme token
     const opacity = useTransform(progress, [start, start + 0.18], [0.18, 1]);
     return (
-        <motion.span style={{ opacity }} className="inline text-ink">
+        <m.span style={{ opacity }} className="inline text-ink">
             {children}{" "}
-        </motion.span>
+        </m.span>
     );
 }
 

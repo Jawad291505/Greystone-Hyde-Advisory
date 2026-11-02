@@ -16,6 +16,8 @@
 # next.js
 /.next/
 /out/
+# made before each build by scripts/resize-images.mjs
+/public/images/sized/
 
 # production
 /build
@@ -41,3 +43,6 @@ yarn-error.log*
 next-env.d.ts
 
 Greystone Hyde - Legal Privacy and Cookie Policy.docx
+
+# upload bundle made from out/
+/greystone-hyde-site.zip

@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { useEffect, useRef, useState, useSyncExternalStore } from "react";
-import { AnimatePresence, motion, useInView, useReducedMotion } from "framer-motion";
+import { AnimatePresence, m, useInView, useReducedMotion } from "framer-motion";
 import LineIcon from "./LineIcons";
 import ReasonArt from "./ReasonArt";
 
@@ -170,7 +170,7 @@ function Plate({ active, playing, reduce, compact = false }) {
           <p className="flex items-baseline gap-2 font-display leading-none tracking-[-0.03em] tabular-nums">
             <span className="block overflow-hidden text-[clamp(4rem,6.4vw,6rem)]">
               <AnimatePresence mode="wait" initial={false}>
-                <motion.span
+                <m.span
                   key={active}
                   initial={reduce ? false : { opacity: 0, y: "35%" }}
                   animate={{ opacity: 1, y: 0 }}
@@ -179,7 +179,7 @@ function Plate({ active, playing, reduce, compact = false }) {
                   className="block"
                 >
                   {num(active)}
-                </motion.span>
+                </m.span>
               </AnimatePresence>
             </span>
             <span className="font-mono text-[11px] tracking-[0.16em] text-white/70">/ {num(reasons.length - 1)}</span>
@@ -192,7 +192,7 @@ function Plate({ active, playing, reduce, compact = false }) {
       <span aria-hidden className="slow-turn absolute -inset-[3.5%] rounded-full border border-dashed border-navy/15" />
       <svg viewBox="0 0 100 100" fill="none" aria-hidden className="pointer-events-none absolute -top-[1.75%] -left-[1.75%] h-[103.5%] w-[103.5%]">
         {playing && (
-          <motion.circle
+          <m.circle
             key={active}
             cx={50}
             cy={50}
@@ -223,7 +223,7 @@ function Disc({ active, live, reduce, bare = false }) {
       <span aria-hidden className={`relative block ${bare ? "w-[74%]" : "w-[80%]"}`}>
         {live && (
           <AnimatePresence mode="wait" initial={false}>
-            <motion.span
+            <m.span
               key={current.title}
               initial={reduce ? false : { opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -239,7 +239,7 @@ function Disc({ active, live, reduce, bare = false }) {
                   <span className="h-px w-3 shrink-0 bg-glint" />
                 </span>
               )}
-            </motion.span>
+            </m.span>
           </AnimatePresence>
         )}
       </span>
@@ -324,7 +324,7 @@ export default function Reasons() {
 
         <div ref={stage}>
           {/* Desktop: the circles */}
-          <motion.div
+          <m.div
             variants={stageIn}
             initial={reduce ? false : "hidden"}
             whileInView="show"
@@ -333,28 +333,28 @@ export default function Reasons() {
             style={{ height: u(HEIGHT) }}
             className="relative mt-12 hidden [--u:clamp(0.82rem,1.3vw,1.05rem)] lg:block"
           >
-            <motion.div
+            <m.div
               variants={rise}
               style={{ left: u(BIG_LEFT), top: u(BIG_TOP), width: u(BIG), height: u(BIG) }}
               className="absolute rounded-full shadow-[0_50px_90px_-50px_color-mix(in_srgb,var(--ink)_70%,transparent)]"
             >
               <Plate active={active} playing={playing && desktop} reduce={reduce} />
-            </motion.div>
+            </m.div>
 
-            <motion.div
+            <m.div
               variants={slide}
               style={{ left: u(DISC.x - SMALL / 2), top: u(DISC.y - SMALL / 2), width: u(SMALL), height: u(SMALL) }}
               className="absolute flex items-center justify-center overflow-hidden rounded-full bg-[linear-gradient(155deg,var(--navy)_0%,var(--ink)_85%)] text-white shadow-[0_40px_70px_-30px_color-mix(in_srgb,var(--ink)_75%,transparent)] ring-4 ring-paper"
             >
               <Disc active={active} live={inView && desktop} reduce={reduce} />
-            </motion.div>
+            </m.div>
 
             {reasons.map((r, i) => {
               const on = i === active;
               const p = NODES[i];
               return (
                 <div key={r.title}>
-                  <motion.span
+                  <m.span
                     aria-hidden
                     variants={pop}
                     style={{ left: u(p.x), top: u(p.y), width: u(NODE), height: u(NODE) }}
@@ -362,14 +362,14 @@ export default function Reasons() {
                     onMouseEnter={() => hover(i)}
                   >
                     <Node r={r} on={on} className="h-full w-full" />
-                  </motion.span>
-                  <motion.span
+                  </m.span>
+                  <m.span
                     aria-hidden
                     variants={drawX}
                     style={{ left: u(p.x + LEAD_FROM), top: u(p.y), width: u(LEAD_TO - LEAD_FROM) }}
                     className={`absolute h-px origin-left transition-colors duration-500 ${on ? "bg-royal" : "bg-navy/20"}`}
                   />
-                  <motion.button
+                  <m.button
                     type="button"
                     variants={fade}
                     aria-pressed={on}
@@ -396,11 +396,11 @@ export default function Reasons() {
                     >
                       {r.body}
                     </span>
-                  </motion.button>
+                  </m.button>
                 </div>
               );
             })}
-          </motion.div>
+          </m.div>
 
           {/* Below desktop: the photograph with its disc, then the six as a list */}
           <div className="mt-10 lg:hidden">
