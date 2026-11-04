@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /light-preview
+Disallow: /hero-light-preview
+
+Sitemap: https://greystonehyde.co.uk/sitemap.xml
